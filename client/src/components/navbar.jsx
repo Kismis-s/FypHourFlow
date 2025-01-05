@@ -72,7 +72,7 @@ function Navbar() {
             <button className="px-3 py-1 border border-blue-950 text-blue-950 rounded hover:bg-blue-600 hover:text-white" onClick={()=>navigate("/signup")}>
               Sign up
             </button>
-            <button className="px-3 py-1 bg-blue-950 text-white rounded hover:bg-blue-600 mr-32">
+            <button className="px-3 py-1 bg-blue-950 text-white rounded hover:bg-blue-600 mr-32" onClick={()=>navigate("/login")}>
               Login
             </button>
           </div>
