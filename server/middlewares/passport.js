@@ -2,7 +2,8 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const mongoose = require('mongoose');
 const Users = mongoose.model("users"); // Import the Mongoose model
-const jwt=require("jsonwebtoken")
+const jwt=require("jsonwebtoken");
+
 passport.use(
   new GoogleStrategy(
     {

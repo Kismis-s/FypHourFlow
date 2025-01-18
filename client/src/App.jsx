@@ -1,9 +1,9 @@
 import LandingPage from "./pages/LandingPage";
-import Navbar from "./components/navbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignUp from "./pages/signUp";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
+import OffersPage from "./pages/OffersPage";
 
 function App() {
   return (
@@ -14,6 +14,7 @@ function App() {
         <Route exact path="/signup" element={<SignUp />} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/profile" element={<Profile />} />
+        <Route exact path="/offers" element={<OffersPage />} />
       </Routes>
       </BrowserRouter>
     </div>

@@ -25,7 +25,7 @@ const userLogin = async(req, res)=>{
     }catch(e){
         res.status(400).json({
             status: "Failed to login.",
-            message: e
+            message:  e.message || "An unknown error occurred.",
         })
         return;
     }

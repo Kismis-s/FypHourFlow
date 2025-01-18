@@ -11,18 +11,8 @@ const userSchema = new mongoose.Schema({
         unique: true,
     },
     password: {
-        type: String,
-        select: false,
-        validate: {
-          validator: function (value) {
-            // Only enforce unique password for manual login users
-            if (this.provider === "manual") {
-              return value && value.length > 0; // Ensure password is not empty for manual users
-            }
-            return true; // No validation for Google users (password is null)
-          },
-          message: "Password is required for manual login",
-        },
+      type: String,
+      required: [true, "Password is required!"]
       },
     photo: {
         type: String, // Profile picture for OAuth users
