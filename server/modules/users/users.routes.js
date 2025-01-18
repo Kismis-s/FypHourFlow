@@ -14,5 +14,7 @@ userRouter.post("/login", userLogin);
 userRouter.use(auth);
 userRouter.post("/editProfile", editProfile);
 userRouter.get("/dashboard", userDashboard);
+userRouter.use("/income", addRouter);
+userRouter.use("/expense", subtractRouter);
 
 module.exports = userRouter;
