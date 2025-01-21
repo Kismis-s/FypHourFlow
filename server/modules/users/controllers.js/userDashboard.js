@@ -4,7 +4,7 @@ const userDashboard = async (req, res)=>{
     const Users = mongoose.model("users");
     const Transactions = mongoose.model("transactions");
 
-    const getTransactions = await Transaction.find({
+    const getTransactions = await Transactions.find({
         user_id: req.user._id
     }).sort("-createdAt")//shows from the back
     .select("amount remarks transaction_type")
@@ -15,7 +15,8 @@ const userDashboard = async (req, res)=>{
     }).select("name email");
     res.status(200).json({
         message: "Welcome to user dashboard!",
-        data: getUserData
+        data: getUserData,
+        data: getTransactions
     })
 }
 
