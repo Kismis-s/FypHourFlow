@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const passport = require("passport");
+const cors = require("cors");
 const session = require("express-session");
 const userRouter = require("./modules/users/users.routes");
 require("./models/users.model"); // Ensure the user model is correctly defined
@@ -13,6 +14,7 @@ const app = express();
 
 // Middleware to parse JSON
 app.use(express.json());
+app.use(cors());
 
 // Session setup
 app.use(
