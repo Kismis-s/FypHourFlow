@@ -18,7 +18,7 @@ function SignUp() {
       return;
     }
     axios
-      .post("http://localhost:3000/user/register", { name, email, password })
+      .post(`${api}/user/register`, { name, email, password })
       .then((result) => {
         console.log(result);
         navigate("/");
@@ -105,7 +105,10 @@ function SignUp() {
               </label>
             </div>
             <div>
-              <button className="px-4 py-2 w-full rounded-md mt-1 bg-blue-950 text-white hover:bg-blue-800" onClick={handleSubmit}>
+              <button
+                className="px-4 py-2 w-full rounded-md mt-1 bg-blue-950 text-white hover:bg-blue-800"
+                onClick={handleSubmit}
+              >
                 Create Account
               </button>
             </div>

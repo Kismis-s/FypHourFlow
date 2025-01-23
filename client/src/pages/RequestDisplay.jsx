@@ -82,7 +82,7 @@ export default function RequestDisplay() {
           </div>
         </div>
         <div className="border-b-2">
-          <p>Skiils: {request.skills}</p>
+          <p>Skills: {request.skills}</p>
           <h4>Description</h4>
           <p>{request.description}</p>
         </div>
