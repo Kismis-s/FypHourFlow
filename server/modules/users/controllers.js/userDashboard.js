@@ -12,11 +12,11 @@ const userDashboard = async (req, res)=>{
 
     const getUserData = await Users.findOne({
         _id: req.user._id
-    }).select("name email");
+    });
     res.status(200).json({
         message: "Welcome to user dashboard!",
         data: getUserData,
-        data: getTransactions
+        transac: getTransactions
     })
 }
 

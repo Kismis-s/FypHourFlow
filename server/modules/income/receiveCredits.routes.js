@@ -1,4 +1,4 @@
-const addCredits = require("./controllers.js/addCredits");
+const addCredits = require("./controllers.js/receiveCredits");
 const express = require("express");
 const auth = require("../../middlewares/auth");
 

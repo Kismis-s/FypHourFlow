@@ -1,6 +1,6 @@
 const express = require("express");
 const auth = require("../../middlewares/auth");
-const subtractCredits = require("./subtractCredits");
+const subtractCredits = require("./sendCredits");
 
 const subtractRouter = express.Router();
 

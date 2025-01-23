@@ -5,8 +5,8 @@ const userLogin = require("./controllers.js/userLogin");
 const userDashboard = require("./controllers.js/userDashboard");
 const auth = require("../../middlewares/auth");
 const editProfile = require("./controllers.js/editProfile");
-const addRouter = require("../income/addCredits.routes");
-const subtractRouter = require("../expense/subtractCredits.routes");
+const addRouter = require("../income/receiveCredits.routes");
+const subtractRouter = require("../expense/sendCredits.routes");
 
 userRouter.post("/register", userRegister);
 userRouter.post("/login", userLogin);
