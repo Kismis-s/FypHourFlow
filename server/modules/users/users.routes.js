@@ -11,7 +11,7 @@ const subtractRouter = require("../expense/subtractCredits.routes");
 userRouter.post("/register", userRegister);
 userRouter.post("/login", userLogin);
 
-//userRouter.use(auth);
+userRouter.use(auth);
 userRouter.post("/editProfile", editProfile);
 userRouter.get("/dashboard", userDashboard);
 userRouter.use("/income", addRouter);

@@ -21,11 +21,11 @@ const subtractCredits = async (req,res)=>{
         await Transactions.create({
             amount: amount,
             remarks: remarks,
-            user_id: req.user_id,
+            user_id: req.user._id,
             transaction_type: "expense"
         })
         await Users.updateOne({
-            _id: req.user_id,
+            _id: req.user._id,
         },{
             $inc:{
                 balance: -amount,
