@@ -5,6 +5,7 @@ const userLogin = require("./controllers.js/userLogin");
 const userDashboard = require("./controllers.js/userDashboard");
 const auth = require("../../middlewares/auth");
 const editProfile = require("./controllers.js/editProfile");
+const subtractRouter = require("../expense/subtractCredits.routes");
 
 userRouter.post("/register", userRegister);
 userRouter.post("/login", userLogin);
@@ -12,5 +13,7 @@ userRouter.post("/login", userLogin);
 userRouter.use(auth);
 userRouter.post("/editProfile", editProfile);
 userRouter.get("/dashboard", userDashboard);
+
+userRouter.use("/expense", subtractRouter);
 
 module.exports = userRouter;

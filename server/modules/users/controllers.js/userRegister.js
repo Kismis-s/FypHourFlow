@@ -18,6 +18,7 @@ const userRegister = async(req, res)=>{
             name,
             email,
             password: encryptedPassword,
+            balance:100
         })
     }catch(e){
         res.status(400).json({

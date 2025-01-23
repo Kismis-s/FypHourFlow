@@ -38,9 +38,7 @@ const userLogin = async(req, res)=>{
         _id: getUserForAccessToken._id,
         name: getUserForAccessToken.name,
         email: getUserForAccessToken.email,
-    }, process.env.jwt_salt,{
-        expiresIn: "90 days"
-    });
+    }, process.env.jwt_salt);
     console.log(req.headers);
 
     res.status(200).json({

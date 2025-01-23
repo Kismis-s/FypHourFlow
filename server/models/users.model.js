@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
     password: {
       type: String,
       required: [true, "Password is required!"]
-      },
+    },
     photo: {
         type: String, // Profile picture for OAuth users
       },
@@ -31,6 +31,10 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
       },
+      balance: {
+        type: Number,
+        required: [true, "Balance is required!"]
+    },
     },{
     timestamps: true,
 })
