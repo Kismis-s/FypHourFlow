@@ -15,23 +15,39 @@ const userSchema = new mongoose.Schema({
       required: [true, "Password is required!"]
     },
     photo: {
-        type: String, // Profile picture for OAuth users
-      },
-      provider: {
+        data: Buffer, 
+        contentType: String 
+    },
+    birthday: {
+      type: String, 
+    },
+    profession: {
+      type: String, 
+    },
+    phone: {
+      type: Number, 
+    },
+    city: {
+      type: String, 
+    },
+    province: {
+      type: String, 
+    },
+    provider: {
         type: String,
         enum: ["manual", "google"], // Distinguish manual and Google-authenticated users
         default: "manual",
-      },
-      googleId: {
+    },
+    googleId: {
         type: String, // Store Google-specific ID for OAuth users
         unique: true,
         sparse: true, // Allow null for manual login users
-      },
-      createdAt: {
+    },
+    createdAt: {
         type: Date,
         default: Date.now,
-      },
-      balance: {
+    },
+    balance: {
         type: Number,
         required: [true, "Balance is required!"]
     },

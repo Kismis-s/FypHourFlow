@@ -5,21 +5,26 @@ import girl from "../assets/girl.jpg";
 import Footer from "../components/footer";
 import axios from "axios";
 import { AuthContext } from "../AuthContext";
+import { Link } from "react-router-dom";
+
 function Profile() {
   const api = import.meta.env.VITE_URL;
   const { authToken } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("skills");
   const [user, setUser] = useState(null);
-  const [transactions, setTransactions] = useState(null);
-  useEffect(async () => {
-    const res = await axios.get(`${api}/user/dashboard`, {
-      header: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
-    setUser(res.data.data);
-    setTransactions(res.data.transac);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      console.log("called");
+      const res = await axios.get(`${api}/user/dashboard`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      setUser(res.data.data);
+    };
+    fetchProfile();
   }, []);
   return (
     <div className="bg-slate-100">
@@ -37,7 +42,7 @@ function Profile() {
               />
             </div>
             {/* Profile Picture */}
-            <div className="absolute left-1/2 -translate-x-1/2 top-40 md:left-[10%] md:top-60">
+            <div className="absolute left-1/2 -translate-x-1/2 top-40 md:left-[17%] md:top-60">
               <img
                 src={`${api}/images/${user.photo}`}
                 alt="profile"
@@ -87,27 +92,27 @@ function Profile() {
                     About
                   </h1>
                   <ul className="space-y-3">
-                    {user.location && (
+                    {user.birthday && (
                       <li>
-                        <strong>Birthday:</strong> January 1, 1995
+                        <strong>Birthday:</strong> {user.birthday}
                       </li>
                     )}
-                    {user.gender && (
+                    {user.city && (
                       <li>
-                        <strong>Gender:</strong> Female
+                        <strong>City:</strong> {user.city}
                       </li>
                     )}
-                    {user.location && (
+                    {user.province && (
                       <li>
-                        <strong>Location:</strong> Kathmandu, Nepal
+                        <strong>Location:</strong> {user.province}
                       </li>
                     )}
                     <li>
-                      <strong>Email:</strong> jenisha.gurung@example.com
+                      <strong>Email:</strong> {user.email}
                     </li>
                     {user.phone && (
                       <li>
-                        <strong>Phone:</strong> +977-9812345678
+                        <strong>Phone:</strong> {user.phone}
                       </li>
                     )}
                   </ul>
@@ -132,9 +137,12 @@ function Profile() {
                       d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
                     />
                   </svg>
-                  <h4 className="text-lg font-semibold text-blue-900">
+                  <Link
+                    to="/settings"
+                    className="text-lg font-semibold text-blue-900"
+                  >
                     Settings and Help
-                  </h4>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -187,7 +195,7 @@ function Profile() {
                     <div className="mt-5">
                       {activeTab === "skills" && (
                         <div className="flex flex-wrap gap-3">
-                          {user.skills.length > 0
+                          {user.skills?.length > 0
                             ? user.skills.map((skill, index) => {
                                 return (
                                   <span
@@ -232,9 +240,9 @@ function Profile() {
                             TIME CREDITS
                           </span>
                         </p>
-                        <button className="mt-7 rounded bg-blue-950 px-11 py-1 text-white hover:bg-blue-600">
+                        <Link to="/transactions" className="mt-7 rounded bg-blue-950 px-11 py-1 text-white hover:bg-blue-600">
                           See Transactions
-                        </button>
+                        </Link>
                       </div>
                     </div>
                     {/* Average Rating */}

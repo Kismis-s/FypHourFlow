@@ -4,17 +4,20 @@ const passport = require("passport");
 const cors = require("cors");
 const session = require("express-session");
 const userRouter = require("./modules/users/users.routes");
+require("./models/transactions.model");
 require("./models/users.model"); // Ensure the user model is correctly defined
 const authRouter = require("./modules/users/authRoutes");
 require("./middlewares/auth");
 require("dotenv").config();
 require("./middlewares/passport");
+const path = require("path");
 
 const app = express();
 
 // Middleware to parse JSON
 app.use(express.json());
 app.use(cors());
+app.use("/images", express.static(path.join(__dirname, "public/images")));
 
 // Session setup
 app.use(
@@ -49,7 +52,7 @@ mongoose
 
 // User Routes
 app.use("/user", userRouter);
-app.use("/users", authRouter); 
+// app.use("/users", authRouter); 
 
 // Start the server
 app.listen(3000, () => {

@@ -39,7 +39,7 @@ const userLogin = async(req, res)=>{
         name: getUserForAccessToken.name,
         email: getUserForAccessToken.email,
     }, process.env.jwt_salt);
-    console.log(req.headers);
+    console.log(accessToken);
 
     res.status(200).json({
         status: "Logged in!",

@@ -4,6 +4,7 @@ import { useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +29,7 @@ function Login() {
       );
       console.log(response);
       if (response.data.status === "Logged in!") {
-        login(response.data.token);
+        login(response.data.accessToken);
         navigate("/profile");
       }
     } catch (error) {

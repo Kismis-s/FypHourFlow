@@ -8,7 +8,9 @@ const userDashboard = async (req, res)=>{
         user_id: req.user._id
     }).sort("-createdAt")//shows from the back
     .select("amount remarks transaction_type")
-    .limit(5);
+    .limit(10)
+    .populate("sender", "name") 
+    .populate("receiver", "name");
 
     const getUserData = await Users.findOne({
         _id: req.user._id

@@ -3,17 +3,17 @@ const userRouter = express.Router();
 const userRegister = require("./controllers.js/userRegister");
 const userLogin = require("./controllers.js/userLogin");
 const userDashboard = require("./controllers.js/userDashboard");
-const auth = require("../../middlewares/auth");
+const auth=require("../../middlewares/auth");
+const sendCredits = require("./controllers.js/sendCredits");
 const editProfile = require("./controllers.js/editProfile");
-const subtractRouter = require("../expense/subtractCredits.routes");
+
 
 userRouter.post("/register", userRegister);
 userRouter.post("/login", userLogin);
 
 userRouter.use(auth);
-userRouter.post("/editProfile", editProfile);
+userRouter.patch("/editProfile", editProfile);
 userRouter.get("/dashboard", userDashboard);
-
-userRouter.use("/expense", subtractRouter);
+userRouter.post("/sendCredits",sendCredits);
 
 module.exports = userRouter;
