@@ -4,6 +4,7 @@ import LoggedNavbar from "../components/loggedNavbar";
 import Footer from "../components/footer";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Transactions() {
   const [activeScreen, setActiveScreen] = useState("screen1");
@@ -15,6 +16,8 @@ export default function Transactions() {
   const [remarks, setRemarks] = useState("");
   const [error, setError] = useState(null);
   const api = import.meta.env.VITE_URL;
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -45,13 +48,14 @@ export default function Transactions() {
         {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
           },
         }
       );
       console.log(response);
       if (response.data.status === "Credits sent successfully!") {
         alert("Credits sent sucessfully!!!");
-        navigate("/profile");
+        navigate(-1);
       }
     } catch (error) {
       console.log(error);
