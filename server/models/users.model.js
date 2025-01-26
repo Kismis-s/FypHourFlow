@@ -27,12 +27,6 @@ const userSchema = new mongoose.Schema({
     phone: {
       type: Number, 
     },
-    city: {
-      type: String, 
-    },
-    province: {
-      type: String, 
-    },
     provider: {
         type: String,
         enum: ["manual", "google"], // Distinguish manual and Google-authenticated users
@@ -50,6 +44,12 @@ const userSchema = new mongoose.Schema({
     balance: {
         type: Number,
         required: [true, "Balance is required!"]
+    },
+    location: {
+      latitude: Number,
+      longitude: Number,
+      city: String,
+      country: String,
     },
     },{
     timestamps: true,

@@ -97,14 +97,14 @@ function Profile() {
                         <strong>Birthday:</strong> {user.birthday}
                       </li>
                     )}
-                    {user.city && (
+                    {user.location.city && (
                       <li>
-                        <strong>City:</strong> {user.city}
+                        <strong>City:</strong> {user.location.city}
                       </li>
                     )}
-                    {user.province && (
+                    {user.location.country && (
                       <li>
-                        <strong>Location:</strong> {user.province}
+                        <strong>Country:</strong> {user.location.country}
                       </li>
                     )}
                     <li>
@@ -240,7 +240,10 @@ function Profile() {
                             TIME CREDITS
                           </span>
                         </p>
-                        <Link to="/transactions" className="mt-7 rounded bg-blue-950 px-11 py-1 text-white hover:bg-blue-600">
+                        <Link
+                          to="/transactions"
+                          className="mt-7 rounded bg-blue-950 px-11 py-1 text-white hover:bg-blue-600"
+                        >
                           See Transactions
                         </Link>
                       </div>
