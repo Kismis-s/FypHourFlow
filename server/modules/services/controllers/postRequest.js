@@ -29,7 +29,6 @@ const postRequest = async (req, res) => {
         expiration,
         status
     });
-    console.log(newRequest);
 
     await Users.updateOne(
       { _id: req.user._id },

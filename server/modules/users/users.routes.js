@@ -6,7 +6,8 @@ const userDashboard = require("./controllers.js/userDashboard");
 const auth=require("../../middlewares/auth");
 const sendCredits = require("./controllers.js/sendCredits");
 const editProfile = require("./controllers.js/editProfile");
-const postRequest = require("./controllers.js/postRequest");
+const postRequest = require("../../modules/services/controllers/postRequest");
+const getServices = require("../services/controllers/getServices");
 
 
 userRouter.post("/register", userRegister);
@@ -15,7 +16,9 @@ userRouter.post("/login", userLogin);
 userRouter.use(auth);
 userRouter.patch("/editProfile", editProfile);
 userRouter.get("/dashboard", userDashboard);
-userRouter.post("/sendCredits",sendCredits);
-userRouter.post("/postRequest",postRequest);
+userRouter.post("/sendCredits",sendCredits);//time banking
+//for services
+userRouter.post("/postRequest", postRequest);
+userRouter.get("/getServices", getServices);
 
 module.exports = userRouter;
