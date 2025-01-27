@@ -21,6 +21,7 @@ const Settings = () => {
     logout();
     navigate("/");
   };
+
   return (
     <div>
       <LoggedNavbar />
@@ -28,6 +29,7 @@ const Settings = () => {
         <div className="flex w-4/5 max-w-6xl bg-white rounded-lg shadow-md">
           <div className="w-64 bg-gray-800 text-white rounded-l-lg p-5">
             <ul className="list-none p-0 m-0">
+              
               {sidebarItems.map((item) => (
                 <li
                   key={item.id}

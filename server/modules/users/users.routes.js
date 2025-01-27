@@ -6,6 +6,7 @@ const userDashboard = require("./controllers.js/userDashboard");
 const auth=require("../../middlewares/auth");
 const sendCredits = require("./controllers.js/sendCredits");
 const editProfile = require("./controllers.js/editProfile");
+const postRequest = require("./controllers.js/postRequest");
 
 
 userRouter.post("/register", userRegister);
@@ -15,5 +16,6 @@ userRouter.use(auth);
 userRouter.patch("/editProfile", editProfile);
 userRouter.get("/dashboard", userDashboard);
 userRouter.post("/sendCredits",sendCredits);
+userRouter.post("/postRequest",postRequest);
 
 module.exports = userRouter;

@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const axios = require("axios");
 
 const userLogin = async (req, res) => {
     const Users = mongoose.model("users");
@@ -19,8 +18,10 @@ const userLogin = async (req, res) => {
         const matchedPassword = await bcrypt.compare(password, getUser.password);
         if (!matchedPassword) throw new Error("The password does not match!");
     
-        // If coordinates are provided, fetch location details
+        // If coordinates are provided, update user location with latitude and longitude only
         if (coords) {
+            // Commenting out the reverse geocoding part for now
+            /*
             const positionStackApiKey = process.env.POSITION_STACK_API_KEY;  
             console.log("Position Stack API Key:", positionStackApiKey);
             const geoUrl = `http://api.positionstack.com/v1/reverse?access_key=${positionStackApiKey}&query=${coords.latitude},${coords.longitude}&output=json`;
@@ -46,7 +47,6 @@ const userLogin = async (req, res) => {
                         country = addressComponents.country;
                     }
 
-
                     // If no city or neighborhood is found, we can fallback to other components
                     if (!city) {
                         city = "Unknown city";
@@ -70,6 +70,15 @@ const userLogin = async (req, res) => {
             } catch (geoError) {
                 console.error("Failed to fetch location:", geoError.message);
             }
+            */
+
+            // Only storing latitude and longitude
+            getUser.location = {
+                latitude: coords.latitude,
+                longitude: coords.longitude,
+            };
+
+            await getUser.save();
         }
     } catch (e) {
         res.status(400).json({

@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema({
     },
     phone: {
       type: Number, 
+      match: [/^\d{10}$/, "Please provide a valid phone number!"],
     },
     provider: {
         type: String,
@@ -36,6 +37,7 @@ const userSchema = new mongoose.Schema({
         type: String, // Store Google-specific ID for OAuth users
         unique: true,
         sparse: true, // Allow null for manual login users
+        default: null,
     },
     createdAt: {
         type: Date,
@@ -50,6 +52,21 @@ const userSchema = new mongoose.Schema({
       longitude: Number,
       city: String,
       country: String,
+    },
+    skills: {
+      type: [String],
+    },
+    openServices: {
+      type: [{ type: mongoose.Schema.Types.ObjectId }],
+      ref: "services",
+    },
+    ongoingServices: {
+      type: [{ type: mongoose.Schema.Types.ObjectId }],
+      ref: "services",
+    },
+    completedServices: {
+      type: [{ type: mongoose.Schema.Types.ObjectId }],
+      ref: "services",
     },
     },{
     timestamps: true,

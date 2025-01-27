@@ -6,14 +6,13 @@ const transactionSchema = new mongoose.Schema({
         ref: "users",//referencing to the model we are connecting
         required: [true, "ID is required!"]
     },
-    sender: { 
+    client: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: "users" 
     },
-    receiver: { 
+    provider: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: "users",
-        required: [true, "Receiver is required!"]
     },
     amount: {
         type: Number,
