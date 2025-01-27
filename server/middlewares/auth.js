@@ -13,6 +13,7 @@ const auth = (req, res, next) =>{
     const token = authorizationHeader.split("Bearer ")[1];
     try{
         const checkToken = jwt.verify(token, process.env.jwt_salt);
+        console.log(token);
         req.user = checkToken;//so that another function can access it
     }catch(e){
         res.status(401).json({

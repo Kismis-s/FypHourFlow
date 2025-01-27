@@ -1,3 +1,4 @@
+import { Link, NavLink } from "react-router-dom";
 import Hourflow from "../assets/Hourflow.png";
 import girl from "../assets/girl.jpg";
 
@@ -14,29 +15,29 @@ function LoggedNavbar() {
         {/* Navigation Links */}
         <ul className="flex space-x-10">
           <li>
-            <a href="/" className="hover:text-blue-500">
+            <NavLink to="/" className="hover:text-blue-500">
               Home
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a href="#" className="hover:text-blue-500">
+            <NavLink to="/services" className="hover:text-blue-500">
               Services
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a href="#" className="hover:text-blue-500">
+            <NavLink to="/offers" className="hover:text-blue-500">
               Offers
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a href="#" className="hover:text-blue-500">
+            <NavLink to="/contact" className="hover:text-blue-500">
               Contact
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a href="#" className="hover:text-blue-500">
+            <NavLink to="/about" className="hover:text-blue-500">
               About Us
-            </a>
+            </NavLink>
           </li>
         </ul>
 
@@ -67,16 +68,33 @@ function LoggedNavbar() {
           </form>
 
           <div className="flex flex-row space-x-14">
-          <div>
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9"fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-</svg>
+            <div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-9 w-9"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+                />
+              </svg>
+            </div>
+            <div>
+              <Link to="/profile">
+                <img
+                  src={girl}
+                  alt="profile"
+                  className="rounded-full h-10 w-10 mr-8"
+                ></img>
+              </Link>
+            </div>
           </div>
-          <div>
-            <img src={girl} alt="profile" className="rounded-full h-10 w-10 mr-8"></img>
-          </div>
-          </div>
-
         </div>
       </nav>
     </div>

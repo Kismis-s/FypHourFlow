@@ -1,39 +1,66 @@
-import React, { useContext, useState } from "react";
-import { AuthContext } from "../AuthContext";
+import React, { useContext, useState, useEffect } from "react";
 import LoggedNavbar from "../components/loggedNavbar";
 import Footer from "../components/footer";
 import RequestCard from "../components/RequestCard";
 import { useNavigate } from "react-router-dom";
-export default function ServicePage() {
+import axios from "axios";
+import { AuthContext } from "../AuthContext";
+
+const ServicePage = () => {
   const navigate = useNavigate();
   const { authToken } = useContext(AuthContext);
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
-  useEffect(async () => {
-    const res = await axios.get(`${api}/services`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
-    setServices(res.data.data);
-    setLoading(false);
-  }, []);
+  const [selectedRole, setSelectedRole] = useState("all");
+  const api = import.meta.env.VITE_URL;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`${api}/user/getServices`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        setServices(res.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [authToken]);
+
   const handleCreate = () => {
-    navigate("/createService");
+    navigate("/postRequest");
   };
+
+  const handleFilterChange = (event) => {
+    setSelectedRole(event.target.value);
+  };
+
+  // Filter services based on selectedRole
+  const filteredServices =
+    selectedRole === "all"
+      ? services
+      : services.filter((service) => service.role === selectedRole);
+
   if (loading) {
     return (
-      <div className="flex items-center h-screen">
+      <div className="flex items-center h-screen justify-center">
         <p>Loading...</p>
       </div>
     );
   }
+
   return (
     <div>
       <LoggedNavbar />
       <div>
-        <div className="flex itmes-center justify-evenly">
+        <div className="flex items-center justify-evenly">
           <div className="space-y-5">
             <h1>
               Share Skills, Build <span>Bonds</span>!
@@ -44,7 +71,8 @@ export default function ServicePage() {
             </p>
             <button className="p-3">Browse Services</button>
           </div>
-          <img src="" />
+          <img src="/your-image.jpg" alt="Placeholder" />{" "}
+          {/* Replace with actual image */}
         </div>
         <div>
           <h2>Requests available</h2>
@@ -58,6 +86,7 @@ export default function ServicePage() {
               >
                 <option value="all">All</option>
                 <option value="try">"try"</option>
+                {/* Add options as per your actual roles */}
               </select>
             </div>
             <button className="p-3 bg-green text-white" onClick={handleCreate}>
@@ -65,11 +94,15 @@ export default function ServicePage() {
             </button>
           </div>
         </div>
-        {services.map((request, index) => {
-          return <RequestCard request={request} key={index} />;
-        })}
+        <div className="flex flex-wrap gap-5">
+          {filteredServices.map((request, index) => (
+            <RequestCard request={request} key={index} />
+          ))}
+        </div>
       </div>
       <Footer />
     </div>
   );
-}
+};
+
+export default ServicePage;

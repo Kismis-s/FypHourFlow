@@ -9,8 +9,14 @@ export const AuthProvider = ({ children }) => {
 
   // Load token from localStorage on app load
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) setAuthToken(token);
+    const fetchData = async () => {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        setAuthToken(token);
+      }
+    };
+
+    fetchData();
   }, []);
 
   // Function to save token after login

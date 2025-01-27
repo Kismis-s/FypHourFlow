@@ -3,6 +3,8 @@ import { AuthContext } from "../AuthContext";
 import { BiSolidCoinStack } from "react-icons/bi";
 import { CiLocationOn } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 export default function RequestCard(props) {
   const { authToken } = useContext(AuthContext);
   const api = import.meta.env.VITE_URL;
@@ -10,20 +12,35 @@ export default function RequestCard(props) {
   const navigate = useNavigate();
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
-  useEffect(async () => {
-    const res = await axios.get(`${api}/getUserById/${request.client}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
-    setClient(res.data.data);
-    setLoading(false);
-  }, []);
+
+  useEffect(() => {
+    const fetchClient = async () => {
+      try {
+        const res = await axios.get(
+          `${api}/user/getUserById/${request.client}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+        setClient(res.data.data);
+      } catch (error) {
+        console.error("Error fetching client:", error);
+        // Handle error appropriately (e.g., display an error message)
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchClient();
+  }, [api, authToken, request.client]); // Add dependencies
 
   const handleClick = () => {
     navigate(`/request/${request._id}`);
   };
+
   if (loading) {
     return (
       <div className="flex items-center h-screen">
@@ -31,27 +48,34 @@ export default function RequestCard(props) {
       </div>
     );
   }
+
   return (
     <div>
-      <img src={`${api}/images/${request.image}`} className="h-1/2" />
-      <div className="flex items-center jsutify-between">
+      <img
+        src={`${api}/images/${request.image}`}
+        className="h-1/2"
+        alt="Request Image"
+      />
+      <div className="flex items-center justify-between">
         <h1>{request.title}</h1>
-        <div className="flex gap-2">
-          <p>{request.budget}</p>
+        <div className="flex gap-2 items-center">
+          <p>{request.credits}</p>
           <BiSolidCoinStack />
         </div>
       </div>
       <div className="flex gap-3 items-center">
-        <img src={`${api}/image/${client.image}`} className="rounded" />
+        {client && client.image && (
+          <img
+            src={`${api}/images/${client.image}`}
+            className="rounded"
+            alt="Client Avatar"
+          />
+        )}
         <div>
-          <h2>{client.name}</h2>
-          <div className="flex gap-2 items-center">
-            <CiLocationOn />
-            <p>{client.location}</p>
-          </div>
+          <h2>{client ? client.name : "Client not found"}</h2>
         </div>
       </div>
-      <p>{request.requirements}</p>
+      <p>{request.skills}</p>
       <button
         className="rounded-lg w-full text-bold bg-green p-3"
         onClick={handleClick}
