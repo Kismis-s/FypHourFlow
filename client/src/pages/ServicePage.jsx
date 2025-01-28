@@ -5,6 +5,7 @@ import RequestCard from "../components/RequestCard";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../AuthContext";
+import service from "../assets/services.jpg";
 
 const ServicePage = () => {
   const navigate = useNavigate();
@@ -61,22 +62,25 @@ const ServicePage = () => {
       <LoggedNavbar />
       <div>
         <div className="flex items-center justify-evenly font-serif">
-          <div className="space-y-5">
-            <h1>
-              Share Skills, Build <span>Bonds</span>!
+          <div className="space-y-2">
+            <h1 className="text-4xl font-extrabold text-primary text-blue-950 ml-1 leading-10">
+              Share Skills, Build <span className="text-blue-700">Bonds</span>!
             </h1>
-            <p>
+            <p className="text-lg text-secondary text-gray-500 mt-6 pb-5">
               Encouraging acts of service, fostering deeper connections and a
-              spirit of collaboration within communities
+              spirit of <br /> collaboration within communities
             </p>
-            <button className="p-3">Browse Services</button>
+            <button className="px-4 py-2 bg-blue-950 text-white rounded hover:bg-blue-700">
+              Browse Services
+            </button>
           </div>
-          <img src="/your-image.jpg" alt="Placeholder" />{" "}
-          {/* Replace with actual image */}
+          <img src={service} alt="Placeholder" className="h-80 w-auto" />{" "}
         </div>
-        <div>
-          <h2>Requests available</h2>
-          <div className="flex gap-5">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold text-blue-950 ml-8 font-serif">
+            Requests available
+          </h2>
+          <div className="flex gap-5 font-serif">
             <div className="flex gap-2 items-center">
               <p>Filter By:</p>
               <select
@@ -85,15 +89,15 @@ const ServicePage = () => {
                 value={selectedRole}
               >
                 <option value="all">All</option>
-                <option value="try">"try"</option>
-                {/* Add options as per your actual roles */}
+                <option value="try">Gardening</option>
               </select>
             </div>
-            <button className="p-3 bg-green text-white" onClick={handleCreate}>
+            <button className="px-4 py-1 mr-10 bg-green-700 text-white rounded" onClick={handleCreate}>
               Create
             </button>
           </div>
         </div>
+
         <div className="flex flex-wrap gap-5">
           {filteredServices.map((request, index) => (
             <RequestCard request={request} key={index} />

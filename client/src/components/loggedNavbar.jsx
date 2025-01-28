@@ -1,15 +1,54 @@
 import { Link, NavLink } from "react-router-dom";
 import Hourflow from "../assets/Hourflow.png";
-import girl from "../assets/girl.jpg";
+import React, { useContext, useState, useEffect } from "react";
+import axios from "axios";
+import { AuthContext } from "../AuthContext";
 
 function LoggedNavbar() {
+  const api = import.meta.env.VITE_URL;
+  const { authToken } = useContext(AuthContext);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      console.log("called");
+      const res = await axios.get(`${api}/user/dashboard`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      setUser(res.data.data);
+    };
+    fetchProfile();
+  }, [authToken]);
+
+  if (!user) {
+    return (
+      <div className="text-gray-700 font-serif m-0">
+        {/* Navigation */}
+        <nav className="border-b border-gray-200 flex items-center justify-between px-8 h-16">
+          {/* Logo */}
+          <div className="flex items-center">
+            <img src={Hourflow} alt="logo" className="h-16 w-16 ml-4" />
+          </div>
+
+          {/* Placeholder for user profile */}
+          <div className="flex items-center">
+            <div className="h-10 w-10 rounded-full bg-gray-400"></div>
+          </div>
+        </nav>
+      </div>
+    );
+  }
+
   return (
     <div className="text-gray-700 font-serif m-0">
       {/* Navigation */}
       <nav className="border-b border-gray-200 flex items-center justify-between px-8 h-16">
         {/* Logo */}
         <div className="flex items-center">
-          <img src={Hourflow} alt="logo" className="h-16 w-16  ml-4" />
+          <img src={Hourflow} alt="logo" className="h-16 w-16 ml-4" />
         </div>
 
         {/* Navigation Links */}
@@ -74,13 +113,12 @@ function LoggedNavbar() {
                 className="h-9 w-9"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke-width="1.5"
+                strokeWidth="1.5"
                 stroke="currentColor"
-                class="size-6"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
                 />
               </svg>
@@ -88,10 +126,10 @@ function LoggedNavbar() {
             <div>
               <Link to="/profile">
                 <img
-                  src={girl}
+                  src={`${api}/uploads/${user.photo}`}
                   alt="profile"
                   className="rounded-full h-10 w-10 mr-8"
-                ></img>
+                />
               </Link>
             </div>
           </div>

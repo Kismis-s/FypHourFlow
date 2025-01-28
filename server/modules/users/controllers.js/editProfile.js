@@ -1,65 +1,90 @@
-const mongoose = require("mongoose");
-const multer = require("multer");
+const mongoose = require('mongoose');
+const multer = require('multer');
+const path = require('path');
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage }).single("photo");
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}_${file.originalname}`);
+  },
+});
+
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    const fileTypes = /jpeg|jpg|png/;
+    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = fileTypes.test(file.mimetype);
+
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb('Error: Images only!');
+    }
+  },
+}).fields([
+  { name: 'photo', maxCount: 1 },
+  { name: 'cover', maxCount: 1 },
+]);
 
 const editProfile = async (req, res) => {
-    const Users = mongoose.model("users");
+  const Users = mongoose.model('users');
 
-    const { name, email, password, birthday, phone, city, province, profession} = req.body;
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({ status: 'Failed!', message: err });
+    }
 
-    // Handle the photo upload with multer
-    upload(req, res, async (err) => {
-        if (err) {
-            return res.status(400).json({
-                status: "Failed!",
-                message: "Error uploading photo: " + err.message,
-            });
-        }
+    const { name, email, birthday, phone, city, province, profession } = req.body;
+    const photo = req.files?.photo ? req.files.photo[0].filename : null;
+    const cover = req.files?.cover ? req.files.cover[0].filename : null;
 
-        // If there's a file uploaded, create the photo object
-        let photo = undefined;
-        if (req.file) {
-            photo = {
-                data: req.file.buffer,        // The image data (Buffer)
-                contentType: req.file.mimetype,  // The MIME type of the image
-            };
-        }
+    try {
+      const updateData = {
+        name,
+        email,
+        birthday,
+        phone,
+        city,
+        province,
+        profession,
+      };
 
-        try {
-            const updateProfile = await Users.updateOne(
-                { _id: req.user._id },
-                {
-                    name,
-                    email,
-                    password,
-                    photo,  
-                    birthday,
-                    phone,
-                    city,
-                    province,
-                    profession
-                }
-            );
+      if (photo) {
+        updateData.photo = photo;
+      }
 
-            if (updateProfile.nModified === 0) {
-                return res.status(400).json({
-                    status: "Failed!",
-                    message: "No changes made to the profile.",
-                });
-            }
+      if (cover) {
+        updateData.cover = cover;
+      }
 
-            res.status(200).json({
-                status: "Profile updated!",
-            });
-        } catch (e) {
-            res.status(400).json({
-                status: "Failed!",
-                error: e.message,
-            });
-        }
-    });
+      const updateProfile = await Users.updateOne(
+        { _id: req.user._id },
+        updateData
+      );
+
+      if (updateProfile.nModified === 0) {
+        return res.status(400).json({
+          status: 'Failed!',
+          message: 'No changes made to the profile.',
+        });
+      }
+
+      res.status(200).json({
+        status: 'Profile updated!',
+        photo: photo ? `/uploads/${photo}` : null,
+        cover: cover ? `/uploads/${cover}` : null,
+      });
+    } catch (e) {
+      res.status(400).json({
+        status: 'Failed!',
+        error: e.message,
+      });
+    }
+  });
 };
 
 module.exports = editProfile;

@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../AuthContext";
 import axios from "axios";
+import LoggedNavbar from "../components/loggedNavbar";
 
 export default function EditProfile() {
   const api = import.meta.env.VITE_URL;
@@ -16,6 +17,7 @@ export default function EditProfile() {
     email: "",
     profession: "",
     photo: null,
+    cover:null
   });
   useEffect(async () => {
     const res = await axios.get(`${api}/user/dashboard`, {
@@ -45,31 +47,39 @@ export default function EditProfile() {
     });
   };
   const handleImageChange = (e) => {
+    const { name, files } = e.target;
     setFormData({
       ...formData,
-      photo: e.target.files[0],
+      [name]: files[0],
     });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formDataToSend = new FormData();
-    formDataToSend.append("name", formData.name);
-    formDataToSend.append("phone", formData.phone);
-    formDataToSend.append("birthday", formData.birthday);
-    formDataToSend.append("city", formData.city);
-    formDataToSend.append("province", formData.province);
-    formDataToSend.append("email", formData.email);
-    formDataToSend.append("profession", formData.profession);
-    if (formData.photo != null) {
-      formDataToSend.append("photo", formData.photo);
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", formData.name);
+      formDataToSend.append("phone", formData.phone);
+      formDataToSend.append("birthday", formData.birthday);
+      formDataToSend.append("city", formData.city);
+      formDataToSend.append("province", formData.province);
+      formDataToSend.append("email", formData.email);
+      formDataToSend.append("profession", formData.profession);
+      formDataToSend.append('photo', formData.photo);
+      formDataToSend.append('cover', formData.cover);
+  
+      const res = await axios.patch(`${api}/user/editProfile`, formDataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      alert("Profile updated successfully!");
+    } catch (error) {
+      console.error("Error updating profile:", error.response?.data || error.message);
+      alert("Failed to update profile. Please check your input.");
     }
-    const res = await axios.patch(`${api}/user/editProfile`, formDataToSend, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
   };
+  
   if (loading) {
     return (
       <div className="flex items-center text-center h-screen">
@@ -81,7 +91,6 @@ export default function EditProfile() {
     <div>
       <div className="flex items-center justify-between font-serif">
         <h2>Edit Profile</h2>
-        <img src={`${api}/image/${user.img}`} />
       </div>
       <form onSubmit={handleSubmit} className="my-10 w-2/3">
         <div className="mb-5">
@@ -96,6 +105,21 @@ export default function EditProfile() {
             id="file_input"
             type="file"
             name="photo"
+            onChange={handleImageChange}
+          />
+        </div>
+        <div className="mb-5">
+          <label
+            className="block mb-2 text-sm font-medium text-gray-900 "
+            htmlFor="file_input"
+          >
+            Upload Background Picture
+          </label>
+          <input
+            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none "
+            id="file_input"
+            type="file"
+            name="cover"
             onChange={handleImageChange}
           />
         </div>
@@ -224,7 +248,6 @@ export default function EditProfile() {
             value={formData.profession}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
             placeholder="Developer"
-            required
           />
         </div>
         <button

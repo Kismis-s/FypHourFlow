@@ -15,8 +15,12 @@ const userSchema = new mongoose.Schema({
       required: [true, "Password is required!"]
     },
     photo: {
-        data: Buffer, 
-        contentType: String 
+        type: String,
+        default: null
+    },
+    cover: {
+      type: String,
+      default: null
     },
     birthday: {
       type: String, 

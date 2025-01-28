@@ -25,7 +25,7 @@ const Settings = () => {
   };
 
   const SettingsContent = ({ children }) => (
-    <div className="flex-1 p-5">{children}</div>
+    <div className="flex-1 p-5 overflow-auto">{children}</div>
   );
 
   const Button = ({ onClick, children, className = "" }) => (
@@ -40,7 +40,7 @@ const Settings = () => {
   return (
     <div>
       <LoggedNavbar />
-      <div className="flex justify-center items-center h-screen bg-gray-100">
+      <div className="flex justify-center items-start min-h-screen bg-gray-100"> {/* Adjusted for height */}
         <div className="flex w-4/5 max-w-6xl bg-white rounded-lg shadow-md">
           <div className="w-64 bg-gray-800 text-white rounded-l-lg p-5">
             <ul className="list-none p-0 m-0">
