@@ -27,8 +27,9 @@ function Profile() {
     fetchProfile();
   }, []);
   return (
-    <div className="bg-slate-100">
+    <div>
       <LoggedNavbar />
+    <div className="bg-slate-100">
       {user && (
         <div className="min-h-screen text-gray-700 font-serif">
           {/* Profile Header */}
@@ -277,6 +278,7 @@ function Profile() {
         </div>
       )}
       <Footer />
+    </div>
     </div>
   );
 }

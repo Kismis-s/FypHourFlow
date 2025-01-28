@@ -7,9 +7,9 @@ const auth=require("../../middlewares/auth");
 const sendCredits = require("./controllers.js/sendCredits");
 const editProfile = require("./controllers.js/editProfile");
 const postRequest = require("../../modules/services/controllers/postRequest");
-const getServices = require("../services/controllers/getServices");
-const getUserbyId = require("./controllers.js/getUserbyId");
-
+const getServices = require("../services/controllers/getServices");;
+const findServicebyId = require("../services/controllers/findServicebyId");
+const getUserByID = require("../users/controllers.js/getUserbyId");
 
 userRouter.post("/register", userRegister);
 userRouter.post("/login", userLogin);
@@ -21,6 +21,7 @@ userRouter.post("/sendCredits",sendCredits);//time banking
 //for services
 userRouter.post("/postRequest", postRequest);
 userRouter.get("/getServices", getServices);
-userRouter.get("/getUserById/:id", getUserbyId);
+userRouter.get("/getUser/:id", getUserByID);
+userRouter.get("/findServicebyId/:id", findServicebyId);
 
 module.exports = userRouter;

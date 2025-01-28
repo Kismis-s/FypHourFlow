@@ -13,9 +13,9 @@ import Profile from "./pages/Profile";
 import OffersPage from "./pages/OffersPage";
 import Settings from "./pages/Settings";
 import Transactions from "./pages/Transactions";
-import ServicePage from "./pages/ServicePage";
-import Service from "./pages/Service";
 import PrivateRoute from "./PrivateRouter";
+import ServicePage from "../../client/src/pages/ServicePage";
+import RequestDisplay from "./pages/RequestDisplay";
 
 function App() {
   const router = createBrowserRouter(
@@ -45,6 +45,10 @@ function App() {
         <Route
           path="/services"
           element={<PrivateRoute element={<ServicePage />} />}
+        />
+        <Route
+          path="/displayService/:id"
+          element={<PrivateRoute element={<RequestDisplay />} />}
         />
       </Route>
     )

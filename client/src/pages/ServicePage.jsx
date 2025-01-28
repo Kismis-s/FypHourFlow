@@ -60,7 +60,7 @@ const ServicePage = () => {
     <div>
       <LoggedNavbar />
       <div>
-        <div className="flex items-center justify-evenly">
+        <div className="flex items-center justify-evenly font-serif">
           <div className="space-y-5">
             <h1>
               Share Skills, Build <span>Bonds</span>!

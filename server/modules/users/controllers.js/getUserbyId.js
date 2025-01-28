@@ -1,28 +1,26 @@
 const mongoose = require("mongoose");
 
-const getUserbyId = async(req,res)=>{
-    const Users = mongoose.model("users");
+const getUserByID = async (req, res) => {
+  const Users = mongoose.model("users");
+  const id = req.params.id;
+
+  // Validate ObjectId
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({ error: "Invalid user ID format" });
+  }
 
   try {
-    const userId = req.params.id; 
+    const getUser = await Users.findOne({ _id: id });
 
-    // Validate if the provided ID is a valid MongoDB ObjectId
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).send({ error: "Invalid user ID format" });
-    }
-
-    // Find user by ID
-    const user = await Users.findById(userId);
-    if (!user) {
+    if (!getUser) {
       return res.status(404).send({ error: "User not found" });
     }
 
-    // Send the user data
-    res.status(200).send({ data: user });
+    res.status(200).send({ data: getUser });
   } catch (error) {
-    console.error("Error fetching user:", error);
+    console.error("Error fetching user by ID:", error);
     res.status(500).send({ error: "Server error" });
   }
-}
+};
 
-module.exports = getUserbyId;
+module.exports = getUserByID;

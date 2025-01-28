@@ -17,7 +17,7 @@ export default function RequestCard(props) {
     const fetchClient = async () => {
       try {
         const res = await axios.get(
-          `${api}/user/getUserById/${request.client}`,
+          `${api}/user/getUser/${request.client}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -38,7 +38,7 @@ export default function RequestCard(props) {
   }, [api, authToken, request.client]); // Add dependencies
 
   const handleClick = () => {
-    navigate(`/request/${request._id}`);
+    navigate(`/displayService/${request._id}`);
   };
 
   if (loading) {
@@ -50,7 +50,7 @@ export default function RequestCard(props) {
   }
 
   return (
-    <div>
+    <div className="font-serif mb-4">
       <img
         src={`${api}/images/${request.image}`}
         className="h-1/2"
@@ -75,7 +75,7 @@ export default function RequestCard(props) {
           <h2>{client ? client.name : "Client not found"}</h2>
         </div>
       </div>
-      <p>{request.skills}</p>
+      <p>Skills: {request.skills}</p>
       <button
         className="rounded-lg w-full text-bold bg-green p-3"
         onClick={handleClick}
