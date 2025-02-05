@@ -92,13 +92,16 @@ const ServicePage = () => {
                 <option value="try">Gardening</option>
               </select>
             </div>
-            <button className="px-4 py-1 mr-10 bg-green-700 text-white rounded" onClick={handleCreate}>
+            <button
+              className="px-4 py-1 mr-10 bg-green-700 text-white rounded"
+              onClick={handleCreate}
+            >
               Create
             </button>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-5 m-5">
+        <div className="flex flex-wrap gap-5 m-7">
           {filteredServices.map((request, index) => (
             <RequestCard request={request} key={index} />
           ))}
