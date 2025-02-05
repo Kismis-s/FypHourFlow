@@ -98,7 +98,7 @@ const ServicePage = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-5">
+        <div className="flex flex-wrap gap-5 m-5">
           {filteredServices.map((request, index) => (
             <RequestCard request={request} key={index} />
           ))}

@@ -21,56 +21,54 @@ const userLogin = async (req, res) => {
         // If coordinates are provided, update user location with latitude and longitude only
         if (coords) {
             // Commenting out the reverse geocoding part for now
-            /*
-            const positionStackApiKey = process.env.POSITION_STACK_API_KEY;  
-            console.log("Position Stack API Key:", positionStackApiKey);
-            const geoUrl = `http://api.positionstack.com/v1/reverse?access_key=${positionStackApiKey}&query=${coords.latitude},${coords.longitude}&output=json`;
-            console.log("Making API request to:", geoUrl);
+            // const positionStackApiKey = process.env.POSITION_STACK_API_KEY;  
+            // console.log("Position Stack API Key:", positionStackApiKey);
+            // const geoUrl = `http://api.positionstack.com/v1/reverse?access_key=${positionStackApiKey}&query=${coords.latitude},${coords.longitude}&output=json`;
+            // console.log("Making API request to:", geoUrl);
 
-            try {
-                const geoResponse = await axios.get(geoUrl);
-                console.log("Position Stack API response:", geoResponse.data);
+            // try {
+            //     const geoResponse = await axios.get(geoUrl);
+            //     console.log("Position Stack API response:", geoResponse.data);
 
-                if (geoResponse.data.error) {
-                    console.error("Position Stack error:", geoResponse.data.error);
-                } else if (geoResponse.data.data.length > 0) {
-                    const addressComponents = geoResponse.data.data[0];
+            //     if (geoResponse.data.error) {
+            //         console.error("Position Stack error:", geoResponse.data.error);
+            //     } else if (geoResponse.data.data.length > 0) {
+            //         const addressComponents = geoResponse.data.data[0];
 
-                    let city = null;
-                    let country = null;
+            //         let city = null;
+            //         let country = null;
 
-                    // Extract city, neighborhood, and country from address components
-                    if (addressComponents.locality) {
-                        city = addressComponents.locality;
-                    }
-                    if (addressComponents.country) {
-                        country = addressComponents.country;
-                    }
+            //         // Extract city, neighborhood, and country from address components
+            //         if (addressComponents.locality) {
+            //             city = addressComponents.locality;
+            //         }
+            //         if (addressComponents.country) {
+            //             country = addressComponents.country;
+            //         }
 
-                    // If no city or neighborhood is found, we can fallback to other components
-                    if (!city) {
-                        city = "Unknown city";
-                    }
-                    if (!country) {
-                        country = "Unknown country";
-                    }
+            //         // If no city or neighborhood is found, we can fallback to other components
+            //         if (!city) {
+            //             city = "Unknown city";
+            //         }
+            //         if (!country) {
+            //             country = "Unknown country";
+            //         }
 
-                    // Update user location with the parsed data
-                    getUser.location = {
-                        latitude: coords.latitude,
-                        longitude: coords.longitude,
-                        city: city,
-                        country: country,
-                    };
+            //         // Update user location with the parsed data
+            //         getUser.location = {
+            //             latitude: coords.latitude,
+            //             longitude: coords.longitude,
+            //             city: city,
+            //             country: country,
+            //         };
 
-                    await getUser.save();
-                } else {
-                    console.warn("No results found for the given coordinates.");
-                }
-            } catch (geoError) {
-                console.error("Failed to fetch location:", geoError.message);
-            }
-            */
+            //         await getUser.save();
+            //     } else {
+            //         console.warn("No results found for the given coordinates.");
+            //     }
+            // } catch (geoError) {
+            //     console.error("Failed to fetch location:", geoError.message);
+            // }
 
             // Only storing latitude and longitude
             getUser.location = {

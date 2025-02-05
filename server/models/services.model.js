@@ -23,8 +23,9 @@ const servicesSchema = new mongoose.Schema({
         type: String,
         required: [true, "Description is required!"],
     },
-    photo: {
+    serviceImage: {
         type: String,
+        default: null
     },
     skills: {
         type: [String],

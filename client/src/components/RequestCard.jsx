@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../AuthContext";
 import { BiSolidCoinStack } from "react-icons/bi";
-import { CiLocationOn } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -28,14 +27,13 @@ export default function RequestCard(props) {
         setClient(res.data.data);
       } catch (error) {
         console.error("Error fetching client:", error);
-        // Handle error appropriately (e.g., display an error message)
       } finally {
         setLoading(false);
       }
     };
 
     fetchClient();
-  }, [api, authToken, request.client]); // Add dependencies
+  }, [api, authToken, request.client]);
 
   const handleClick = () => {
     navigate(`/displayService/${request._id}`);
@@ -43,45 +41,56 @@ export default function RequestCard(props) {
 
   if (loading) {
     return (
-      <div className="flex items-center h-screen">
-        <p>Loading...</p>
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-lg font-semibold">Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="font-serif mb-4">
+    <div className="font-serif bg-white shadow-lg rounded-lg overflow-hidden w-80 border border-gray-200">
+      {/* Request Image without borders, covering the top */}
       <img
-        src={`${api}/images/${request.image}`}
-        className="h-1/2"
+        src={`${api}/serviceImages/${request.serviceImage}`}
+        className="w-full h-48 object-cover"
         alt="Request Image"
       />
-      <div className="flex items-center justify-between">
-        <h1>{request.title}</h1>
-        <div className="flex gap-2 items-center">
-          <p>{request.credits}</p>
-          <BiSolidCoinStack />
+
+      <div className="p-5 space-y-4">
+        {/* Title and Credits */}
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-bold">{request.title}</h1>
+          <div className="flex gap-2 items-center text-white bg-blue-950 p-1 pl-3 pr-3 rounded-xl">
+            <p className="text-md font-semibold">{request.credits}</p>
+            <BiSolidCoinStack size={20} />
+          </div>
         </div>
-      </div>
-      <div className="flex gap-3 items-center">
-        {client && client.image && (
-          <img
-            src={`${api}/images/${client.image}`}
-            className="rounded"
-            alt="Client Avatar"
-          />
-        )}
-        <div>
-          <h2>{client ? client.name : "Client not found"}</h2>
+
+        {/* Client Profile */}
+        <div className="flex gap-3 items-center">
+          {client && client.photo && (
+            <img
+              src={`${api}/uploads/${client.photo}`}
+              className="w-10 h-10 rounded-full"
+              alt="Client Avatar"
+            />
+          )}
+          <h2 className="text-md font-semibold text-gray-700">
+            {client ? client.name : "Client not found"}
+          </h2>
         </div>
+
+        {/* Skills */}
+        <p className="text-gray-600 text-sm font-sem"> <span className="font-semibold">Skills: </span> {request.skills}</p>
+
+        {/* Review Button */}
+        <button
+          className="rounded-lg w-full text-bold bg-green-700 hover:bg-green-800 text-white py-2 px-4 transition duration-300 ease-in-out"
+          onClick={handleClick}
+        >
+          Review
+        </button>
       </div>
-      <p>Skills: {request.skills}</p>
-      <button
-        className="rounded-lg w-full text-bold bg-green p-3"
-        onClick={handleClick}
-      >
-        Review
-      </button>
     </div>
   );
 }
