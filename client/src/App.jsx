@@ -16,6 +16,7 @@ import Transactions from "./pages/Transactions";
 import PrivateRoute from "./PrivateRouter";
 import ServicePage from "../../client/src/pages/ServicePage";
 import RequestDisplay from "./pages/RequestDisplay";
+import PostService from "./pages/CreateRequest";
 
 function App() {
   const router = createBrowserRouter(
@@ -49,6 +50,10 @@ function App() {
         <Route
           path="/displayService/:id"
           element={<PrivateRoute element={<RequestDisplay />} />}
+        />
+        <Route
+          path="/postRequest"
+          element={<PrivateRoute element={<PostService />} />}
         />
       </Route>
     )

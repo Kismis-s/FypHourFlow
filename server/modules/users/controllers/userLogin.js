@@ -72,11 +72,12 @@ const userLogin = async (req, res) => {
 
             // Only storing latitude and longitude
             getUser.location = {
-                latitude: coords.latitude,
-                longitude: coords.longitude,
+                type: "Point",
+                coordinates: [coords.longitude, coords.latitude],
             };
 
             await getUser.save();
+            console.log("User location updated:", getUser.location);
         }
     } catch (e) {
         res.status(400).json({

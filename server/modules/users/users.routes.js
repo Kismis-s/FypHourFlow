@@ -1,15 +1,15 @@
 const express = require("express");
 const userRouter = express.Router();
-const userRegister = require("./controllers.js/userRegister");
-const userLogin = require("./controllers.js/userLogin");
-const userDashboard = require("./controllers.js/userDashboard");
+const userRegister = require("./controllers/userRegister");
+const userLogin = require("./controllers/userLogin");
+const userDashboard = require("./controllers/userDashboard");
 const auth=require("../../middlewares/auth");
-const sendCredits = require("./controllers.js/sendCredits");
-const editProfile = require("./controllers.js/editProfile");
+const sendCredits = require("./controllers/sendCredits");
+const editProfile = require("./controllers/editProfile");
 const postRequest = require("../../modules/services/controllers/postRequest");
 const getServices = require("../services/controllers/getServices");;
 const findServicebyId = require("../services/controllers/findServicebyId");
-const getUserByID = require("../users/controllers.js/getUserbyId");
+const getUserByID = require("../users/controllers/getUserbyId");
 
 userRouter.post("/register", userRegister);
 userRouter.post("/login", userLogin);

@@ -60,7 +60,7 @@ export default function RequestCard(props) {
         {/* Title and Credits */}
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">{request.title}</h1>
-          <div className="flex gap-2 items-center text-white bg-blue-950 p-1 pl-3 pr-3 rounded-xl">
+          <div className="flex gap-2 items-center text-white bg-blue-950 p-1 pl-3 pr-3 rounded-2xl">
             <p className="text-md font-semibold">{request.credits}</p>
             <BiSolidCoinStack size={20} />
           </div>
