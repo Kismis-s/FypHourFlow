@@ -52,25 +52,36 @@ const userSchema = new mongoose.Schema({
         required: [true, "Balance is required!"]
     },
     location: {
-      latitude: Number,
-      longitude: Number,
+      type: {
+        type: String,
+        enum: ["Point"],
+        default: "Point"
+      },
+      coordinates: {
+        type: [Number], // [longitude, latitude]
+        default: [null, null],
+      },
       city: String,
       country: String,
     },
     skills: {
       type: [String],
+      default: []
     },
     openServices: {
       type: [{ type: mongoose.Schema.Types.ObjectId }],
       ref: "services",
+      default: []
     },
     ongoingServices: {
       type: [{ type: mongoose.Schema.Types.ObjectId }],
       ref: "services",
+      default: []
     },
     completedServices: {
       type: [{ type: mongoose.Schema.Types.ObjectId }],
       ref: "services",
+      default: []
     },
     },{
     timestamps: true,

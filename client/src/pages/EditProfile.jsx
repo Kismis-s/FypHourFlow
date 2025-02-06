@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../AuthContext";
 import axios from "axios";
-import LoggedNavbar from "../components/loggedNavbar";
 
 export default function EditProfile() {
   const api = import.meta.env.VITE_URL;

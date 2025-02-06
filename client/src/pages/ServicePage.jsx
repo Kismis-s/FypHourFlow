@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../AuthContext";
 import service from "../assets/services.jpg";
+import { Link } from "react-router-dom";
 
 const ServicePage = () => {
   const navigate = useNavigate();
