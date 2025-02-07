@@ -13,18 +13,26 @@ const ServicePage = () => {
   const { authToken } = useContext(AuthContext);
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedRole, setSelectedRole] = useState("all");
+  const [selectedDistance, setSelectedDistance] = useState("all");
   const api = import.meta.env.VITE_URL;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Send 'null' or empty string for "All" to get all services
+        const params =
+          selectedDistance !== "all"
+            ? { distance: selectedDistance }
+            : { distance: null };
+
         const res = await axios.get(`${api}/user/getServices`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
+          params,
         });
+
         setServices(res.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -34,21 +42,29 @@ const ServicePage = () => {
     };
 
     fetchData();
-  }, [authToken]);
+  }, [authToken, selectedDistance]);
 
   const handleCreate = () => {
     navigate("/postRequest");
   };
 
-  const handleFilterChange = (event) => {
-    setSelectedRole(event.target.value);
+  const handleDistanceChange = (event) => {
+    setSelectedDistance(event.target.value);
+    let distanceInMeters;
+  
+    if (event.target.value === "500") {
+      distanceInMeters = 500; // 500 meters
+    } else if (event.target.value === "1000") {
+      distanceInMeters = 1000; // 1 km
+    } else if (event.target.value === "5000") {
+      distanceInMeters = 5000; // 5 km
+    } else {
+      distanceInMeters = null; // No filter for "All"
+    }
+  
+    setSelectedDistance(distanceInMeters);
   };
-
-  // Filter services based on selectedRole
-  const filteredServices =
-    selectedRole === "all"
-      ? services
-      : services.filter((service) => service.role === selectedRole);
+  
 
   if (loading) {
     return (
@@ -75,7 +91,7 @@ const ServicePage = () => {
               Browse Services
             </button>
           </div>
-          <img src={service} alt="Placeholder" className="h-80 w-auto" />{" "}
+          <img src={service} alt="Placeholder" className="h-80 w-auto" />
         </div>
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold text-blue-950 ml-8 font-serif">
@@ -83,16 +99,19 @@ const ServicePage = () => {
           </h2>
           <div className="flex gap-5 font-serif">
             <div className="flex gap-2 items-center">
-              <p>Filter By:</p>
+              <p>Filter By Distance:</p>
               <select
                 className="w-[150px] bg-white text-black px-2 py-1 border rounded-md"
-                onChange={handleFilterChange}
-                value={selectedRole}
+                onChange={handleDistanceChange}
+                value={selectedDistance}
               >
                 <option value="all">All</option>
-                <option value="try">Gardening</option>
+                <option value="500">Within 500 meters</option>
+                <option value="1000">Within 1 km</option>
+                <option value="5000">Within 5 km</option>
               </select>
             </div>
+
             <button
               className="px-4 py-1 mr-10 bg-green-700 text-white rounded"
               onClick={handleCreate}
@@ -103,7 +122,7 @@ const ServicePage = () => {
         </div>
 
         <div className="flex flex-wrap gap-5 m-7">
-          {filteredServices.map((request, index) => (
+          {services.map((request, index) => (
             <RequestCard request={request} key={index} />
           ))}
         </div>

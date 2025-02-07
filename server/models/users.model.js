@@ -59,7 +59,6 @@ const userSchema = new mongoose.Schema({
       },
       coordinates: {
         type: [Number], // [longitude, latitude]
-        default: [null, null],
       },
       city: String,
       country: String,
@@ -86,6 +85,8 @@ const userSchema = new mongoose.Schema({
     },{
     timestamps: true,
 })
+
+userSchema.index({ location: "2dsphere" });
 
 const userModel = mongoose.model("users", userSchema);
 

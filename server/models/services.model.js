@@ -56,7 +56,6 @@ const servicesSchema = new mongoose.Schema({
         },
         coordinates: {
             type: [Number], // Stores [longitude, latitude]
-            default: [0, 0],
         }
     }
 },{
