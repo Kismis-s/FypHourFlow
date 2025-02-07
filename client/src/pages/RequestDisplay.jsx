@@ -142,7 +142,7 @@ export default function RequestDisplay() {
 
         <div className="mt-6 pt-4">
           <p className="text-lg font-semibold text-blue-800 mb-1">SKILLS:</p>
-          <p className="text-gray-700">{request?.skills}</p>
+          <p className="text-gray-700">{request?.skills.join(", ")}</p>
           <h4 className="text-xl font-semibold mt-4 text-blue-800 mb-1">DESCRIPTION:</h4>
           <p className="text-gray-700">{request?.description}</p>
         </div>

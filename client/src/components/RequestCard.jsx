@@ -81,7 +81,7 @@ export default function RequestCard(props) {
         </div>
 
         {/* Skills */}
-        <p className="text-gray-600 text-sm font-sem"> <span className="font-semibold">Skills: </span> {request.skills}</p>
+        <p className="text-gray-600 text-sm font-sem"> <span className="font-semibold">Skills: </span> {request.skills.join(", ")}</p>
 
         {/* Review Button */}
         <button

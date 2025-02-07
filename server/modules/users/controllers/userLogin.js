@@ -18,7 +18,6 @@ const userLogin = async (req, res) => {
         const matchedPassword = await bcrypt.compare(password, getUser.password);
         if (!matchedPassword) throw new Error("The password does not match!");
     
-        // If coordinates are provided, update user location with latitude and longitude only
         if (coords) {
             // Commenting out the reverse geocoding part for now
             // const positionStackApiKey = process.env.POSITION_STACK_API_KEY;  

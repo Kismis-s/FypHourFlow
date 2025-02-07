@@ -52,7 +52,6 @@ export default function Transactions() {
           },
         }
       );
-      console.log(response);
       if (response.data.status === "Credits sent successfully!") {
         alert("Credits sent sucessfully!!!");
         navigate(-1);

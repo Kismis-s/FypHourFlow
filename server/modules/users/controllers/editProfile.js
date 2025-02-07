@@ -74,7 +74,7 @@ const editProfile = async (req, res) => {
       }
 
       res.status(200).json({
-        status: 'Profile updated!',
+        status: "Profile updated!",
         photo: photo ? `/uploads/${photo}` : null,
         cover: cover ? `/uploads/${cover}` : null,
       });

@@ -72,7 +72,10 @@ export default function EditProfile() {
           Authorization: `Bearer ${authToken}`,
         },
       });
-      alert("Profile updated successfully!");
+      if (res.data.status === "Profile updated!") {
+        alert("Profile updated successfully!");
+        navigate(-1);
+      }
     } catch (error) {
       console.error("Error updating profile:", error.response?.data || error.message);
       alert("Failed to update profile. Please check your input.");
@@ -210,7 +213,7 @@ export default function EditProfile() {
               onChange={handleChange}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="Kathmandu"
-              required
+              
             />
           </div>
           <div>
@@ -228,7 +231,7 @@ export default function EditProfile() {
               onChange={handleChange}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="Bagmati"
-              required
+              
             />
           </div>
         </div>
