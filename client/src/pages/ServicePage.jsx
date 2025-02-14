@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../AuthContext";
 import service from "../assets/services.jpg";
-import { Link } from "react-router-dom";
 
 const ServicePage = () => {
   const navigate = useNavigate();
@@ -14,16 +13,16 @@ const ServicePage = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDistance, setSelectedDistance] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all"); 
   const api = import.meta.env.VITE_URL;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Send 'null' or empty string for "All" to get all services
-        const params =
-          selectedDistance !== "all"
-            ? { distance: selectedDistance }
-            : { distance: null };
+        const params = {
+          distance: selectedDistance !== "all" ? selectedDistance : null,
+          status: selectedStatus !== "all" ? selectedStatus : null, // Include status filter
+        };
 
         const res = await axios.get(`${api}/user/getServices`, {
           headers: {
@@ -42,7 +41,7 @@ const ServicePage = () => {
     };
 
     fetchData();
-  }, [authToken, selectedDistance]);
+  }, [authToken, selectedDistance, selectedStatus]); // Include selectedStatus as a dependency
 
   const handleCreate = () => {
     navigate("/postRequest");
@@ -50,21 +49,11 @@ const ServicePage = () => {
 
   const handleDistanceChange = (event) => {
     setSelectedDistance(event.target.value);
-    let distanceInMeters;
-  
-    if (event.target.value === "500") {
-      distanceInMeters = 500; // 500 meters
-    } else if (event.target.value === "1000") {
-      distanceInMeters = 1000; // 1 km
-    } else if (event.target.value === "5000") {
-      distanceInMeters = 5000; // 5 km
-    } else {
-      distanceInMeters = null; // No filter for "All"
-    }
-  
-    setSelectedDistance(distanceInMeters);
   };
-  
+
+  const handleStatusChange = (event) => {
+    setSelectedStatus(event.target.value);
+  };
 
   if (loading) {
     return (
@@ -98,6 +87,7 @@ const ServicePage = () => {
             Requests available
           </h2>
           <div className="flex gap-5 font-serif">
+            {/* Distance Filter */}
             <div className="flex gap-2 items-center">
               <p>Filter By Distance:</p>
               <select
@@ -109,6 +99,21 @@ const ServicePage = () => {
                 <option value="500">Within 500 meters</option>
                 <option value="1000">Within 1 km</option>
                 <option value="5000">Within 5 km</option>
+              </select>
+            </div>
+
+            {/* Status Filter */}
+            <div className="flex gap-2 items-center">
+              <p>Filter By Status:</p>
+              <select
+                className="w-[150px] bg-white text-black px-2 py-1 border rounded-md"
+                onChange={handleStatusChange}
+                value={selectedStatus}
+              >
+                <option value="all">All</option>
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
               </select>
             </div>
 

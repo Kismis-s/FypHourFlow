@@ -76,7 +76,6 @@ const userLogin = async (req, res) => {
             };
 
             await getUser.save();
-            console.log("User location updated:", getUser.location);
         }
     } catch (e) {
         res.status(400).json({

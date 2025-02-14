@@ -14,7 +14,10 @@ const userDashboard = async (req, res)=>{
 
     const getUserData = await Users.findOne({
         _id: req.user._id
-    });
+    }).populate("openServices")
+    .populate("ongoingServices")
+    .populate("completedServices");
+    
     res.status(200).json({
         message: "Welcome to user dashboard!",
         data: getUserData,

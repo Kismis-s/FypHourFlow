@@ -4,6 +4,7 @@ import { AuthContext } from "../AuthContext";
 import { useNavigate } from "react-router-dom";
 import LoggedNavbar from "../components/loggedNavbar";
 import Footer from "../components/footer";
+import UserServices from "./UserServices";
 
 const Settings = () => {
   const [activeContent, setActiveContent] = useState("profile");
@@ -12,6 +13,7 @@ const Settings = () => {
 
   const sidebarItems = [
     { id: "profile", label: "Edit Profile" },
+    { id: "services", label: "Services" },
     { id: "help", label: "Help & Support" },
   ];
 
@@ -40,7 +42,9 @@ const Settings = () => {
   return (
     <div>
       <LoggedNavbar />
-      <div className="flex justify-center items-start min-h-screen bg-gray-100"> {/* Adjusted for height */}
+      <div className="flex justify-center items-start min-h-screen bg-gray-100 font-serif">
+        {" "}
+        {/* Adjusted for height */}
         <div className="flex w-4/5 max-w-6xl bg-white rounded-lg shadow-md">
           <div className="w-64 bg-gray-800 text-white rounded-l-lg p-5">
             <ul className="list-none p-0 m-0">
@@ -66,7 +70,32 @@ const Settings = () => {
           </div>
 
           <SettingsContent>
-            {activeContent === "profile" && <EditProfile />}
+            {activeContent === "profile" && (
+              <>
+                {(() => {
+                  try {
+                    return <EditProfile />;
+                  } catch (error) {
+                    console.error("Error in EditProfile:", error);
+                    return <p>Error loading EditProfile</p>;
+                  }
+                })()}
+              </>
+            )}
+
+            {activeContent === "services" && (
+              <>
+                {(() => {
+                  try {
+                    return <UserServices />;
+                  } catch (error) {
+                    console.error("Error in UserServices:", error);
+                    return <p>Error loading UserServices</p>;
+                  }
+                })()}
+              </>
+            )}
+
             {activeContent === "help" && (
               <div className="space-y-4">
                 <h2 className="text-2xl font-bold">Help & Support</h2>

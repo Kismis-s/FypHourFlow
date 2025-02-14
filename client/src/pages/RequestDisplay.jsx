@@ -14,6 +14,8 @@ export default function RequestDisplay() {
   const [request, setRequest] = useState(null);
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
   const api = import.meta.env.VITE_URL;
 
   useEffect(() => {
@@ -61,8 +63,34 @@ export default function RequestDisplay() {
     console.log("Chat clicked");
   };
 
-  const handleClick = () => {
-    console.log("Handle request clicked");
+  const handleTakeRequest = async () => {
+    setIsRequesting(true);
+
+    try {
+      const response = await axios.post(
+        `${api}/user/acceptRequest/${id}`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      if (response.data.status === "Service accepted successfully!") {
+        setRequest((prevRequest) => ({
+          ...prevRequest,
+          status: "In Progress",
+          provider: response.data.userInfo._id,
+        }));
+        setIsOpen(false);
+      }
+    } catch (error) {
+      console.error("Error accepting request:", error);
+    } finally {
+      setIsRequesting(false);
+    }
   };
 
   if (loading) {
@@ -104,7 +132,9 @@ export default function RequestDisplay() {
 
             {/* Posted By Section */}
             <div className="flex-grow flex flex-col justify-center mt-[-6]">
-              <h2 className="text-base font-semibold mb-2 text-blue-800">POSTED BY:</h2>
+              <h2 className="text-base font-semibold mb-2 text-blue-800">
+                POSTED BY:
+              </h2>
               <div className="flex items-center gap-3 mb-2 ml-6">
                 {client && client.photo && (
                   <img
@@ -127,15 +157,39 @@ export default function RequestDisplay() {
                 onClick={handleChat}
                 className="flex items-center gap-2 rounded-lg w-full ml-6 mt-4 mb-6"
               >
-                <MdOutlineChatBubbleOutline className="text-xl" /> Chat with {" "}
+                <MdOutlineChatBubbleOutline className="text-xl" /> Chat with{" "}
                 {client?.name}
               </button>
               <button
-                onClick={handleClick}
+                onClick={() => setIsOpen(true)}
                 className="bg-green-700 text-white w-52 px-6 py-2 rounded-lg hover:bg-green-800 transition ml-6"
               >
                 Take This Request
               </button>
+              {isOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                  <div className="bg-white p-6 rounded-lg shadow-lg w-auto h-40">
+                    <h2 className="text-xl font-bold mb-4">
+                      Do you want to take this request?
+                    </h2>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        className="mt-4 bg-green-700 text-white px-4 py-2 rounded"
+                        onClick={handleTakeRequest}
+                        disabled={isRequesting}
+                      >
+                        {isRequesting ? "Processing..." : "Accept"}
+                      </button>
+                      <button
+                        className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -143,7 +197,9 @@ export default function RequestDisplay() {
         <div className="mt-6 pt-4">
           <p className="text-lg font-semibold text-blue-800 mb-1">SKILLS:</p>
           <p className="text-gray-700">{request?.skills.join(", ")}</p>
-          <h4 className="text-xl font-semibold mt-4 text-blue-800 mb-1">DESCRIPTION:</h4>
+          <h4 className="text-xl font-semibold mt-4 text-blue-800 mb-1">
+            DESCRIPTION:
+          </h4>
           <p className="text-gray-700">{request?.description}</p>
         </div>
         <p className="text-gray-600 mt-4 p-4 border-t-2 text-end">

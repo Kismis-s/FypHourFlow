@@ -140,7 +140,7 @@ function Profile() {
                       to="/settings"
                       className="text-lg font-semibold text-blue-900"
                     >
-                      Settings and Help
+                      Settings and More
                     </Link>
                   </div>
                 </div>

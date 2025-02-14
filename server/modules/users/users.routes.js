@@ -10,6 +10,7 @@ const postRequest = require("../../modules/services/controllers/postRequest");
 const getServices = require("../services/controllers/getServices");;
 const findServicebyId = require("../services/controllers/findServicebyId");
 const getUserByID = require("../users/controllers/getUserbyId");
+const acceptRequest = require("../services/controllers/acceptRequest");
 
 userRouter.post("/register", userRegister);
 userRouter.post("/login", userLogin);
@@ -23,5 +24,6 @@ userRouter.post("/postRequest", postRequest);
 userRouter.get("/getServices", getServices);
 userRouter.get("/getUser/:id", getUserByID);
 userRouter.get("/findServicebyId/:id", findServicebyId);
+userRouter.post("/acceptRequest/:id", acceptRequest);
 
 module.exports = userRouter;

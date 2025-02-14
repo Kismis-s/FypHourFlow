@@ -1,9 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../AuthContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function EditProfile() {
   const api = import.meta.env.VITE_URL;
+  const navigate = useNavigate();
   const { authToken } = useContext(AuthContext);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,28 +18,38 @@ export default function EditProfile() {
     email: "",
     profession: "",
     photo: null,
-    cover:null
+    cover: null,
   });
-  useEffect(async () => {
-    const res = await axios.get(`${api}/user/dashboard`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
-    setUser(res.data.data);
-    const fetchedData = res.data.data;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      name: fetchedData.name,
-      birthday: fetchedData.birthday,
-      city: fetchedData.city,
-      province: fetchedData.province,
-      email: fetchedData.email,
-      phone: fetchedData.phone,
-    }));
-    setLoading(false);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await axios.get(`${api}/user/dashboard`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        setUser(res.data.data);
+        const fetchedData = res.data.data;
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          name: fetchedData.name || "",
+          birthday: fetchedData.birthday || "",
+          city: fetchedData.city || "",
+          province: fetchedData.province || "",
+          email: fetchedData.email || "",
+          phone: fetchedData.phone || "",
+        }));
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
   }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -63,9 +75,9 @@ export default function EditProfile() {
       formDataToSend.append("province", formData.province);
       formDataToSend.append("email", formData.email);
       formDataToSend.append("profession", formData.profession);
-      formDataToSend.append('photo', formData.photo);
-      formDataToSend.append('cover', formData.cover);
-  
+      formDataToSend.append("photo", formData.photo);
+      formDataToSend.append("cover", formData.cover);
+
       const res = await axios.patch(`${api}/user/editProfile`, formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -77,11 +89,14 @@ export default function EditProfile() {
         navigate(-1);
       }
     } catch (error) {
-      console.error("Error updating profile:", error.response?.data || error.message);
+      console.error(
+        "Error updating profile:",
+        error.response?.data || error.message
+      );
       alert("Failed to update profile. Please check your input.");
     }
   };
-  
+
   if (loading) {
     return (
       <div className="flex items-center text-center h-screen">
@@ -213,7 +228,6 @@ export default function EditProfile() {
               onChange={handleChange}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="Kathmandu"
-              
             />
           </div>
           <div>
@@ -231,7 +245,6 @@ export default function EditProfile() {
               onChange={handleChange}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="Bagmati"
-              
             />
           </div>
         </div>

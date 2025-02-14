@@ -4,7 +4,9 @@ const getServices = async (req, res) => {
   const Services = mongoose.model("services");
   const Users = mongoose.model("users");
 
-  const userId = req.user._id; 
+  const userId = req.user._id;
+  const { distance, status } = req.query; // Extract distance and status from query params
+
   try {
     const user = await Users.findById(userId);
 
@@ -12,28 +14,25 @@ const getServices = async (req, res) => {
       return res.status(404).send({ error: "User's location not found" });
     }
 
-    const userLocation = user.location.coordinates;  
-    const maxDistance = parseInt(req.query.distance) || null;
+    const userLocation = user.location.coordinates;
+    const maxDistance = distance ? parseInt(distance) : null;
 
-    let allServices;
+    let filter = {}; // Initialize an empty filter object
 
     if (maxDistance) {
-      // If maxDistance is provided, filter by location within the specified distance
-      allServices = await Services.find({
-        location: {
-          $nearSphere: {
-            $geometry: {
-              type: "Point",
-              coordinates: userLocation,
-            },
-            $maxDistance: maxDistance,  // Max distance in meters
-          },
+      filter.location = {
+        $nearSphere: {
+          $geometry: { type: "Point", coordinates: userLocation },
+          $maxDistance: maxDistance, // Max distance in meters
         },
-      });
-    } else {
-      // If no maxDistance is provided (All option), get all services
-      allServices = await Services.find({});
+      };
     }
+
+    if (status && status !== "all") {
+      filter.status = status; // Add status filtering if it's not "all"
+    }
+
+    const allServices = await Services.find(filter);
 
     res.status(200).send({ data: allServices });
   } catch (error) {
