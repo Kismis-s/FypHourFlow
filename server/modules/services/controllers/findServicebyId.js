@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const findServicebyId = async (req, res) => {
   const id = req.params.id;
   const Services = mongoose.model("services");
-  const Users = mongoose.model("users");
 
   try {
     const service = await Services.findById(id);

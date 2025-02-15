@@ -16,6 +16,7 @@ import ServicePage from "../../client/src/pages/ServicePage";
 import RequestDisplay from "./pages/RequestDisplay";
 import PostService from "./pages/CreateRequest";
 import UserServices from "./pages/UserServices";
+import EditService from "./pages/EditService";
 
 function App() {
   const router = createBrowserRouter(
@@ -57,6 +58,10 @@ function App() {
         <Route
           path="/userServices"
           element={<PrivateRoute element={<UserServices />} />}
+        />
+        <Route
+          path="/editService/:id"
+          element={<PrivateRoute element={<EditService />} />}
         />
       </Route>
     )

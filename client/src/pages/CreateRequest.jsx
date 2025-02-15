@@ -34,6 +34,7 @@ export default function PostService() {
     "UI/UX Design",
     "Tutoring",
     "Translation",
+    "Assistance"
   ];
 
   useEffect(() => {
