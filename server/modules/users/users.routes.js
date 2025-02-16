@@ -12,6 +12,8 @@ const findServicebyId = require("../services/controllers/findServicebyId");
 const getUserByID = require("../users/controllers/getUserbyId");
 const acceptRequest = require("../services/controllers/acceptRequest");
 const editService = require("../services/controllers/editService");
+const deleteService = require("../services/controllers/deleteService");
+const completeService = require("../services/controllers/completeService");
 
 userRouter.post("/register", userRegister);
 userRouter.post("/login", userLogin);
@@ -27,5 +29,7 @@ userRouter.get("/getUser/:id", getUserByID);
 userRouter.get("/findServicebyId/:id", findServicebyId);
 userRouter.post("/acceptRequest/:id", acceptRequest);
 userRouter.patch("/editService/:id", editService);
+userRouter.delete("/deleteService/:id", deleteService);
+userRouter.post("/completeService/:id", completeService);
 
 module.exports = userRouter;
