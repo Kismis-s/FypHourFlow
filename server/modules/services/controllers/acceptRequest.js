@@ -18,7 +18,6 @@ const acceptRequest = async (req, res) => {
       return res.status(404).json({ message: "Client not found!" });
     }
 
-
     const user = await Users.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found!" });
@@ -32,22 +31,24 @@ const acceptRequest = async (req, res) => {
     service.provider = userId;
     await service.save();
 
+    // Add to provider's ongoingServices if not already present
     if (!user.ongoingServices.includes(serviceId)) {
       user.ongoingServices.push(serviceId);
       await user.save();
     }
 
-    client.openServices = client.openServices.filter(id => id.toString() !== serviceId);
-    if (!client.ongoingServices.includes(serviceId)) {
-      client.ongoingServices.push(serviceId);
-    }
-    await client.save();
+    // Remove from client's openServices and add to ongoingServices
+    await Users.findByIdAndUpdate(client._id, {
+      $pull: { openServices: serviceId },
+      $push: { ongoingServices: serviceId },
+    });
 
-    res.status(200).send({ 
+    res.status(200).send({
       status: "Service accepted successfully!",
       data: service,
       clientInfo: client,
-    userInfo: user });
+      userInfo: user,
+    });
   } catch (error) {
     console.error("Error accepting the service:", error);
     res.status(500).send({ message: "Internal server error" });

@@ -32,17 +32,17 @@ const userSchema = new mongoose.Schema({
       type: Number, 
       match: [/^\d{10}$/, "Please provide a valid phone number!"],
     },
-    provider: {
-        type: String,
-        enum: ["manual", "google"], // Distinguish manual and Google-authenticated users
-        default: "manual",
-    },
-    googleId: {
-        type: String, // Store Google-specific ID for OAuth users
-        unique: true,
-        sparse: true, // Allow null for manual login users
-        default: null,
-    },
+    // provider: {
+    //     type: String,
+    //     enum: ["manual", "google"], // Distinguish manual and Google-authenticated users
+    //     default: "manual",
+    // },
+    // googleId: {
+    //     type: String, // Store Google-specific ID for OAuth users
+    //     unique: true,
+    //     sparse: true, // Allow null for manual login users
+    //     default: null,
+    // },
     createdAt: {
         type: Date,
         default: Date.now,

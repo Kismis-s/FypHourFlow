@@ -3,14 +3,13 @@ import LoggedNavbar from "../components/loggedNavbar";
 import Footer from "../components/footer";
 import axios from "axios";
 import { AuthContext } from "../AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Profile() {
   const api = import.meta.env.VITE_URL;
   const { authToken } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("skills");
   const [user, setUser] = useState(null);
-
   useEffect(() => {
     const fetchProfile = async () => {
       console.log("called");
@@ -59,20 +58,6 @@ function Profile() {
               </div>
               {/* Actions (SVG + Buttons) */}
               <div className="absolute top-80 flex justify-center gap-2 right-0 p-4 md:top-96 md:right-10 md:justify-end">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="text-white rounded-full bg-blue-950 h-7 w-7 p-1 md:h-8 md:w-8"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-                  />
-                </svg>
                 <button className="rounded bg-blue-950 px-8 py-1 text-white hover:bg-blue-600 md:px-11">
                   Follow
                 </button>

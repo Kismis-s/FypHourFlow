@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../AuthContext";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import LoggedNavbar from "../components/loggedNavbar";
 import Footer from "../components/footer";
 import { BiSolidCoinStack } from "react-icons/bi";
@@ -9,26 +9,31 @@ import { CiLocationOn } from "react-icons/ci";
 import axios from "axios";
 
 export default function RequestDisplay() {
-  const { id } = useParams();
-  const { authToken } = useContext(AuthContext);
+  const { reqId } = useParams();
+  const { authToken, id } = useContext(AuthContext);
   const [request, setRequest] = useState(null);
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
+  const navigate = useNavigate();
   const api = import.meta.env.VITE_URL;
 
   useEffect(() => {
     const fetchRequestAndClient = async () => {
       try {
-        const response = await axios.get(`${api}/user/findServicebyId/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
+        const response = await axios.get(
+          `${api}/user/findServicebyId/${reqId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
 
         const requestData = response.data.data;
+        console.log(requestData);
         setRequest(requestData);
 
         if (requestData && requestData.client) {
@@ -57,12 +62,14 @@ export default function RequestDisplay() {
     };
 
     fetchRequestAndClient();
-  }, [id, authToken, api]);
+  }, [reqId, authToken, api]);
 
   const handleChat = () => {
-    console.log("Chat clicked");
+    navigate(`/chat?currentUser=${id}&chatUser=${client._id}`);
   };
-
+  const handleChatWithProvider = () => {
+    navigate(`/chat?currentUser=${id}&chatUser=${request.provider._id}`);
+  };
   const handleTakeRequest = async () => {
     setIsRequesting(true);
 
@@ -153,13 +160,25 @@ export default function RequestDisplay() {
                   </div>
                 </div>
               </div>
-              <button
-                onClick={handleChat}
-                className="flex items-center gap-2 rounded-lg w-full ml-6 mt-4 mb-6"
-              >
-                <MdOutlineChatBubbleOutline className="text-xl" /> Chat with{" "}
-                {client?.name}
-              </button>
+
+              {id != client._id && (
+                <button
+                  onClick={handleChat}
+                  className="flex items-center gap-2 rounded-lg w-full ml-6 mt-4 mb-6"
+                >
+                  <MdOutlineChatBubbleOutline className="text-xl" /> Chat with{" "}
+                  {client?.name}
+                </button>
+              )}
+              {id == client._id && (
+                <button
+                  onClick={handleChatWithProvider}
+                  className="flex items-center gap-2 rounded-lg w-full ml-6 mt-4 mb-6"
+                >
+                  <MdOutlineChatBubbleOutline className="text-xl" /> Chat with
+                  provider
+                </button>
+              )}
               <button
                 onClick={() => setIsOpen(true)}
                 className="bg-green-700 text-white w-52 px-6 py-2 rounded-lg hover:bg-green-800 transition ml-6"

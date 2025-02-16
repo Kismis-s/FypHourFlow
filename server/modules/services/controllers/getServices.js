@@ -32,7 +32,7 @@ const getServices = async (req, res) => {
       filter.status = status; // Add status filtering if it's not "all"
     }
 
-    const allServices = await Services.find(filter);
+    const allServices = await Services.find(filter).populate("provider");
 
     res.status(200).send({ data: allServices });
   } catch (error) {

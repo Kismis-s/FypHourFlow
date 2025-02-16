@@ -13,7 +13,7 @@ const ServicePage = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDistance, setSelectedDistance] = useState("all");
-  const [selectedStatus, setSelectedStatus] = useState("all"); 
+  const [selectedStatus, setSelectedStatus] = useState("all");
   const api = import.meta.env.VITE_URL;
 
   useEffect(() => {
@@ -31,8 +31,10 @@ const ServicePage = () => {
           },
           params,
         });
-
-        setServices(res.data.data);
+        const filtered = res.data.data.filter(
+          (service) => service.status !== "Completed"
+        );
+        setServices(filtered);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -113,7 +115,6 @@ const ServicePage = () => {
                 <option value="all">All</option>
                 <option value="Open">Open</option>
                 <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
               </select>
             </div>
 

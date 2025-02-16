@@ -39,7 +39,7 @@ function Login() {
           console.log("Sending coordinates:", { latitude, longitude });
 
           if (response.data.status === "Logged in!") {
-            login(response.data.accessToken);
+            login(response.data.accessToken, response.data.id);
             navigate("/profile");
           }
         } catch (error) {

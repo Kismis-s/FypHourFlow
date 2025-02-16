@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import LoggedNavbar from "../components/loggedNavbar";
 import Footer from "../components/footer";
 import UserServices from "./UserServices";
+import OpenServices from "./OpenServices";
+import OngoingServices from "./OngoingServices";
+import CompletedServices from "./CompletedServices";
 
 const Settings = () => {
   const [activeContent, setActiveContent] = useState("profile");
@@ -13,7 +16,9 @@ const Settings = () => {
 
   const sidebarItems = [
     { id: "profile", label: "Edit Profile" },
-    { id: "services", label: "Services" },
+    { id: "openServices", label: "Open Services" },
+    { id: "ongoingServices", label: "Ongoing Services" },
+    { id: "completedServices", label: "Completed Services" },
     { id: "help", label: "Help & Support" },
   ];
 
@@ -83,14 +88,40 @@ const Settings = () => {
               </>
             )}
 
-            {activeContent === "services" && (
+            {activeContent === "openServices" && (
               <>
                 {(() => {
                   try {
-                    return <UserServices />;
+                    return <OpenServices />;
                   } catch (error) {
-                    console.error("Error in UserServices:", error);
-                    return <p>Error loading UserServices</p>;
+                    console.error("Error in Open Services:", error);
+                    return <p>Error loading Open Services</p>;
+                  }
+                })()}
+              </>
+            )}
+
+            {activeContent === "ongoingServices" && (
+              <>
+                {(() => {
+                  try {
+                    return <OngoingServices />;
+                  } catch (error) {
+                    console.error("Error in Ongoing Services:", error);
+                    return <p>Error loading Ongoing Services</p>;
+                  }
+                })()}
+              </>
+            )}
+
+            {activeContent === "completedServices" && (
+              <>
+                {(() => {
+                  try {
+                    return <CompletedServices />;
+                  } catch (error) {
+                    console.error("Error in Ongoing Services:", error);
+                    return <p>Error loading Ongoing Services</p>;
                   }
                 })()}
               </>

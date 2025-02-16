@@ -124,7 +124,8 @@ function ServiceList({ title, services, isOpen }) {
 function ServiceCard({ service, isOpen }) {
   const api = import.meta.env.VITE_URL;
   const navigate = useNavigate();
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // State to control the popup visibility
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  
 
   const imageUrl = service.serviceImage?.trim()
     ? `${api}/serviceImages/${service.serviceImage}`
@@ -151,11 +152,43 @@ function ServiceCard({ service, isOpen }) {
     setIsPopupOpen(false); // Close the popup
   };
 
-  // Handle Delete action (Placeholder for now)
-  const handleDeleteClick = (e) => {
+  const handleDeleteClick = async (e) => {
     e.stopPropagation();
-    alert("Delete functionality is not implemented yet.");
-    setIsPopupOpen(false); // Close the popup
+
+    const authToken = localStorage.getItem("authToken");
+    console.log("Auth Token:", authToken);
+
+    if (!authToken) {
+      alert("No authorization token found");
+      return;
+    }
+
+    try {
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this service?"
+      );
+      if (!confirmDelete) return;
+
+      const response = await axios.delete(
+        `${api}/user/deleteService/${service._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      // Update the state to remove the deleted service
+      setOpenServices((prevServices) =>
+        prevServices.filter((s) => s._id !== service._id)
+      );
+      setIsPopupOpen(false);
+      alert("Service deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting service:", error);
+      alert("Failed to delete service");
+    }
   };
 
   // Close the popup
