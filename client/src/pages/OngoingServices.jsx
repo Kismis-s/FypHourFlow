@@ -1,12 +1,11 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { AuthContext } from '../AuthContext';
-import axios from 'axios';
-import { BiSolidCoinStack } from 'react-icons/bi';
-import { useNavigate } from 'react-router-dom';
-import ConfirmationDialog from '../components/confirmationDialog';
-
+import React, { useContext, useState, useEffect } from "react";
+import { AuthContext } from "../AuthContext";
+import axios from "axios";
+import { BiSolidCoinStack } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
+import ConfirmationDialog from "../components/confirmationDialog";
+import { FaUser } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
-
 
 export default function OngoingServices() {
   const [ongoingServices, setOngoingServices] = useState([]);
@@ -23,13 +22,13 @@ export default function OngoingServices() {
       try {
         const res = await axios.get(`${api}/user/dashboard`, {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
         });
         setOngoingServices(res.data.data?.ongoingServices || []);
       } catch (error) {
-        setError('Failed to load ongoing services');
+        setError("Failed to load ongoing services");
       } finally {
         setLoading(false);
       }
@@ -38,16 +37,13 @@ export default function OngoingServices() {
   }, [api, authToken]);
 
   const handleServiceClick = (serviceId, clientId, providerId) => {
-    // Use jwt_decode to decode the token and get user ID
-    const userId = jwtDecode(authToken)._id; // Assuming the user ID is stored in the token
-    if (userId === clientId) {
+    const userId = jwtDecode(authToken)._id;
+
+    if (userId === clientId._id) {
       setSelectedServiceId(serviceId);
       setIsDialogOpen(true);
-    } else if (userId === providerId) {
-      navigate(`/displayService/${serviceId}`);
     } else {
-      // If neither client nor provider, maybe show an error or do nothing
-      alert('You are not authorized to interact with this service.');
+      navigate(`/displayService/${serviceId}`);
     }
   };
 
@@ -58,7 +54,7 @@ export default function OngoingServices() {
         {},
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
         }
@@ -67,9 +63,9 @@ export default function OngoingServices() {
         prevServices.filter((service) => service._id !== selectedServiceId)
       );
       setIsDialogOpen(false);
-      navigate('/transactions');
+      navigate("/transactions");
     } catch (error) {
-      setError('Failed to complete the service');
+      setError("Failed to complete the service");
       setIsDialogOpen(false);
     }
   };
@@ -106,7 +102,11 @@ export default function OngoingServices() {
               key={service._id}
               service={service}
               onClick={() =>
-                handleServiceClick(service._id, service.client, service.provider)
+                handleServiceClick(
+                  service._id,
+                  service.client,
+                  service.provider
+                )
               }
             />
           ))
@@ -129,38 +129,62 @@ function ServiceCard({ service, onClick }) {
   const api = import.meta.env.VITE_URL;
   const imageUrl = service.serviceImage?.trim()
     ? `${api}/serviceImages/${service.serviceImage}`
-    : 'https://via.placeholder.com/150';
+    : "https://via.placeholder.com/150";
 
   return (
     <div
-      className="relative flex bg-white shadow-md rounded-lg overflow-hidden border h-40 font-serif cursor-pointer"
-      onClick={onClick}
+      className="relative flex bg-white shadow-lg rounded-xl overflow-hidden border h-44 font-serif cursor-pointer transition-transform transform hover:scale-105"
+      onClick={() => {
+        console.log("Service Card Clicked!");
+        onClick();
+      }}
     >
       {/* Service Image */}
       <img
         src={imageUrl}
         alt={service.title}
-        className="w-36 h-full object-cover"
+        className="w-40 h-full object-cover"
       />
       {/* Service Details */}
-      <div className="ml-4 flex flex-col justify-between flex-grow">
+      <div className="ml-4 flex flex-col justify-between flex-grow p-3">
+        {/* Title & Description */}
         <div>
-          <h3 className="text-lg font-bold text-blue-900 mt-4">
+          <h3 className="text-lg font-bold text-blue-900 line-clamp-1">
             {service.title}
           </h3>
-          <p className="text-gray-600 mt-3 line-clamp-2">
+          <p className="text-gray-600 text-sm mt-2 line-clamp-2">
             {service.description}
           </p>
-          <p className="text-sm text-gray-500 mt-3">
-            <strong className="text-blue-900">Skills:</strong>{' '}
-            {service.skills?.join(', ') || 'N/A'}
-          </p>
+        </div>
+
+        {/* Skills */}
+        <p className="text-sm text-gray-500">
+          <strong className="text-blue-900">Skills:</strong>{" "}
+          {service.skills?.join(", ") || "N/A"}
+        </p>
+
+        {/* Client & Provider */}
+        <div className="flex justify-between items-center mt-3">
+          <div className="flex items-center bg-blue-100 px-3 py-1 rounded-lg">
+            <FaUser className="text-blue-900 mr-2" size={14} />
+            <p className="text-xs text-gray-700">
+              <strong className="text-blue-900">Client:</strong>{" "}
+              {service.client?.name || "Unknown"}
+            </p>
+          </div>
+          <div className="flex items-center bg-green-100 px-3 py-1 rounded-lg">
+            <FaUser className="text-green-900 mr-2" size={14} />
+            <p className="text-xs text-gray-700">
+              <strong className="text-green-900">Provider:</strong>{" "}
+              {service.provider?.name || "Unknown"}
+            </p>
+          </div>
         </div>
       </div>
       {/* Credits Badge */}
-      <div className="flex gap-2 items-center absolute top-2 right-2 text-white bg-blue-950 py-1 px-3 m-1 rounded-2xl">
+      <div className="absolute top-2 right-2 bg-blue-950 text-white py-1 px-3 m-1 rounded-2xl flex items-center">
         <p className="text-md font-semibold">{service.credits}</p>
-        <BiSolidCoinStack size={20} />
+        <BiSolidCoinStack size={20} className="ml-1" />
       </div>
     </div>
   );

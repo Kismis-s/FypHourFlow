@@ -15,8 +15,20 @@ const userDashboard = async (req, res)=>{
     const getUserData = await Users.findOne({
         _id: req.user._id
     }).populate("openServices")
-    .populate("ongoingServices")
-    .populate("completedServices");
+    .populate({
+        path: "ongoingServices",
+        populate: [
+            { path: "client", select: "name" },  
+            { path: "provider", select: "name" }
+        ]
+    })
+    .populate({
+        path: "completedServices",
+        populate: [
+            { path: "client", select: "name" },  
+            { path: "provider", select: "name" }
+        ]
+    })
     
     res.status(200).json({
         message: "Welcome to user dashboard!",

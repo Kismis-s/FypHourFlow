@@ -19,9 +19,7 @@ const Chat = () => {
   const [roomId, setRoomId] = useState("");
   const [currentUser, setCurrentUser] = useState();
   const [chatUser, setChatUser] = useState();
-  const navigate = useNavigate(); // use navigate hook
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [popupRoomId, setPopupRoomId] = useState("");
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const generatedRoomId = [currentUserId, chatWithUserId].sort().join("_");
