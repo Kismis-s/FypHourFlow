@@ -15,15 +15,12 @@ export default function RequestCard(props) {
   useEffect(() => {
     const fetchClient = async () => {
       try {
-        const res = await axios.get(
-          `${api}/user/getUser/${request.client}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
+        const res = await axios.get(`${api}/user/getUser/${request.client}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
         setClient(res.data.data);
       } catch (error) {
         console.error("Error fetching client:", error);
@@ -49,18 +46,25 @@ export default function RequestCard(props) {
 
   return (
     <div className="font-serif bg-white shadow-lg rounded-lg overflow-hidden w-80 border border-gray-200">
-      {/* Request Image without borders, covering the top */}
-      <img
-        src={`${api}/serviceImages/${request.serviceImage}`}
-        className="w-full h-48 object-cover"
-        alt="Request Image"
-      />
+      {/* Image with Status Badge */}
+      <div className="relative">
+        <img
+          src={`${api}/serviceImages/${request.serviceImage}`}
+          className="w-full h-48 object-cover"
+          alt="Request Image"
+        />
+
+        {/* Status Badge */}
+        <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-sm px-3 m-2 py-2 rounded-lg">
+          {request.status}
+        </div>
+      </div>
 
       <div className="p-5 space-y-4">
         {/* Title and Credits */}
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">{request.title}</h1>
-          <div className="flex gap-2 items-center text-white bg-blue-950 p-1 pl-3 pr-3 rounded-xl">
+          <div className="flex gap-2 items-center text-white bg-blue-950 p-1 pl-3 pr-3 rounded-2xl">
             <p className="text-md font-semibold">{request.credits}</p>
             <BiSolidCoinStack size={20} />
           </div>
@@ -81,7 +85,10 @@ export default function RequestCard(props) {
         </div>
 
         {/* Skills */}
-        <p className="text-gray-600 text-sm font-sem"> <span className="font-semibold">Skills: </span> {request.skills}</p>
+        <p className="text-gray-600 text-sm font-sem">
+          <span className="font-semibold">Skills: </span>{" "}
+          {request.skills.join(", ")}
+        </p>
 
         {/* Review Button */}
         <button

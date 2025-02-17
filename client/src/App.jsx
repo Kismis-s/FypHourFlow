@@ -1,7 +1,5 @@
 import LandingPage from "./pages/LandingPage";
 import {
-  BrowserRouter,
-  Routes,
   Route,
   RouterProvider,
   createBrowserRouter,
@@ -16,6 +14,12 @@ import Transactions from "./pages/Transactions";
 import PrivateRoute from "./PrivateRouter";
 import ServicePage from "../../client/src/pages/ServicePage";
 import RequestDisplay from "./pages/RequestDisplay";
+import PostService from "./pages/CreateRequest";
+import UserServices from "./pages/UserServices";
+import EditService from "./pages/EditService";
+import OpenServices from "./pages/OpenServices";
+import OngoingServices from "./pages/OngoingServices";
+import Chat from "./pages/Chats";
 
 function App() {
   const router = createBrowserRouter(
@@ -47,9 +51,30 @@ function App() {
           element={<PrivateRoute element={<ServicePage />} />}
         />
         <Route
-          path="/displayService/:id"
+          path="/displayService/:reqId"
           element={<PrivateRoute element={<RequestDisplay />} />}
         />
+        <Route
+          path="/postRequest"
+          element={<PrivateRoute element={<PostService />} />}
+        />
+        <Route
+          path="/userServices"
+          element={<PrivateRoute element={<UserServices />} />}
+        />
+        <Route
+          path="/editService/:id"
+          element={<PrivateRoute element={<EditService />} />}
+        />
+        <Route
+          path="/openServices"
+          element={<PrivateRoute element={<OpenServices />} />}
+        />
+        <Route
+          path="/ongoingServices"
+          element={<PrivateRoute element={<OngoingServices />} />}
+        />
+        <Route path="/chat" element={<Chat />} />
       </Route>
     )
   );

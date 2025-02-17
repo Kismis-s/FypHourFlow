@@ -2,12 +2,8 @@ const mongoose = require("mongoose");
 
 const getUserByID = async (req, res) => {
   const Users = mongoose.model("users");
-  const id = req.params.id;
+  const {id} = req.params;
 
-  // Validate ObjectId
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).send({ error: "Invalid user ID format" });
-  }
 
   try {
     const getUser = await Users.findOne({ _id: id });

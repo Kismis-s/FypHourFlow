@@ -32,17 +32,17 @@ const userSchema = new mongoose.Schema({
       type: Number, 
       match: [/^\d{10}$/, "Please provide a valid phone number!"],
     },
-    provider: {
-        type: String,
-        enum: ["manual", "google"], // Distinguish manual and Google-authenticated users
-        default: "manual",
-    },
-    googleId: {
-        type: String, // Store Google-specific ID for OAuth users
-        unique: true,
-        sparse: true, // Allow null for manual login users
-        default: null,
-    },
+    // provider: {
+    //     type: String,
+    //     enum: ["manual", "google"], // Distinguish manual and Google-authenticated users
+    //     default: "manual",
+    // },
+    // googleId: {
+    //     type: String, // Store Google-specific ID for OAuth users
+    //     unique: true,
+    //     sparse: true, // Allow null for manual login users
+    //     default: null,
+    // },
     createdAt: {
         type: Date,
         default: Date.now,
@@ -52,29 +52,41 @@ const userSchema = new mongoose.Schema({
         required: [true, "Balance is required!"]
     },
     location: {
-      latitude: Number,
-      longitude: Number,
+      type: {
+        type: String,
+        enum: ["Point"],
+        default: "Point"
+      },
+      coordinates: {
+        type: [Number], // [longitude, latitude]
+      },
       city: String,
       country: String,
     },
     skills: {
       type: [String],
+      default: []
     },
     openServices: {
       type: [{ type: mongoose.Schema.Types.ObjectId }],
       ref: "services",
+      default: []
     },
     ongoingServices: {
       type: [{ type: mongoose.Schema.Types.ObjectId }],
       ref: "services",
+      default: []
     },
     completedServices: {
       type: [{ type: mongoose.Schema.Types.ObjectId }],
       ref: "services",
+      default: []
     },
     },{
     timestamps: true,
 })
+
+userSchema.index({ location: "2dsphere" });
 
 const userModel = mongoose.model("users", userSchema);
 

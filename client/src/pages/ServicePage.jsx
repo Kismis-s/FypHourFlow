@@ -12,19 +12,29 @@ const ServicePage = () => {
   const { authToken } = useContext(AuthContext);
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedRole, setSelectedRole] = useState("all");
+  const [selectedDistance, setSelectedDistance] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
   const api = import.meta.env.VITE_URL;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const params = {
+          distance: selectedDistance !== "all" ? selectedDistance : null,
+          status: selectedStatus !== "all" ? selectedStatus : null, // Include status filter
+        };
+
         const res = await axios.get(`${api}/user/getServices`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
+          params,
         });
-        setServices(res.data.data);
+        const filtered = res.data.data.filter(
+          (service) => service.status !== "Completed"
+        );
+        setServices(filtered);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -33,21 +43,19 @@ const ServicePage = () => {
     };
 
     fetchData();
-  }, [authToken]);
+  }, [authToken, selectedDistance, selectedStatus]); // Include selectedStatus as a dependency
 
   const handleCreate = () => {
     navigate("/postRequest");
   };
 
-  const handleFilterChange = (event) => {
-    setSelectedRole(event.target.value);
+  const handleDistanceChange = (event) => {
+    setSelectedDistance(event.target.value);
   };
 
-  // Filter services based on selectedRole
-  const filteredServices =
-    selectedRole === "all"
-      ? services
-      : services.filter((service) => service.role === selectedRole);
+  const handleStatusChange = (event) => {
+    setSelectedStatus(event.target.value);
+  };
 
   if (loading) {
     return (
@@ -74,32 +82,53 @@ const ServicePage = () => {
               Browse Services
             </button>
           </div>
-          <img src={service} alt="Placeholder" className="h-80 w-auto" />{" "}
+          <img src={service} alt="Placeholder" className="h-80 w-auto" />
         </div>
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold text-blue-950 ml-8 font-serif">
             Requests available
           </h2>
           <div className="flex gap-5 font-serif">
+            {/* Distance Filter */}
             <div className="flex gap-2 items-center">
-              <p>Filter By:</p>
+              <p>Filter By Distance:</p>
               <select
                 className="w-[150px] bg-white text-black px-2 py-1 border rounded-md"
-                onChange={handleFilterChange}
-                value={selectedRole}
+                onChange={handleDistanceChange}
+                value={selectedDistance}
               >
                 <option value="all">All</option>
-                <option value="try">Gardening</option>
+                <option value="500">Within 500 meters</option>
+                <option value="1000">Within 1 km</option>
+                <option value="5000">Within 5 km</option>
               </select>
             </div>
-            <button className="px-4 py-1 mr-10 bg-green-700 text-white rounded" onClick={handleCreate}>
+
+            {/* Status Filter */}
+            <div className="flex gap-2 items-center">
+              <p>Filter By Status:</p>
+              <select
+                className="w-[150px] bg-white text-black px-2 py-1 border rounded-md"
+                onChange={handleStatusChange}
+                value={selectedStatus}
+              >
+                <option value="all">All</option>
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+              </select>
+            </div>
+
+            <button
+              className="px-4 py-1 mr-10 bg-green-700 text-white rounded"
+              onClick={handleCreate}
+            >
               Create
             </button>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-5 m-5">
-          {filteredServices.map((request, index) => (
+        <div className="flex flex-wrap gap-5 m-7">
+          {services.map((request, index) => (
             <RequestCard request={request} key={index} />
           ))}
         </div>

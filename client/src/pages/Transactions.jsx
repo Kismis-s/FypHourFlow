@@ -36,7 +36,15 @@ export default function Transactions() {
       }
     };
     fetchTransactions();
-  }, []);
+
+    // Check the URL hash to determine which screen to show
+    const hash = window.location.hash;
+    if (hash === '#screen2') {
+      setActiveScreen('screen2');
+    } else {
+      setActiveScreen('screen1');
+    }
+  }, [authToken, api]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,14 +60,13 @@ export default function Transactions() {
           },
         }
       );
-      console.log(response);
       if (response.data.status === "Credits sent successfully!") {
-        alert("Credits sent sucessfully!!!");
-        navigate(-1);
+        alert("Credits sent successfully!");
+        navigate('/transactions#screen2');  // Redirect to screen2
       }
     } catch (error) {
       console.log(error);
-      setError(` ${error.response?.data?.msg || "error occured"} `);
+      setError(` ${error.response?.data?.msg || "error occurred"} `);
     }
   };
 

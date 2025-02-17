@@ -47,10 +47,22 @@ const servicesSchema = new mongoose.Schema({
         type: String,
         enum: ["Open", "In Progress", "Completed"],
         default: "Open",
-      },
+    },
+    location: {
+        type: {
+            type: String,
+            enum: ["Point"], // Ensures only GeoJSON Point type is stored
+            default: "Point"
+        },
+        coordinates: {
+            type: [Number], // Stores [longitude, latitude]
+        }
+    }
 },{
     timestamps: true,
 })
+
+servicesSchema.index({ location: "2dsphere" });
 
 const servicesModel = mongoose.model("services", servicesSchema);
 
