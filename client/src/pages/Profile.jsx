@@ -4,12 +4,13 @@ import Footer from "../components/footer";
 import axios from "axios";
 import { AuthContext } from "../AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-
+import { FaStar } from "react-icons/fa";
 function Profile() {
   const api = import.meta.env.VITE_URL;
   const { authToken } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("skills");
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchProfile = async () => {
       console.log("called");
@@ -23,6 +24,23 @@ function Profile() {
     };
     fetchProfile();
   }, []);
+  const handleReviewClick = () => {
+    navigate(`/reviews/${user._id}`);
+  };
+  const generateStars = (rating) => {
+    const stars = [];
+    for (let i = 0; i < 5; i++) {
+      stars.push(
+        <FaStar
+          key={i}
+          className={`inline-block ${
+            i < rating ? "text-yellow-400" : "text-gray-300"
+          }`}
+        />
+      );
+    }
+    return stars;
+  };
   return (
     <div>
       <LoggedNavbar />
@@ -237,20 +255,17 @@ function Profile() {
                         <div className="text-base font-semibold text-blue-900">
                           Average Rating
                         </div>
-                        <div className="mt-4 flex items-center justify-center">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-auto w-14 text-yellow-400 p-4"
-                            viewBox="0 0 24 24"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
+                        <div className="mt-4 text-center text-3xl items-center justify-center">
+                          {generateStars(user.averageRating)}
+                          {/* <br></br>
+                          {user.averageRating} */}
                         </div>
+                        <button
+                          onClick={handleReviewClick}
+                          className="mt-7 rounded bg-blue-950 px-11 py-1 text-white hover:bg-blue-600"
+                        >
+                          See Reviews
+                        </button>
                       </div>
                     </div>
                   </div>

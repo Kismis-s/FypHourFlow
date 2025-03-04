@@ -10,6 +10,7 @@ require("./models/transactions.model");
 require("./models/users.model"); // Ensure the user model is correctly defined
 //const authRouter = require("./modules/users/authRoutes");
 require("./middlewares/auth");
+require("./models/review.model")
 require("./models/messages.model");
 require("dotenv").config();
 require("./middlewares/passport");
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use(cors("*"));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/serviceImages", express.static(path.join(__dirname, "serviceImages")));
+app.use("/offerImages", express.static(path.join(__dirname, "offerImages")));
 
 // Session setup
 app.use(
@@ -123,6 +125,6 @@ io.on("connection", (socket) => {
   });
 
 // Start the server
-server.listen(3000, () => {
-    console.log("Server started on port 3000");
+server.listen(3059, () => {
+    console.log("Server started on port 3059");
 });

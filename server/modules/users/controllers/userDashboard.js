@@ -29,6 +29,8 @@ const userDashboard = async (req, res)=>{
             { path: "provider", select: "name" }
         ]
     })
+    .populate("createdOffers")
+    .populate("claimedOffers")
     
     res.status(200).json({
         message: "Welcome to user dashboard!",

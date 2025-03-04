@@ -6,29 +6,36 @@ import Footer from "../components/footer";
 import OfferCard from "../components/OfferCard";
 import OfferBanner from "../components/OfferBanner";
 import PopularCategories from "../components/PopularCategories";
+import discounts from "../assets/discounts.jpg";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function OffersPage() {
   const { authToken } = useContext(AuthContext);
-  const [topOffers, setTopOffers] = useState([]);
-  const [offersNearYou, setOffersNearYou] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [vendors, setVendors] = useState([]);
-  const [banners, setBanners] = useState([]);
+  const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
-  useEffect(async () => {
-    const res = await axios.get(`${api}/offers`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
-    setTopOffers(res.data.topOffers);
-    setOffersNearYou(res.data.offersNearYou);
-    setCategories(res.data.categories);
-    setVendors(res.data.vendors);
-    setBanners(res.data.banners);
-    setLoading(false);
-  }, []);
+  const api = import.meta.env.VITE_URL;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchOffers() {
+      try {
+        const res = await axios.get(`${api}/user/getOffers`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        setOffers(res.data.data);
+      } catch (error) {
+        console.error("Error fetching offers:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchOffers();
+  }, [authToken, api]); 
+  
   if (loading) {
     return (
       <div className="flex items-center h-screen">
@@ -36,32 +43,48 @@ export default function OffersPage() {
       </div>
     );
   }
+  const handleCreate =()=>{
+    navigate("/createOffer");
+  }
   return (
     <div>
       <LoggedNavbar />
       <div>
-        <div className="flex itmes-center justify-evenly">
+        <div className="flex justify-evenly font-serif">
           <div className="space-y-5">
-            <h1>
-              Get exclusive <span>discounts</span>!
+            <h1 className="text-4xl font-extrabold text-primary text-blue-950 ml-1 mt-28 leading-10">
+              Get exclusive <span className="text-blue-700">discounts</span>!
             </h1>
-            <p>Discoutns and offers</p>
-            <button className="p-3">Claim your Discounts</button>
+            <p className="text-lg text-secondary text-gray-500 pb-3">
+              Discounts and Offers!!!
+            </p>
+            <button className="px-4 py-2 bg-blue-950 text-white rounded hover:bg-blue-700">
+              Claim your Discounts
+            </button>
           </div>
-          <img src="" />
+          <img src={discounts} alt="Discount Offers" className="ml-10" />
+
         </div>
         {/* Top Offers */}
         <div>
-          <div className="flex jsutify-between">
-            <h2>Top Offers</h2>
-            <p>More</p>
+          <div className="flex justify-between items-center px-6 md:px-10 py-4">
+            <h2 className="text-2xl font-semibold text-blue-900 font-serif">
+              Top Offers
+            </h2>
+            <button className="px-4 py-1 font-serif bg-green-700 text-white rounded-lg hover:bg-green-600 transition duration-300"
+            onClick={handleCreate}>
+              Create
+            </button>
           </div>
-          {topOffers.map((offer, index) => {
-            return <OfferCard offer={offer} key={index} />;
-          })}
+
+          <div className="flex flex-wrap gap-5 m-7 font-serif">
+            {offers.map((offer, index) => {
+              return <OfferCard offer={offer} key={index} />;
+            })}
+          </div>
         </div>
         {/* Offers near you */}
-        <div>
+        {/* <div>
           <div className="flex jsutify-between">
             <h2>Offers near you</h2>
             <p>More</p>
@@ -78,7 +101,7 @@ export default function OffersPage() {
           </div>
         </div>
         {/* Popular Categories */}
-        <div>
+        {/* <div>
           <div className="flex jsutify-between">
             <h2>Popular Categories</h2>
             <p>More</p>
@@ -86,16 +109,16 @@ export default function OffersPage() {
           {categories.map((category, index) => {
             return <PopularCategories category={category} key={index} />;
           })}
-        </div>
+        </div>*/}
         {/* Top Vendors */}
-        <div>
+        {/* <div>
           <h2>Top vendors</h2>
           <div>
             {vendors.map((vendor, index) => {
               return <img src={`${api}/image/${vendor.image}`} />;
             })}
           </div>
-        </div>
+        </div>  */}
       </div>
       <Footer />
     </div>

@@ -75,7 +75,7 @@ export default function RequestDisplay() {
 
     try {
       const response = await axios.post(
-        `${api}/user/acceptRequest/${id}`,
+        `${api}/user/acceptRequest/${reqId}`,
         {},
         {
           headers: {

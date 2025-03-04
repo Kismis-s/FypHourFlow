@@ -6,14 +6,18 @@ import { useNavigate } from "react-router-dom";
 import ConfirmationDialog from "../components/confirmationDialog";
 import { FaUser } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
+import ReviewForm from "../components/ReviewForm";
 
 export default function OngoingServices() {
   const [ongoingServices, setOngoingServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isReviewOpen, setReviewOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState(null);
-  const { authToken } = useContext(AuthContext); // Removed 'role' here
+  const [selectedService, setSelectedService] = useState(null);
+  const { authToken, id } = useContext(AuthContext); // Removed 'role' here
+  const userId = id;
   const api = import.meta.env.VITE_URL;
   const navigate = useNavigate();
 
@@ -36,11 +40,10 @@ export default function OngoingServices() {
     fetchOngoingServices();
   }, [api, authToken]);
 
-  const handleServiceClick = (serviceId, clientId, providerId) => {
-    const userId = jwtDecode(authToken)._id;
-
+  const handleServiceClick = (serviceId, clientId, providerId, service) => {
     if (userId === clientId._id) {
       setSelectedServiceId(serviceId);
+      setSelectedService(service);
       setIsDialogOpen(true);
     } else {
       navigate(`/displayService/${serviceId}`);
@@ -63,7 +66,7 @@ export default function OngoingServices() {
         prevServices.filter((service) => service._id !== selectedServiceId)
       );
       setIsDialogOpen(false);
-      navigate("/transactions");
+      setReviewOpen(true);
     } catch (error) {
       setError("Failed to complete the service");
       setIsDialogOpen(false);
@@ -105,7 +108,8 @@ export default function OngoingServices() {
                 handleServiceClick(
                   service._id,
                   service.client,
-                  service.provider
+                  service.provider,
+                  service
                 )
               }
             />
@@ -121,6 +125,12 @@ export default function OngoingServices() {
         onConfirm={handleConfirm}
         onCancel={handleCancel}
       />
+      {isReviewOpen && (
+        <ReviewForm
+          revieweeId={selectedService.provider._id}
+          reviewerId={userId}
+        />
+      )}
     </div>
   );
 }

@@ -20,6 +20,9 @@ import EditService from "./pages/EditService";
 import OpenServices from "./pages/OpenServices";
 import OngoingServices from "./pages/OngoingServices";
 import Chat from "./pages/Chats";
+import CreateOffer from "./pages/CreateOffer";
+import EditOffer from "./pages/EditOffer";
+import Reviews from "./pages/Reviews";
 
 function App() {
   const router = createBrowserRouter(
@@ -73,6 +76,18 @@ function App() {
         <Route
           path="/ongoingServices"
           element={<PrivateRoute element={<OngoingServices />} />}
+        />
+        <Route
+          path="/createOffer"
+          element={<PrivateRoute element={<CreateOffer />} />}
+        />
+        <Route
+          path="/editOffer/:id"
+          element={<PrivateRoute element={<EditOffer />} />}
+        />
+        <Route
+          path="/reviews/:userId"
+          element={<PrivateRoute element={<Reviews />} />}
         />
         <Route path="/chat" element={<Chat />} />
       </Route>

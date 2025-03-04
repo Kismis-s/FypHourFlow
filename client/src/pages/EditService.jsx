@@ -35,7 +35,7 @@ export default function EditService() {
     "UI/UX Design",
     "Tutoring",
     "Translation",
-    "Assistance"
+    "Assistance",
   ];
 
   useEffect(() => {
