@@ -81,7 +81,22 @@ const userSchema = new mongoose.Schema({
       type: [{ type: mongoose.Schema.Types.ObjectId }],
       ref: "services",
       default: []
+    },createdOffers: {
+      type: [{ type: mongoose.Schema.Types.ObjectId }],
+      ref: "offers",
+      default: []
     },
+    claimedOffers: {
+      type: [{ type: mongoose.Schema.Types.ObjectId }],
+      ref: "offers",
+      default: []
+    },
+    review: {
+      type: [{ type: mongoose.Schema.Types.ObjectId }],
+      ref: "Review",
+    },
+    averageRating: { type: Number, default: 0 },
+    totalReviews: { type: Number, default: 0 },
     },{
     timestamps: true,
 })

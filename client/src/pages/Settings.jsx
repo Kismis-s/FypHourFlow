@@ -8,6 +8,8 @@ import UserServices from "./UserServices";
 import OpenServices from "./OpenServices";
 import OngoingServices from "./OngoingServices";
 import CompletedServices from "./CompletedServices";
+import CreatedOffers from "./PostedOffers";
+import ClaimedOffers from "./ClaimedOffers";
 
 const Settings = () => {
   const [activeContent, setActiveContent] = useState("profile");
@@ -19,6 +21,8 @@ const Settings = () => {
     { id: "openServices", label: "Open Services" },
     { id: "ongoingServices", label: "Ongoing Services" },
     { id: "completedServices", label: "Completed Services" },
+    { id: "createdOffers", label: "Created Offers" },
+    { id: "claimedOffers", label: "Claimed Offers" },
     { id: "help", label: "Help & Support" },
   ];
 
@@ -122,6 +126,32 @@ const Settings = () => {
                   } catch (error) {
                     console.error("Error in Ongoing Services:", error);
                     return <p>Error loading Ongoing Services</p>;
+                  }
+                })()}
+              </>
+            )}
+
+            {activeContent === "createdOffers" && (
+              <>
+                {(() => {
+                  try {
+                    return <CreatedOffers />;
+                  } catch (error) {
+                    console.error("Error in showing posted offers", error);
+                    return <p>Error loading Posted Offers</p>;
+                  }
+                })()}
+              </>
+            )}
+
+            {activeContent === "claimedOffers" && (
+              <>
+                {(() => {
+                  try {
+                    return <ClaimedOffers />;
+                  } catch (error) {
+                    console.error("Error in showing claimed offers", error);
+                    return <p>Error loading claimed Offers</p>;
                   }
                 })()}
               </>

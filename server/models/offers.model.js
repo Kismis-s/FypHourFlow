@@ -1,32 +1,35 @@
 const mongoose = require("mongoose");
 
 const offersSchema = new mongoose.Schema({
-    user_id: {
+    offerProvider: {
         type: mongoose.Schema.Types.ObjectId,//id is object id
         ref: "users",//referencing to the model we are connecting
         required: [true, "ID is required!"]
     },
-    sender: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "users" 
-    },
-    receiver: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "users",
-        required: [true, "Receiver is required!"]
-    },
-    amount: {
+    offerReceivers: [ // Array of users who can receive the offer
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "users"
+        }
+    ],
+    credits: {
         type: Number,
-        required: [true, "Amount is required!"]
+        required: [true, "Credits is required!"]
     },
-    remarks: {
+    title: {
         type: String,
-        required: [true, "Remarks is required!"],
+        required: [true, "Title is required!"],
     },
-    transaction_type: {
+    description: {
         type: String,
-        enum: ["income", "expense"],
-        required: [true, "Type is required!"]
+        required: [true, "Description is required!"],
+    },
+    offerImages: {
+        type: String,
+    },
+    expiration: {
+        type: String,
+        required: [true, "Expiration date is required!"],
     },
 },{
     timestamps: true,

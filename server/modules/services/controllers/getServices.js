@@ -5,7 +5,7 @@ const getServices = async (req, res) => {
   const Users = mongoose.model("users");
 
   const userId = req.user._id;
-  const { distance, status } = req.query; // Extract distance and status from query params
+  const { distance, status } = req.query; 
 
   try {
     const user = await Users.findById(userId);
