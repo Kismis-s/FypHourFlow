@@ -21,9 +21,12 @@ const editOffer = require("../offers/controllers/editOffer");
 const getReviewById = require("../review/controller/getReviewById");
 const createReview = require("../review/controller/createReview");
 const deleteOffer = require("../offers/controllers/deleteOffer");
+const createAchievement = require("../achievements/createAcgievements");
 
 userRouter.post("/register", userRegister);
 userRouter.post("/login", userLogin);
+//for achievements
+userRouter.post("/createAchievement",createAchievement);
 
 userRouter.use(auth);
 userRouter.patch("/editProfile", editProfile);
