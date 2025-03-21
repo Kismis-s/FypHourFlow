@@ -91,6 +91,11 @@ const userSchema = new mongoose.Schema({
       ref: "offers",
       default: []
     },
+    achievementBadges: {
+      type: [{ type: mongoose.Schema.Types.ObjectId }],
+      ref: "achievements",
+      default: []
+    },
     review: {
       type: [{ type: mongoose.Schema.Types.ObjectId }],
       ref: "Review",

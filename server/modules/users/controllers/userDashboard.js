@@ -31,6 +31,7 @@ const userDashboard = async (req, res)=>{
     })
     .populate("createdOffers")
     .populate("claimedOffers")
+    .populate("achievementBadges")
     
     res.status(200).json({
         message: "Welcome to user dashboard!",

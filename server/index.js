@@ -30,7 +30,7 @@ app.use(cors("*"));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/serviceImages", express.static(path.join(__dirname, "serviceImages")));
 app.use("/offerImages", express.static(path.join(__dirname, "offerImages")));
-app.use("/achievementImages", express.static(path.join(__dirname, "achievementImages")));
+app.use("/achievementImages", express.static(path.join(__dirname, "./achievementImages")));
 
 // Session setup
 app.use(

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Achievements = require("../../../models/achievements.model");
 const multer = require("multer");
 const path = require("path");
 
@@ -14,7 +15,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
-    const fileTypes = /jpeg|jpg|png|gif|json}/;
+    const fileTypes = /jpeg|jpg|png|gif/;
     const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = fileTypes.test(file.mimetype);
 
@@ -24,7 +25,7 @@ const upload = multer({
       cb("Error: Images only!");
     }
   },
-}).fields([{ name: "achievementImage", maxCount: 1 }]);
+}).fields([{ name: "achievementImages", maxCount: 1 }]);
 
 const createAchievement = async (req, res) => {
   upload(req, res, async (err) => {
@@ -32,37 +33,36 @@ const createAchievement = async (req, res) => {
       return res.status(400).json({ status: "Failed!", message: err });
     }
 
-    console.log("Uploaded files:", req.files);
-    
-    const { name, description } = req.body;
-    const achievementImage = req.files?.achievementImage ? req.files.achievementImage[0].filename : null;
+    const { name, description, requiredTimeCredits } = req.body;
+    const achievementImages = req.files?.achievementImages ? req.files.achievementImages[0].filename : null;
 
-    const session = await mongoose.startSession();
-    session.startTransaction();
-
-    const Achievements = mongoose.model("achievements");
+    const session = await mongoose.startSession(); // Start session for transaction
 
     try {
+      session.startTransaction(); // Begin transaction
+
       const newAchievement = await Achievements.create(
         [
           {
             name,
             description,
-            achievementImage,
+            achievementImages,
+            requiredTimeCredits
           },
         ],
-        { session }
+        { session } // Pass session to the offer creation
       );
 
+      // Commit transaction if everything is successful
       await session.commitTransaction();
       session.endSession();
 
       res.status(201).json({
-        status: "Successful!",
-        message: "Achievement created successfully!",
-        data: newAchievement,
+        status: "Achievement created successfully!",
+        data: newAchievement[0], // Return the created offer
       });
     } catch (error) {
+      // Abort transaction if there is an error
       await session.abortTransaction();
       session.endSession();
       res.status(400).json({

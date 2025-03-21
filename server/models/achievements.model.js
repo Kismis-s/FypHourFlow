@@ -9,9 +9,17 @@ const achievementSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    icon:{
+    achievementImages:{
         type: String,
         required: true,
+    },
+    requiredTimeCredits: { 
+        type: Number, 
+        required: true 
+    }, 
+    createdAt: { 
+        type: Date, 
+        default: Date.now 
     }
 })
 
