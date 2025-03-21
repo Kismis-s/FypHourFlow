@@ -41,6 +41,11 @@ function Profile() {
     }
     return stars;
   };
+  function Badge({ achievementImages }) {
+    const imageUrl = `${api}/achievementImages/${achievementImages}`;
+
+    return <img src={imageUrl} alt="Achievement Badge" className="w-16 h-16" />;
+  }
   return (
     <div>
       <LoggedNavbar />
@@ -269,7 +274,12 @@ function Profile() {
                       </div>
                     </div>
                   </div>
-                  <div className="rounder bg-white h-full"></div>
+                  <div className="rounder bg-white h-full">
+                    <div className="text-base font-semibold text-blue-900 p-4">
+                      Achievement Badges
+                    </div>
+                    <Badge badgeName="achievement.gif" />;
+                  </div>
                 </div>
               </div>
             </div>
