@@ -5,6 +5,7 @@ import axios from "axios";
 import { AuthContext } from "../AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
+import Badge from "../components/AchievementBadges";
 function Profile() {
   const api = import.meta.env.VITE_URL;
   const { authToken } = useContext(AuthContext);
@@ -13,7 +14,6 @@ function Profile() {
   const navigate = useNavigate();
   useEffect(() => {
     const fetchProfile = async () => {
-      console.log("called");
       const res = await axios.get(`${api}/user/dashboard`, {
         headers: {
           "Content-Type": "application/json",
@@ -41,11 +41,7 @@ function Profile() {
     }
     return stars;
   };
-  function Badge({ achievementImages }) {
-    const imageUrl = `${api}/achievementImages/${achievementImages}`;
 
-    return <img src={imageUrl} alt="Achievement Badge" className="w-16 h-16" />;
-  }
   return (
     <div>
       <LoggedNavbar />
@@ -274,11 +270,20 @@ function Profile() {
                       </div>
                     </div>
                   </div>
-                  <div className="rounder bg-white h-full">
-                    <div className="text-base font-semibold text-blue-900 p-4">
+                  {/* Display Achievement Badges */}
+                  <div className="rounded bg-white h-full shadow">
+                    <h2 className="text-base font-semibold text-blue-900 p-5">
                       Achievement Badges
+                    </h2>
+                    <div className="grid gap-4">
+                      {user.achievementBadges?.length > 0 ? (
+                        user.achievementBadges.map((badge) => (
+                          <Badge key={badge._id} badge={badge} />
+                        ))
+                      ) : (
+                        <p className="text-center">No Achievements yet.</p>
+                      )}
                     </div>
-                    <Badge badgeName="achievement.gif" />;
                   </div>
                 </div>
               </div>
