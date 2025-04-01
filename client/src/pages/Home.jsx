@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../AuthContext";
 import home from "../assets/home.png";
+import AchievementSlider from "../components/HighlightsCard";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -140,6 +141,17 @@ const HomePage = () => {
           {offers.map((offer, index) => {
             return <OfferCard offer={offer} key={index} />;
           })}
+        </div>
+        <div>
+          <h2 className="text-2xl font-semibold text-blue-900 ml-16 font-serif mt-12 mb-4">
+            HourFlow's Highlights
+          </h2>
+          <AchievementSlider />
+        </div>
+        <div>
+          <h2 className="text-2xl font-semibold text-blue-900 ml-16 font-serif">
+            Our Partners
+          </h2>
         </div>
       </div>
       <Footer />
