@@ -23,6 +23,7 @@ import Chat from "./pages/Chats";
 import CreateOffer from "./pages/CreateOffer";
 import EditOffer from "./pages/EditOffer";
 import Reviews from "./pages/Reviews";
+import HomePage from "./pages/Home";
 
 function App() {
   const router = createBrowserRouter(
@@ -90,6 +91,7 @@ function App() {
           element={<PrivateRoute element={<Reviews />} />}
         />
         <Route path="/chat" element={<Chat />} />
+        <Route path="/home" element={<HomePage />} />
       </Route>
     )
   );

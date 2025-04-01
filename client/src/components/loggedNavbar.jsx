@@ -54,7 +54,7 @@ function LoggedNavbar() {
         {/* Navigation Links */}
         <ul className="flex space-x-10">
           <li>
-            <NavLink to="/" className="hover:text-blue-500">
+            <NavLink to="/home" className="hover:text-blue-500">
               Home
             </NavLink>
           </li>

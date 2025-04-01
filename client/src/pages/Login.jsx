@@ -40,7 +40,7 @@ function Login() {
 
           if (response.data.status === "Logged in!") {
             login(response.data.accessToken, response.data.id);
-            navigate("/profile");
+            navigate("/home");
           }
         } catch (error) {
           console.log(error);
