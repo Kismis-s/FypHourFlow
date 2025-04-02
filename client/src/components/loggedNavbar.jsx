@@ -69,13 +69,13 @@ function LoggedNavbar() {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/contact" className="hover:text-blue-500">
-              Contact
+            <NavLink to="/groups" className="hover:text-blue-500">
+              Groups
             </NavLink>
           </li>
           <li>
-            <NavLink to="/about" className="hover:text-blue-500">
-              About Us
+            <NavLink to="/contact" className="hover:text-blue-500">
+              Contact
             </NavLink>
           </li>
         </ul>

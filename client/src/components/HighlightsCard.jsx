@@ -40,7 +40,7 @@ const AchievementSlider = () => {
   }
 
   return (
-    <div className="w-11/12 max-w-screen-2xl mx-auto flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden mb-5 border text-gray-800 font-serif h-72 ">
+    <div className="w-11/12 max-w-screen-2xl mx-auto flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden mb-8 border text-gray-800 font-serif h-72 ">
       <div className="w-full md:w-1/2 p-8 flex flex-col justify-center relative">
         <div className="relative z-10">
           <h3 className="achievement-title text-3xl font-bold mb-4 text-blue-950">

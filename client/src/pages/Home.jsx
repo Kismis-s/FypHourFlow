@@ -8,6 +8,13 @@ import axios from "axios";
 import { AuthContext } from "../AuthContext";
 import home from "../assets/home.png";
 import AchievementSlider from "../components/HighlightsCard";
+import kk from "../assets/kk.png";
+import miniso from "../assets/miniso.png";
+import pathao from "../assets/pathao.png";
+import roadhouse from "../assets/roadhouse.png";
+import fire from "../assets/fire.png";
+import daraz from "../assets/daraz.png";
+import arabica from "../assets/arabica.png";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -149,9 +156,18 @@ const HomePage = () => {
           <AchievementSlider />
         </div>
         <div>
-          <h2 className="text-2xl font-semibold text-blue-900 ml-16 font-serif">
-            Our Partners
+          <h2 className="text-2xl font-semibold text-blue-900 ml-16 font-serif mb-6">
+            Our Top Partners
           </h2>
+          <div className="flex flex-wrap justify-center gap-[85px] mb-4">
+            <img src={kk} alt="KK mart" className="h-[65px] w-auto" />
+            <img src={miniso} alt="Miniso" className="h-[70px] w-auto" />
+            <img src={daraz} alt="Daraz" className="h-[70px] w-auto" />
+            <img src={pathao} alt="Pathao" className="h-[95px] w-auto" />
+            <img src={roadhouse} alt="Roadhouse" className="h-[90px] w-auto" />
+            <img src={fire} alt="fire" className="h-[100px] w-auto" />
+            <img src={arabica} alt="arabica" className="h-[120px] w-auto" />
+          </div>
         </div>
       </div>
       <Footer />
