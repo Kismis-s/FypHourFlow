@@ -23,10 +23,11 @@ const createReview = require("../review/controller/createReview");
 const deleteOffer = require("../offers/controllers/deleteOffer");
 const createAchievement = require("../achievements/controllers/createAchievements");
 const pushAchievement = require("../achievements/controllers/pushAchievement");
+const createGroup = require("../groups/createGroup");
 
 userRouter.post("/register", userRegister);
 userRouter.post("/login", userLogin);
-//for achievements
+
 userRouter.post("/createAchievement", createAchievement);
 
 userRouter.use(auth);
@@ -54,6 +55,10 @@ userRouter.delete("/deleteOffer/:id", deleteOffer);
 userRouter.get("/getReview/:id",getReviewById);
 userRouter.post("/createReview",createReview);
 
+//for achievements
 userRouter.post("/pushAchievement", pushAchievement);
+
+//for groups
+userRouter.post("/createGroup", createGroup);
 
 module.exports = userRouter;

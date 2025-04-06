@@ -30,6 +30,7 @@ app.use(cors("*"));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/serviceImages", express.static(path.join(__dirname, "serviceImages")));
 app.use("/offerImages", express.static(path.join(__dirname, "offerImages")));
+app.use("/groupImages", express.static(path.join(__dirname, "groupImages")));
 app.use("/achievementImages", express.static(path.join(__dirname, "./achievementImages")));
 
 // Session setup
@@ -80,7 +81,7 @@ io.on("connection", (socket) => {
       const roomId = [userId1, userId2].sort().join("_"); // Ensures consistent room ID order
       socket.join(roomId);
   
-      console.log(`User ${socket.id} joined room: ${roomId}`);
+      //console.log(`User ${socket.id} joined room: ${roomId}`);
   
       // Notify other users in the room (optional)
       socket.to(roomId).emit("user_joined", { userId: userId1 });

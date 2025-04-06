@@ -33,7 +33,6 @@ const groupSchema = new mongoose.Schema(
     },
     chatID: {
       type: String,
-      required: [true, "chat id not given"],
     },
   },
   { timestamps: true }
