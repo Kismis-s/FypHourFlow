@@ -20,10 +20,6 @@ const deleteComment = async (req, res) => {
 
     const post = await PostModel.findOne({ comments: commentId });
     const group = await GroupModel.findOne({ _id: comment.group });
-    console.log(comment.author);
-    console.log(post.author);
-    console.log(group.creator);
-    console.log(req.user._id);
     if (
       comment.author.toString() !== req.user._id.toString() &&
       post.author.toString() !== req.user._id.toString() &&

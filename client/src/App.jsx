@@ -24,6 +24,7 @@ import CreateOffer from "./pages/CreateOffer";
 import EditOffer from "./pages/EditOffer";
 import Reviews from "./pages/Reviews";
 import HomePage from "./pages/Home";
+import Groups from "./pages/Groups";
 
 function App() {
   const router = createBrowserRouter(
@@ -92,6 +93,7 @@ function App() {
         />
         <Route path="/chat" element={<Chat />} />
         <Route path="/home" element={<HomePage />} />
+        <Route path="/groups" element={<Groups />} />
       </Route>
     )
   );
