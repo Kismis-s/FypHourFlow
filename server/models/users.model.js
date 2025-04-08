@@ -51,6 +51,15 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: [true, "Balance is required!"]
     },
+    groups: {
+      type: [String],
+    },
+    posts: {
+      type: [String],
+    },
+    comments: {
+      type: [String],
+    },
     location: {
       type: {
         type: String,

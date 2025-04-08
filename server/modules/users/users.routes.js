@@ -23,7 +23,23 @@ const createReview = require("../review/controller/createReview");
 const deleteOffer = require("../offers/controllers/deleteOffer");
 const createAchievement = require("../achievements/controllers/createAchievements");
 const pushAchievement = require("../achievements/controllers/pushAchievement");
-const createGroup = require("../groups/createGroup");
+const createGroup = require("../groups/controllers/createGroup");
+const updateGroup = require("../groups/controllers/updateGroups");
+const delGroup = require("../groups/controllers/delGroup");
+const getAllGroups = require("../groups/controllers/getAllGroups");
+const getGroupById = require("../groups/controllers/getGroupbyId");
+const joinGroup = require("../groups/controllers/joinGroup");
+const leaveGroup = require("../groups/controllers/leaveGroup");
+const createPost = require("../posts/controllers/createPost");
+const updatePost = require("../posts/controllers/updatePost");
+const getAllPosts = require("../posts/controllers/getAllPosts");
+const getPostById = require("../posts/controllers/getPostbyId");
+const deletePost = require("../posts/controllers/deletePost");
+const createComment = require("../comments/controllers/createComment");
+const updateComment = require("../comments/controllers/updateComment");
+const getAllComment = require("../comments/controllers/getAllComments");
+const getCommentById = require("../comments/controllers/getCommentbyId");
+const deleteComment = require("../comments/controllers/deleteComment");
 
 userRouter.post("/register", userRegister);
 userRouter.post("/login", userLogin);
@@ -60,5 +76,25 @@ userRouter.post("/pushAchievement", pushAchievement);
 
 //for groups
 userRouter.post("/createGroup", createGroup);
+userRouter.get("/getAllGroups", getAllGroups);
+userRouter.get("/getGroupbyId/:id", getGroupById);
+userRouter.put("/joinGroup/:id", joinGroup);
+userRouter.patch("/leaveGroup/:id", leaveGroup);
+userRouter.patch("/updateGroup/:id", updateGroup);
+userRouter.delete("/deleteGroup/:id", delGroup);
+
+//for posts
+userRouter.post("/createPost/:id", createPost);
+userRouter.patch("/updatePost/:id", updatePost);
+userRouter.get("/posts", getAllPosts);
+userRouter.get("/getPostbyId/:id", getPostById);
+userRouter.delete("/deletePost/:id", deletePost);
+
+//for comments
+userRouter.post("/createComment/:groupId/:postId", createComment);
+userRouter.patch("/updateComment/:id", updateComment);
+userRouter.get("/getCommentbyId/:id", getCommentById);
+userRouter.get("/getAllComments", getAllComment);
+userRouter.delete("/deleteComment/:id", deleteComment);
 
 module.exports = userRouter;

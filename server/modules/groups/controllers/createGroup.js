@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
-const Users = require("../../models/users.model");
-const Groups = require("../../models/groups.model");
+const Users = require("../../../models/users.model");
+const Groups = require("../../../models/groups.model");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
