@@ -24,22 +24,6 @@ const leaveGroup = async (req, res) => {
     group.members.pull(req.user._id);
     await group.save();
 
-    // const creator = await GroupModel.findById(group.creator);
-    // const stdForChat = await UserModel.findById(req.user._id);
-    // await axios.put(
-    //   `https://api.chatengine.io/chats/${group.chatID}/people/`,
-    //   {
-    //     username: stdForChat.email,
-    //   },
-    //   {
-    //     headers: {
-    //       "Project-ID": process.env.project_id,
-    //       "User-Name": creator.email,
-    //       "User-Secret": creator.password,
-    //     },
-    //   }
-    // );
-    // Update the user's groups array
     await UserModel.findByIdAndUpdate(
       { _id: req.user._id },
       {

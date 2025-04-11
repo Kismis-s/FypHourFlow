@@ -4,63 +4,47 @@ import Footer from "../components/footer";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../AuthContext";
-import groups from "../assets/groups.jpg";
+import groupsImg from "../assets/groupsImg.jpg";
+import GroupCard from "../components/GroupCard";
 
 const Groups = () => {
-  //   const navigate = useNavigate();
-  //   const { authToken } = useContext(AuthContext);
-  //   const [groups, setGroups] = useState([]);
-  //   const [loading, setLoading] = useState(true);
-  //   const api = import.meta.env.VITE_URL;
+  const navigate = useNavigate();
+  const { authToken } = useContext(AuthContext);
+  const [groups, setGroups] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const api = import.meta.env.VITE_URL;
 
-  //   useEffect(() => {
-  //     const fetchData = async () => {
-  //       try {
-  //         const [servicesRes, offersRes] = await Promise.all([
-  //           axios.get(`${api}/user/getServices`, {
-  //             headers: {
-  //               "Content-Type": "application/json",
-  //               Authorization: `Bearer ${authToken}`,
-  //             },
-  //           }),
-  //           axios.get(`${api}/user/getOffers`, {
-  //             headers: {
-  //               "Content-Type": "application/json",
-  //               Authorization: `Bearer ${authToken}`,
-  //             },
-  //           }),
-  //         ]);
+  useEffect(() => {
+    async function fetchGroups() {
+      try {
+        const res = await axios.get(`${api}/user/groups`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        setGroups(res.data.groups);
+        console.log("Full response:", res.data);
+      } catch (error) {
+        console.error("Error fetching offers:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchGroups();
+  }, [authToken, api]);
 
-  //         // Process services
-  //         const latestServices = servicesRes.data.data
-  //           .filter((service) => service.status !== "Completed")
-  //           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort by latest
-  //           .slice(0, 8); // Limit to 8
+  const handleCreate = () => {
+    navigate("/createGroup");
+  };
 
-  //         // Process offers
-  //         const latestOffers = offersRes.data.data
-  //           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort by latest
-  //           .slice(0, 8); // Limit to 8
-
-  //         setServices(latestServices);
-  //         setOffers(latestOffers);
-  //       } catch (error) {
-  //         console.error("Error fetching data:", error);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     fetchData();
-  //   }, [authToken, api]);
-
-  //   if (loading) {
-  //     return (
-  //       <div className="flex items-center h-screen justify-center">
-  //         <p>Loading...</p>
-  //       </div>
-  //     );
-  //   }
+  if (loading) {
+    return (
+      <div className="flex items-center h-screen justify-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -80,17 +64,29 @@ const Groups = () => {
               <br /> is a team effort, and every hour makes a difference!
             </p>
           </div>
-          <img
-            src={groups}
-            alt="Placeholder"
-            className="h-[380px] w-auto"
-          />
+          <img src={groupsImg} alt="Placeholder" className="h-[380px] w-auto" />
         </div>
-        <div className="flex justify-between items-center mt-6">
-          <h2 className="text-2xl font-semibold text-blue-900 ml-16 font-serif">
+        <div className="flex justify-between items-center mt-6 font-serif">
+          <h2 className="text-2xl font-semibold text-blue-900 ml-16">
             Groups For You
           </h2>
+          <button
+            className="px-4 py-1 mr-10 bg-green-700 text-white rounded"
+            onClick={handleCreate}
+          >
+            Create
+          </button>
         </div>
+        <div className="flex flex-wrap gap-5 m-7 font-serif">
+          {Array.isArray(groups) && groups.length > 0 ? (
+            groups.map((group, index) => (
+              <GroupCard group={group} key={index} />
+            ))
+          ) : (
+            <p className="text-gray-600 ml-7">No groups found.</p>
+          )}
+        </div>
+
         <Footer />
       </div>
     </div>

@@ -12,6 +12,9 @@ const groupSchema = new mongoose.Schema(
     image: {
       type: String,
     },
+    profile: {
+      type: String,
+    },
     skills: [{
         type: String,
         required: true, 

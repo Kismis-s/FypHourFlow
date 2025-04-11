@@ -25,6 +25,8 @@ import EditOffer from "./pages/EditOffer";
 import Reviews from "./pages/Reviews";
 import HomePage from "./pages/Home";
 import Groups from "./pages/Groups";
+import CreateGroup from "./pages/CreateGroup";
+import GroupDisplay from "./pages/GroupDisplay";
 
 function App() {
   const router = createBrowserRouter(
@@ -91,9 +93,17 @@ function App() {
           path="/reviews/:userId"
           element={<PrivateRoute element={<Reviews />} />}
         />
+        <Route path="/groups" element={<PrivateRoute element={<Groups />} />} />
+        <Route
+          path="/createGroup"
+          element={<PrivateRoute element={<CreateGroup />} />}
+        />
+        <Route
+          path="/displayGroup/:id"
+          element={<PrivateRoute element={<GroupDisplay />} />}
+        />
         <Route path="/chat" element={<Chat />} />
         <Route path="/home" element={<HomePage />} />
-        <Route path="/groups" element={<Groups />} />
       </Route>
     )
   );

@@ -76,7 +76,7 @@ userRouter.post("/pushAchievement", pushAchievement);
 
 //for groups
 userRouter.post("/createGroup", createGroup);
-userRouter.get("/getAllGroups", getAllGroups);
+userRouter.get("/groups", getAllGroups);
 userRouter.get("/getGroupbyId/:id", getGroupById);
 userRouter.put("/joinGroup/:id", joinGroup);
 userRouter.patch("/leaveGroup/:id", leaveGroup);

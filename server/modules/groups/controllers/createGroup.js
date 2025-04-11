@@ -1,12 +1,12 @@
-const mongoose = require("mongoose");
-const multer = require("multer");
-const path = require("path");
+const mongoose = require('mongoose');
+const multer = require('multer');
+const path = require('path');
 const Users = require("../../../models/users.model");
 const Groups = require("../../../models/groups.model");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "groupImages/");
+    cb(null, 'groupImages/');
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}_${file.originalname}`);
@@ -23,27 +23,32 @@ const upload = multer({
     if (mimetype && extname) {
       return cb(null, true);
     } else {
-      cb("Error: Images only!");
+      cb('Error: Images only!');
     }
   },
-}).fields([{ name: "groupImages", maxCount: 1 }]);
+}).fields([
+  { name: 'image', maxCount: 1 },
+  { name: 'profile', maxCount: 1 },
+]);
 
 const createGroup = async (req, res) => {
   upload(req, res, async (err) => {
     if (err) {
-      return res.status(400).json({ status: "Failed!", message: err });
+      return res.status(400).json({ status: 'Failed!', message: err });
     }
 
-    const { name, description, skills, creator} = req.body;
-    const groupImages = req.files?.groupImages ? req.files.groupImages[0].filename : null;
+    const { name, description, skills, creator } = req.body;
+
+    const image = req.files?.image ? req.files.image[0].filename : null;
+    const profile = req.files?.profile ? req.files.profile[0].filename : null;
 
     let parsedSkills = [];
     try {
       parsedSkills = typeof skills === "string" ? JSON.parse(skills) : skills;
     } catch (parseError) {
       return res.status(400).json({
-        status: "Failed!",
-        message: "Skills must be a valid JSON array",
+        status: 'Failed!',
+        message: 'Skills must be a valid JSON array',
       });
     }
 
@@ -51,14 +56,16 @@ const createGroup = async (req, res) => {
     session.startTransaction();
 
     try {
+      // Creating a new group with the uploaded images
       const newGroup = await Groups.create(
         [
           {
-            name, 
-            description, 
-            skills: parsedSkills, 
+            name,
+            description,
+            skills: parsedSkills,
             creator: req.user._id,
-            image: groupImages,
+            image: image, 
+            profile: profile, 
             members: [req.user._id],
           },
         ],
@@ -76,14 +83,14 @@ const createGroup = async (req, res) => {
       session.endSession();
 
       res.status(201).json({
-        status: "Successfully created a group!",
+        status: 'Successfully created a group!',
         data: newGroup,
       });
     } catch (error) {
       await session.abortTransaction();
       session.endSession();
       res.status(400).json({
-        status: "Error",
+        status: 'Error',
         message: error.message || error,
       });
     }
