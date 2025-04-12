@@ -4,7 +4,7 @@ const CommentModel = require("../../../models/comments.model");
 const createComment = async (req, res) => {
   const PostModel = mongoose.model("posts");
   const UserModel = mongoose.model("users");
-  const { groupId, postId } = req.params;
+  const { postId } = req.params;
   const { content } = req.body;
 
   try {
@@ -15,7 +15,6 @@ const createComment = async (req, res) => {
     const newComment = await CommentModel.create({
       author: req.user._id,
       content,
-      group: groupId,
     });
     await PostModel.findByIdAndUpdate(
       {

@@ -6,6 +6,9 @@ import { AuthContext } from "../AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaImage, FaFileAlt, FaLink } from "react-icons/fa";
 import PostCard from "../components/PostCard";
+import { FaCheck } from "react-icons/fa";
+import { FaShareAlt } from "react-icons/fa";
+import ShareModal from "../components/ShareModal";
 
 function GroupDisplay() {
   const api = import.meta.env.VITE_URL;
@@ -13,7 +16,10 @@ function GroupDisplay() {
   const [group, setGroup] = useState(null);
   const [user, setUser] = useState(null);
   const [postText, setPostText] = useState("");
+  const [isMember, setIsMember] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const shareUrl = window.location.href;
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -47,6 +53,44 @@ function GroupDisplay() {
     fetchUser();
   }, []);
 
+  useEffect(() => {
+    const checkMembership = async () => {
+      try {
+        const res = await axios.get(`${api}/user/dashboard`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        setUser(res.data.data);
+        // Check if the user is a member of the group
+        if (res.data.data.groups.includes(id)) {
+          setIsMember(true);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    checkMembership();
+  }, [id, authToken, api]);
+
+  const handleJoinGroup = async () => {
+    try {
+      const res = await axios.put(`${api}/user/joinGroup/${id}`, null, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      if (res.data.message === "Joined group successfully") {
+        setIsMember(true);
+        alert("You have joined the group!");
+      }
+    } catch (error) {
+      console.error("Error joining group:", error);
+      alert("Failed to join the group!");
+    }
+  };
+
   const handleCreatePost = async () => {
     try {
       const formData = new FormData();
@@ -55,7 +99,6 @@ function GroupDisplay() {
 
       const response = await axios.post(
         `${api}/user/createPost/${group._id}`,
-
         formData,
         {
           headers: {
@@ -64,9 +107,15 @@ function GroupDisplay() {
         }
       );
 
-      setPostText("");
       if (response.data.status === "Post created successfully") {
         alert("Posted successfully!");
+
+        // Update the state with the new post
+        setPostText(""); // Clear the post text
+        setGroup((prevGroup) => ({
+          ...prevGroup,
+          posts: [response.data.newPost, ...prevGroup.posts], // Add new post to the front of the list
+        }));
       }
     } catch (error) {
       console.error("Error posting content:", error);
@@ -107,12 +156,39 @@ function GroupDisplay() {
 
               {/* Action Buttons */}
               <div className="absolute top-80 flex justify-center gap-2 right-0 p-4 md:top-96 md:right-10">
-                <button className="rounded bg-blue-950 px-8 py-1 text-white hover:bg-blue-600 md:px-11">
-                  Join
+                <button
+                  onClick={handleJoinGroup}
+                  disabled={isMember}
+                  className={`rounded px-8 py-1 md:px-5 ${
+                    isMember
+                      ? "bg-green-600 text-white cursor-default"
+                      : "bg-blue-950 text-white hover:bg-blue-600"
+                  }`}
+                >
+                  {isMember ? (
+                    <span className="flex items-center">
+                      <FaCheck className="mr-2" /> Joined
+                    </span>
+                  ) : (
+                    "Join"
+                  )}
                 </button>
-                <button className="rounded border border-blue-950 px-8 py-1 text-blue-950 hover:bg-blue-600 hover:text-white md:px-3">
+
+                <button
+                  onClick={() => setIsShareModalOpen(true)}
+                  className="rounded border border-blue-950 px-8 py-1 text-blue-950 hover:bg-blue-600 hover:text-white md:px-5"
+                >
+                  <FaShareAlt className="inline-block mr-2" />
                   Share
                 </button>
+                <ShareModal
+                  isOpen={isShareModalOpen}
+                  onClose={() => setIsShareModalOpen(false)}
+                  title="Join our amazing group!"
+                  quote="Discover and connect with like-minded individuals in our group."
+                  hashtag="#AmazingGroup"
+                  shareUrl={shareUrl}
+                />
               </div>
             </div>
 
@@ -203,7 +279,7 @@ function GroupDisplay() {
                         </div>
                         <button
                           onClick={handleCreatePost}
-                          className="bg-blue-950 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium"
+                          className="bg-blue-950 hover:bg-blue-600 text-white px-5 py-1 rounded text-sm font-medium"
                         >
                           Post
                         </button>
@@ -213,11 +289,9 @@ function GroupDisplay() {
                 </div>
 
                 {/* Posts Section */}
-                <div className="mt-2">
-                  {" "}
-                  {/* Added margin-top here */}
+                <div className="mt-2 gap-y-4">
                   {group.posts && group.posts.length > 0 ? (
-                    <div className="space-y-6">
+                    <div className="space-y-2">
                       {group.posts.map((post, index) => (
                         <PostCard key={index} post={post} api={api} />
                       ))}

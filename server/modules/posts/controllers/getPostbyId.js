@@ -5,7 +5,15 @@ const getPostById = async (req, res) => {
   try {
     const postId = req.params.id;
    
-    const post = await PostModel.findById(postId).populate("author", "name");
+    const post = await PostModel.findById(postId)
+      .populate("author", "name photo") 
+      .populate({
+        path: "comments",
+        populate: {
+          path: "author",
+          select: "name photo", // Populating comment author info
+        },
+      });
 
     if (!post) {
       return res.status(404).json({ message: "Post not found" });

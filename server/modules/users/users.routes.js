@@ -93,10 +93,10 @@ userRouter.get("/getPostbyId/:id", getPostById);
 userRouter.delete("/deletePost/:id", deletePost);
 
 //for comments
-userRouter.post("/createComment/:groupId/:postId", createComment);
+userRouter.post("/createComment/:postId", createComment);
 userRouter.patch("/updateComment/:id", updateComment);
 userRouter.get("/getCommentbyId/:id", getCommentById);
-userRouter.get("/getAllComments", getAllComment);
+userRouter.get("/getAllComments/:postId", getAllComment);
 userRouter.delete("/deleteComment/:id", deleteComment);
 
 module.exports = userRouter;

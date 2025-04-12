@@ -5,7 +5,7 @@ const getCommentById = async (req, res) => {
   const commentId = req.params.id;
 
   try {
-    const comment = await CommentModel.findById(commentId).populate("author");
+    const comment = await CommentModel.findById(commentId).populate("author", "name", "photo");
 
     if (!comment) {
       return res.status(404).json({

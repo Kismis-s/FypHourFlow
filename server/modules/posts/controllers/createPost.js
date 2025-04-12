@@ -46,9 +46,16 @@ const createPost = async (req, res) => {
       }
     );
 
+    const commentCount = await PostModel.aggregate([
+      { $match: { _id: newPost._id } },
+      { $unwind: "$comments" },
+      { $count: "totalComments" },
+    ]);
+
     res.status(201).json({
       status: "Post created successfully",
       post: newPost,
+      commentCount: commentCount.length ? commentCount[0].totalComments : 0,
     });
   } catch (error) {
     console.error("Error creating post:", error);
