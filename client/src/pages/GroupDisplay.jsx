@@ -4,11 +4,16 @@ import Footer from "../components/footer";
 import axios from "axios";
 import { AuthContext } from "../AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
+import { FaImage, FaFileAlt, FaLink } from "react-icons/fa";
+import PostCard from "../components/PostCard";
 
 function GroupDisplay() {
   const api = import.meta.env.VITE_URL;
   const { authToken } = useContext(AuthContext);
   const [group, setGroup] = useState(null);
+  const [user, setUser] = useState(null);
+  const [postText, setPostText] = useState("");
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -29,6 +34,45 @@ function GroupDisplay() {
     };
     fetchGroup();
   }, [id, authToken, api]);
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await axios.get(`${api}/user/dashboard`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      setUser(res.data.data);
+    };
+    fetchUser();
+  }, []);
+
+  const handleCreatePost = async () => {
+    try {
+      const formData = new FormData();
+      console.log(postText);
+      formData.append("content", postText);
+
+      const response = await axios.post(
+        `${api}/user/createPost/${group._id}`,
+
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      setPostText("");
+      if (response.data.status === "Post created successfully") {
+        alert("Posted successfully!");
+      }
+    } catch (error) {
+      console.error("Error posting content:", error);
+      alert("Failed to post the content!");
+    }
+  };
 
   return (
     <div>
@@ -76,10 +120,10 @@ function GroupDisplay() {
               <div className="col-span-12 md:col-span-4 space-y-4">
                 {/* About Section */}
                 <div className="bg-white rounded p-5 shadow">
-                  <h1 className="text-lg font-bold text-blue-900 mb-2">
+                  <h1 className="text-lg font-bold text-blue-900 mb-5">
                     ABOUT
                   </h1>
-                  <p className="text-base mb-2">
+                  <p className="text-base mb-5">
                     {" "}
                     <span className="text-blue-900 font-semibold">
                       Description:{" "}
@@ -87,8 +131,8 @@ function GroupDisplay() {
                     {group.description}
                   </p>
 
-                  <h2 className="font-semibold mb-1 text-blue-900">
-                    Skills Required:
+                  <h2 className="font-semibold mb-2 text-blue-900">
+                    Skills we're looking for:
                   </h2>
                   {group.skills && group.skills.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
@@ -105,7 +149,7 @@ function GroupDisplay() {
                     <p className="text-sm text-gray-500">No skills listed.</p>
                   )}
 
-                  <h2 className="text-blue-900 font-semibold mt-4 mb-2">
+                  <h2 className="text-blue-900 font-semibold mt-5 mb-2">
                     Administrator:
                   </h2>
                   {group.creator ? (
@@ -125,22 +169,63 @@ function GroupDisplay() {
                 </div>
               </div>
 
-              {/* Right Column (Posts) */}
-              <div className="col-span-12 md:col-span-8 bg-white rounded p-4 shadow">
-                <h1 className="text-xl font-bold text-blue-900 mb-4">Posts</h1>
-                {group.posts && group.posts.length > 0 ? (
-                  group.posts.map((post, index) => (
-                    <div
-                      key={index}
-                      className="mb-4 border-b pb-2 last:border-none"
-                    >
-                      <h2 className="text-lg font-semibold">{post.author}</h2>
-                      <p className="text-sm text-gray-600">{post.content}</p>
+              {/* Right Column (Create Post + Posts) */}
+              <div className="col-span-12 md:col-span-8">
+                {/* Create Post */}
+                <div className="bg-white rounded shadow-sm p-6">
+                  <div className="flex items-start space-x-3">
+                    <img
+                      className="h-10 w-10 rounded-full"
+                      src={`${api}/uploads/${user?.photo}`} // use uploaded photo
+                      alt="Your profile"
+                    />
+                    <div className="flex-1">
+                      <p className="font-bold mb-1">{user?.name}</p>
+                      <textarea
+                        value={postText}
+                        onChange={(e) => setPostText(e.target.value)}
+                        className="w-full border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"
+                        rows="3"
+                        placeholder="Share an achievement, tip, or ask a question..."
+                      ></textarea>
+
+                      <div className="flex justify-between items-center mt-3">
+                        <div className="flex space-x-4">
+                          <button className="text-gray-500 hover:text-blue-500">
+                            <FaImage />
+                          </button>
+                          <button className="text-gray-500 hover:text-blue-500">
+                            <FaFileAlt />
+                          </button>
+                          <button className="text-gray-500 hover:text-blue-500">
+                            <FaLink />
+                          </button>
+                        </div>
+                        <button
+                          onClick={handleCreatePost}
+                          className="bg-blue-950 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium"
+                        >
+                          Post
+                        </button>
+                      </div>
                     </div>
-                  ))
-                ) : (
-                  <p className="text-gray-500">No posts available.</p>
-                )}
+                  </div>
+                </div>
+
+                {/* Posts Section */}
+                <div className="mt-2">
+                  {" "}
+                  {/* Added margin-top here */}
+                  {group.posts && group.posts.length > 0 ? (
+                    <div className="space-y-6">
+                      {group.posts.map((post, index) => (
+                        <PostCard key={index} post={post} api={api} />
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-500">No posts available.</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>

@@ -5,7 +5,16 @@ const getGroupById = async (req, res) => {
   try {
     const groupId = req.params.id;
 
-    const group = await GroupModel.findById(groupId).populate("creator");
+    const group = await GroupModel.findById(groupId)
+  .populate('creator', 'name photo')
+  .populate({
+    path: 'posts',
+    populate: {
+      path: 'author',
+      select: 'name photo'
+    }
+  });
+
 
     if (!group) {
       return res.status(404).json({ message: "Group not found" });

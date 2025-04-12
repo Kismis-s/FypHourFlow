@@ -5,7 +5,7 @@ const getPostById = async (req, res) => {
   try {
     const postId = req.params.id;
    
-    const post = await PostModel.findById(postId).populate("author");
+    const post = await PostModel.findById(postId).populate("author", "name");
 
     if (!post) {
       return res.status(404).json({ message: "Post not found" });

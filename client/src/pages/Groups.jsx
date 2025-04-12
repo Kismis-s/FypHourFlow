@@ -24,7 +24,6 @@ const Groups = () => {
           },
         });
         setGroups(res.data.groups);
-        console.log("Full response:", res.data);
       } catch (error) {
         console.error("Error fetching offers:", error);
       } finally {

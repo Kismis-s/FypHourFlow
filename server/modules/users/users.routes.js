@@ -40,6 +40,8 @@ const updateComment = require("../comments/controllers/updateComment");
 const getAllComment = require("../comments/controllers/getAllComments");
 const getCommentById = require("../comments/controllers/getCommentbyId");
 const deleteComment = require("../comments/controllers/deleteComment");
+const multer = require('multer');
+const upload = multer();
 
 userRouter.post("/register", userRegister);
 userRouter.post("/login", userLogin);
@@ -84,7 +86,7 @@ userRouter.patch("/updateGroup/:id", updateGroup);
 userRouter.delete("/deleteGroup/:id", delGroup);
 
 //for posts
-userRouter.post("/createPost/:id", createPost);
+userRouter.post("/createPost/:id", upload.none(), createPost);
 userRouter.patch("/updatePost/:id", updatePost);
 userRouter.get("/posts", getAllPosts);
 userRouter.get("/getPostbyId/:id", getPostById);

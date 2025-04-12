@@ -6,7 +6,7 @@ const getAllPosts = async (req, res) => {
   try {
     const posts = await PostModel.find({
       group: groupId,
-    }).sort({ createdAt: -1 });
+    }).sort({ createdAt: -1 }).populate("author");
 
     res.status(200).json({
       status: "success",
