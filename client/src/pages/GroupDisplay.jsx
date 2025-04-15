@@ -94,7 +94,6 @@ function GroupDisplay() {
   const handleCreatePost = async () => {
     try {
       const formData = new FormData();
-      console.log(postText);
       formData.append("content", postText);
 
       const response = await axios.post(
@@ -109,13 +108,17 @@ function GroupDisplay() {
 
       if (response.data.status === "Post created successfully") {
         alert("Posted successfully!");
+        setPostText("");
 
-        // Update the state with the new post
-        setPostText(""); // Clear the post text
-        setGroup((prevGroup) => ({
-          ...prevGroup,
-          posts: [response.data.newPost, ...prevGroup.posts], // Add new post to the front of the list
-        }));
+        // 🔄 Re-fetch the group data to get the updated posts list
+        const updatedGroup = await axios.get(`${api}/user/getGroupbyId/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+
+        setGroup(updatedGroup.data.group);
       }
     } catch (error) {
       console.error("Error posting content:", error);

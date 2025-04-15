@@ -7,7 +7,7 @@ export default function GroupCard(props) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/displayGroup/${group._id}`); 
+    navigate(`/displayGroup/${group._id}`);
   };
 
   if (!group) {
@@ -50,7 +50,11 @@ export default function GroupCard(props) {
           </button>
         </div>
 
-        <p className="text-gray-600 text-base">{group.description}</p>
+        <p className="text-gray-600 text-sm">
+          {group.description.split(" ").length > 12
+            ? group.description.split(" ").slice(0, 12).join(" ") + " ...more"
+            : group.description}
+        </p>
 
         {/* Skills */}
         <div>

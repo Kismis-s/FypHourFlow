@@ -41,7 +41,7 @@ const Settings = () => {
 
   const Button = ({ onClick, children, className = "" }) => (
     <button
-      className={`bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ${className}`}
+      className={`bg-red-500 hover:bg-red-700 text-white font-bold mt-28  mb-4 py-2 px-4 rounded-md ${className}`}
       onClick={onClick}
     >
       {children}
@@ -51,18 +51,20 @@ const Settings = () => {
   return (
     <div>
       <LoggedNavbar />
-      <div className="flex justify-center items-start min-h-screen bg-gray-100 font-serif">
+      <div className="flex justify-center items-start font-serif">
         {" "}
         {/* Adjusted for height */}
-        <div className="flex w-4/5 max-w-6xl bg-white rounded-lg shadow-md">
-          <div className="w-64 bg-gray-800 text-white rounded-l-lg p-5">
+        <div className="flex w-full bg-white shadow-md">
+          <div className="w-64 bg-blue-50 text-blue-950 p-5">
             <ul className="list-none p-0 m-0">
               {sidebarItems.map((item) => (
                 <li
                   key={item.id}
                   onClick={() => handleSidebarItemClick(item.id)}
-                  className={`py-2 px-4 cursor-pointer transition-colors hover:bg-gray-700 ${
-                    activeContent === item.id ? "bg-gray-700" : ""
+                  className={`py-2 px-4 cursor-pointer transition-colors hover:bg-blue-950 hover:text-white hover:rounded-md ${
+                    activeContent === item.id
+                      ? "bg-blue-950 text-white rounded-md"
+                      : ""
                   }`}
                   tabIndex="0"
                   aria-current={activeContent === item.id ? "page" : null}

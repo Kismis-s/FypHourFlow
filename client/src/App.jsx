@@ -27,6 +27,7 @@ import HomePage from "./pages/Home";
 import Groups from "./pages/Groups";
 import CreateGroup from "./pages/CreateGroup";
 import GroupDisplay from "./pages/GroupDisplay";
+import ContactUs from "./pages/ContactUs";
 
 function App() {
   const router = createBrowserRouter(
@@ -104,6 +105,7 @@ function App() {
         />
         <Route path="/chat" element={<Chat />} />
         <Route path="/home" element={<HomePage />} />
+        <Route path="/contact" element={<ContactUs />} />
       </Route>
     )
   );
