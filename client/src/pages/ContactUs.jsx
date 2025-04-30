@@ -1,15 +1,39 @@
-import React from "react";
+import React, { useRef } from "react";
+import emailjs from "@emailjs/browser";
 import LoggedNavbar from "../components/loggedNavbar";
 import Footer from "../components/footer";
 
 export default function ContactUs() {
+  const form = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm(
+        "service_d7on7za",
+        "template_y9lw8pg",
+        form.current,
+        "f5FfdQIHgSDYgZRec"
+      )
+      .then(
+        (result) => {
+          alert("Message sent successfully!");
+          form.current.reset();
+        },
+        (error) => {
+          alert("Failed to send message.");
+          console.error(error.text);
+        }
+      );
+  };
+
   return (
     <div>
       <LoggedNavbar />
       <div className="min-h-screen bg-[url('https://images.unsplash.com/photo-1500964757637-c85e8a162699?q=80&w=2103&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center bg-no-repeat font-serif flex justify-center items-start px-4 pt-16 pb-4">
         <div className="bg-white bg-opacity-90 rounded-xl shadow-lg flex flex-col md:flex-row w-full max-w-5xl overflow-hidden backdrop-blur-sm">
-          {/* Left Section */}
-          <div className="md:w-1/2 p-8 bg-blue-950  text-white">
+          <div className="md:w-1/2 p-8 bg-blue-950 text-white">
             <h2 className="text-3xl font-bold mb-4">Contact Us</h2>
             <p className="text-lg mb-6">
               Let’s Connect and Build a Better Community Together!
@@ -25,19 +49,20 @@ export default function ContactUs() {
             </div>
           </div>
 
-          {/* Right Section - Form */}
           <div className="md:w-1/2 p-8 relative">
             <div className="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">
                 Send us a message
               </h3>
-              <form className="space-y-4">
+              <form ref={form} onSubmit={sendEmail} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Name
                   </label>
                   <input
                     type="text"
+                    name="user_name"
+                    required
                     className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                     placeholder="Your name"
                   />
@@ -48,6 +73,8 @@ export default function ContactUs() {
                   </label>
                   <input
                     type="email"
+                    name="user_email"
+                    required
                     className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                     placeholder="you@example.com"
                   />
@@ -57,7 +84,9 @@ export default function ContactUs() {
                     Message
                   </label>
                   <textarea
+                    name="message"
                     rows="4"
+                    required
                     className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                     placeholder="Type your message here..."
                   />
@@ -73,8 +102,7 @@ export default function ContactUs() {
           </div>
         </div>
       </div>
-
-      <Footer></Footer>
+      <Footer />
     </div>
   );
 }
