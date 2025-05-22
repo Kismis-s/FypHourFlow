@@ -123,15 +123,15 @@ const OfferCard = (props) => {
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-5 rounded-lg shadow-lg text-center">
-            <h2 className="text-xl font-bold text-green-600">Offer Claimed!</h2>
+            <h2 className="text-xl font-bold text-green-800">Offer Claimed!</h2>
             <p className="text-gray-600">
               You have successfully claimed the offer.
             </p>
             <button
-              className="mt-3 bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+              className="mt-3 bg-blue-950 hover:bg-blue-700 text-white px-4 py-1 rounded-lg"
               onClick={() => setShowPopup(false)}
             >
-              OK
+              Okay
             </button>
           </div>
         </div>

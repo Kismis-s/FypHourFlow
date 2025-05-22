@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { AuthContext } from "../AuthContext";
 import axios from "axios";
 import LoggedNavbar from "../components/loggedNavbar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Footer from "../components/footer";
-import { useNavigate } from "react-router-dom";
 
 export default function CreateOffer() {
   const api = import.meta.env.VITE_URL;
@@ -20,6 +19,10 @@ export default function CreateOffer() {
     location: { type: "Point", coordinates: [] },
   });
 
+  const [imagePreview, setImagePreview] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [successPopup, setSuccessPopup] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -30,26 +33,36 @@ export default function CreateOffer() {
 
   const handleImageChange = (e) => {
     const { name, files } = e.target;
-    setFormData({
-      ...formData,
-      [name]: files[0],
-    });
+    const file = files[0];
+    if (file) {
+      setFormData({
+        ...formData,
+        [name]: file,
+      });
+      setImagePreview(URL.createObjectURL(file));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.credits <= 0) {
-      alert("Credits must be greater than 0.");
-      return;
-    }
+    const newErrors = {};
+    if (!formData.title.trim()) newErrors.title = "Title is required.";
+    if (!formData.description.trim())
+      newErrors.description = "Description is required.";
+    if (!formData.credits || Number(formData.credits) <= 0)
+      newErrors.credits = "Credits must be greater than 0.";
+    if (!formData.expiration)
+      newErrors.expiration = "Expiration date is required.";
+
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
 
     const formDataToSend = new FormData();
     formDataToSend.append("title", formData.title);
     formDataToSend.append("description", formData.description);
     formDataToSend.append("credits", formData.credits);
     formDataToSend.append("expiration", formData.expiration);
-
     if (formData.offerImages) {
       formDataToSend.append("offerImages", formData.offerImages);
     }
@@ -66,8 +79,11 @@ export default function CreateOffer() {
         }
       );
       if (response.data.status === "Offer created successfully!") {
-        alert("Offer posted successfully!");
-        navigate(-1);
+        setSuccessPopup(true);
+        setTimeout(() => {
+          setSuccessPopup(false);
+          navigate(-1);
+        }, 2000);
       }
     } catch (error) {
       console.error("Error posting offer:", error);
@@ -76,7 +92,7 @@ export default function CreateOffer() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col relative">
       <LoggedNavbar />
       <div className="grid grid-cols-[20%_80%] gap-0 font-serif">
         {/* Sidebar */}
@@ -105,7 +121,7 @@ export default function CreateOffer() {
 
         {/* Main Content */}
         <div className="p-8 bg-white max-w-5xl mx-auto w-full m-4">
-          <h1 className="font-semibold text-xl text-blue-800 mb-6 ">
+          <h1 className="font-semibold text-xl text-blue-800 mb-6">
             POST AN OFFER
           </h1>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -117,9 +133,11 @@ export default function CreateOffer() {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                required
                 className="w-full p-3 border rounded-md"
               />
+              {errors.title && (
+                <p className="text-red-600 text-sm mt-1">{errors.title}</p>
+              )}
             </div>
 
             {/* Description */}
@@ -129,9 +147,13 @@ export default function CreateOffer() {
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                required
                 className="w-full p-3 border rounded-md h-24"
               />
+              {errors.description && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.description}
+                </p>
+              )}
             </div>
 
             {/* Credits */}
@@ -142,9 +164,11 @@ export default function CreateOffer() {
                 name="credits"
                 value={formData.credits}
                 onChange={handleChange}
-                required
                 className="w-full p-3 border rounded-md"
               />
+              {errors.credits && (
+                <p className="text-red-600 text-sm mt-1">{errors.credits}</p>
+              )}
             </div>
 
             {/* Expiration */}
@@ -155,9 +179,11 @@ export default function CreateOffer() {
                 name="expiration"
                 value={formData.expiration}
                 onChange={handleChange}
-                required
                 className="w-full p-3 border rounded-md"
               />
+              {errors.expiration && (
+                <p className="text-red-600 text-sm mt-1">{errors.expiration}</p>
+              )}
             </div>
 
             {/* Offer Image */}
@@ -169,6 +195,15 @@ export default function CreateOffer() {
                 onChange={handleImageChange}
                 className="w-full p-3 border rounded-md"
               />
+              {imagePreview && (
+                <div className="mt-3">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="h-40 w-auto border rounded-md object-cover"
+                  />
+                </div>
+              )}
             </div>
 
             {/* Submit Button */}
@@ -183,6 +218,22 @@ export default function CreateOffer() {
           </form>
         </div>
       </div>
+
+      {/* Success Popup */}
+      {successPopup && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white border border-green-600 rounded-xl shadow-lg p-6 text-center max-w-sm z-50">
+            <h2 className="text-green-700 text-xl font-semibold mb-2">
+              Offer Posted!
+            </h2>
+            <p className="text-gray-700">
+              Your offer has been posted successfully.
+            </p>
+          </div>
+          <div className="fixed inset-0 bg-black opacity-30 z-40"></div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );

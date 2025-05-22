@@ -49,7 +49,7 @@ const Groups = () => {
     <div>
       <LoggedNavbar />
       <div>
-        <div className="flex items-center justify-evenly gap-3 font-serif">
+        <div className="flex items-center justify-evenly gap-48 font-serif">
           <div className="space-y-3">
             <h1 className="text-4xl font-extrabold text-primary text-blue-950 leading-10 pb-2">
               Build Together, Grow Together <br></br>with
@@ -63,20 +63,20 @@ const Groups = () => {
               <br /> is a team effort, and every hour makes a difference!
             </p>
           </div>
-          <img src={groupsImg} alt="Placeholder" className="h-[380px] w-auto" />
+          <img src={groupsImg} alt="Placeholder" className="h-[350px] w-auto" />
         </div>
         <div className="flex justify-between items-center mt-6 font-serif">
           <h2 className="text-2xl font-semibold text-blue-900 ml-16">
             Groups For You
           </h2>
           <button
-            className="px-4 py-1 mr-10 bg-green-700 text-white rounded"
+            className="px-4 py-1 mr-16 bg-green-700 text-white rounded"
             onClick={handleCreate}
           >
             Create
           </button>
         </div>
-        <div className="flex flex-wrap gap-5 m-7 font-serif">
+        <div className="flex flex-wrap gap-6 ml-16 mt-7 mb-6 font-serif">
           {Array.isArray(groups) && groups.length > 0 ? (
             groups.map((group, index) => (
               <GroupCard group={group} key={index} />

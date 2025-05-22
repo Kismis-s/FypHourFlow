@@ -2,13 +2,13 @@ import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../AuthContext";
 import axios from "axios";
 import LoggedNavbar from "../components/loggedNavbar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Footer from "../components/footer";
-import { useNavigate } from "react-router-dom";
 
 export default function PostService() {
   const api = import.meta.env.VITE_URL;
   const { authToken, userLocation } = useContext(AuthContext);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -22,7 +22,10 @@ export default function PostService() {
     location: { type: "Point", coordinates: [] },
   });
 
+  const [formErrors, setFormErrors] = useState({});
+  const [imagePreview, setImagePreview] = useState(null);
   const [skillsDropdown, setSkillsDropdown] = useState(false);
+
   const availableSkills = [
     "Web Development",
     "Graphic Design",
@@ -34,9 +37,9 @@ export default function PostService() {
     "UI/UX Design",
     "Tutoring",
     "Translation",
-    "Assistance", 
+    "Assistance",
     "Guitar",
-    "Baking"
+    "Baking",
   ];
 
   useEffect(() => {
@@ -51,12 +54,29 @@ export default function PostService() {
     }
   }, [userLocation]);
 
+  const validate = () => {
+    const errors = {};
+    if (!formData.title.trim()) errors.title = "Title is required.";
+    if (!formData.description.trim())
+      errors.description = "Description is required.";
+    if (!formData.credits) errors.credits = "Credits are required.";
+    else if (parseInt(formData.credits) < 1)
+      errors.credits = "Credits must be at least 1.";
+    if (formData.skills.length === 0)
+      errors.skills = "Select at least one skill.";
+    if (!formData.timeline.trim()) errors.timeline = "Timeline is required.";
+    if (!formData.expiration)
+      errors.expiration = "Expiration date is required.";
+    return errors;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
+    setFormErrors((prev) => ({ ...prev, [name]: null }));
   };
 
   const toggleSkill = (skill) => {
@@ -66,27 +86,26 @@ export default function PostService() {
         ? prev.skills.filter((s) => s !== skill)
         : [...prev.skills, skill],
     }));
+    setFormErrors((prev) => ({ ...prev, skills: null }));
   };
 
   const handleImageChange = (e) => {
-    const { name, files } = e.target;
-    setFormData({
-      ...formData,
-      [name]: files[0],
-    });
+    const file = e.target.files[0];
+    if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        serviceImage: file,
+      }));
+      setImagePreview(URL.createObjectURL(file));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.credits <= 0) {
-      alert("Credits must be greater than 0.");
-      return;
-    }
-    if (formData.skills.length < 1) {
-      alert("Please select at least one skill.");
-      return;
-    }
+    const errors = validate();
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0) return;
 
     const formDataToSend = new FormData();
     formDataToSend.append("title", formData.title);
@@ -96,7 +115,6 @@ export default function PostService() {
     formDataToSend.append("timeline", formData.timeline);
     formDataToSend.append("expiration", formData.expiration);
     formDataToSend.append("location", JSON.stringify(formData.location));
-
     if (formData.serviceImage) {
       formDataToSend.append("serviceImage", formData.serviceImage);
     }
@@ -113,8 +131,7 @@ export default function PostService() {
         }
       );
       if (response.data.status === "Successfully posted request!") {
-        alert("Request posted successfully!");
-        navigate(-1);
+        setShowSuccessPopup(true); // Show the popup instead of alert
       }
     } catch (error) {
       console.error("Error posting service:", error);
@@ -126,7 +143,6 @@ export default function PostService() {
     <div className="min-h-screen flex flex-col">
       <LoggedNavbar />
       <div className="grid grid-cols-[20%_80%] gap-0 font-serif">
-        {/* Sidebar */}
         <div className="flex flex-col bg-blue-50 p-4 text-blue-900">
           <Link
             to="/services"
@@ -150,9 +166,8 @@ export default function PostService() {
           </Link>
         </div>
 
-        {/* Main Content */}
         <div className="p-8 bg-white max-w-5xl mx-auto w-full m-4">
-          <h1 className="font-semibold text-xl text-blue-800 mb-6 ">
+          <h1 className="font-semibold text-xl text-blue-800 mb-6">
             POST A REQUEST
           </h1>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -164,9 +179,13 @@ export default function PostService() {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                required
-                className="w-full p-3 border rounded-md"
+                className={`w-full p-3 border rounded-md ${
+                  formErrors.title ? "border-red-500" : ""
+                }`}
               />
+              {formErrors.title && (
+                <p className="text-red-600 text-sm mt-1">{formErrors.title}</p>
+              )}
             </div>
 
             {/* Description */}
@@ -176,9 +195,15 @@ export default function PostService() {
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                required
-                className="w-full p-3 border rounded-md h-24"
+                className={`w-full p-3 border rounded-md h-24 ${
+                  formErrors.description ? "border-red-500" : ""
+                }`}
               />
+              {formErrors.description && (
+                <p className="text-red-600 text-sm mt-1">
+                  {formErrors.description}
+                </p>
+              )}
             </div>
 
             {/* Credits */}
@@ -189,9 +214,15 @@ export default function PostService() {
                 name="credits"
                 value={formData.credits}
                 onChange={handleChange}
-                required
-                className="w-full p-3 border rounded-md"
+                className={`w-full p-3 border rounded-md ${
+                  formErrors.credits ? "border-red-500" : ""
+                }`}
               />
+              {formErrors.credits && (
+                <p className="text-red-600 text-sm mt-1">
+                  {formErrors.credits}
+                </p>
+              )}
             </div>
 
             {/* Skills Dropdown */}
@@ -200,7 +231,9 @@ export default function PostService() {
               <button
                 type="button"
                 onClick={() => setSkillsDropdown(!skillsDropdown)}
-                className="w-full p-3 border rounded-md flex justify-between items-center bg-white"
+                className={`w-full p-3 border rounded-md flex justify-between items-center bg-white ${
+                  formErrors.skills ? "border-red-500" : ""
+                }`}
               >
                 {formData.skills.length > 0
                   ? formData.skills.join(", ")
@@ -220,7 +253,9 @@ export default function PostService() {
                   />
                 </svg>
               </button>
-
+              {formErrors.skills && (
+                <p className="text-red-600 text-sm mt-1">{formErrors.skills}</p>
+              )}
               {skillsDropdown && (
                 <div className="absolute w-full mt-2 bg-white border rounded-md shadow-lg max-h-40 overflow-y-auto z-10">
                   {availableSkills.map((skill) => (
@@ -246,9 +281,15 @@ export default function PostService() {
                 name="timeline"
                 value={formData.timeline}
                 onChange={handleChange}
-                required
-                className="w-full p-3 border rounded-md"
+                className={`w-full p-3 border rounded-md ${
+                  formErrors.timeline ? "border-red-500" : ""
+                }`}
               />
+              {formErrors.timeline && (
+                <p className="text-red-600 text-sm mt-1">
+                  {formErrors.timeline}
+                </p>
+              )}
             </div>
 
             {/* Expiration */}
@@ -259,9 +300,15 @@ export default function PostService() {
                 name="expiration"
                 value={formData.expiration}
                 onChange={handleChange}
-                required
-                className="w-full p-3 border rounded-md"
+                className={`w-full p-3 border rounded-md ${
+                  formErrors.expiration ? "border-red-500" : ""
+                }`}
               />
+              {formErrors.expiration && (
+                <p className="text-red-600 text-sm mt-1">
+                  {formErrors.expiration}
+                </p>
+              )}
             </div>
 
             {/* Service Image */}
@@ -270,9 +317,17 @@ export default function PostService() {
               <input
                 type="file"
                 name="serviceImage"
+                accept="image/*"
                 onChange={handleImageChange}
                 className="w-full p-3 border rounded-md"
               />
+              {imagePreview && (
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="mt-3 max-h-40 rounded border"
+                />
+              )}
             </div>
 
             {/* Submit Button */}
@@ -287,6 +342,25 @@ export default function PostService() {
           </form>
         </div>
       </div>
+      {showSuccessPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center font-serif">
+            <h2 className="text-lg font-semibold text-green-800 mb-4">
+              Request has been successfully posted!
+            </h2>
+            <button
+              onClick={() => {
+                setShowSuccessPopup(false);
+                navigate(-1);
+              }}
+              className="mt-2 px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-700"
+            >
+              Okay
+            </button>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );
