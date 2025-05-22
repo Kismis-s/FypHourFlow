@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { BsChevronLeft } from "react-icons/bs";
 import LoggedNavbar from "../components/loggedNavbar";
 import Footer from "../components/footer";
+import Swal from "sweetalert2";
 
 export default function EditOffer() {
   const api = import.meta.env.VITE_URL;
@@ -89,15 +90,26 @@ export default function EditOffer() {
       );
 
       if (res.data.status === "Offer updated!") {
-        alert("Offer updated successfully!");
-        navigate(-1);
+        Swal.fire({
+          title: "Success!",
+          text: "Offer updated successfully.",
+          icon: "success",
+          confirmButtonText: "OK",
+        }).then(() => {
+          navigate(-1);
+        });
       }
     } catch (error) {
       console.error(
         "Error updating offer:",
         error.response?.data || error.message
       );
-      alert("Failed to update offer. Please check your input.");
+      Swal.fire({
+        title: "Failed!",
+        text: "Failed to update offer. Please check your input.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -130,7 +142,9 @@ export default function EditOffer() {
         </div>
 
         <div className="w-4/6 p-10">
-          <h2 className="text-2xl font-semibold mb-5">Edit Offer</h2>
+          <h2 className="text-2xl font-semibold mb-5 text-blue-900">
+            Edit Offer
+          </h2>
           <form onSubmit={handleSubmit} className="w-full">
             <div className="mb-5">
               <label
@@ -217,14 +231,14 @@ export default function EditOffer() {
 
             <button
               type="submit"
-              className="text-white bg-blue-700 hover:bg-blue-800 rounded-lg px-5 py-2.5"
+              className="text-white bg-blue-950 hover:bg-blue-800 rounded-lg px-5 py-2"
             >
               Submit
             </button>
             <button
               type="button"
               onClick={handleCancel}
-              className="ml-3 text-white bg-red-600 hover:bg-red-700 rounded-lg px-5 py-2.5"
+              className="ml-3 text-white bg-red-600 hover:bg-red-700 rounded-lg px-5 py-2"
             >
               Cancel
             </button>

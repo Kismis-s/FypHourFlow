@@ -27,7 +27,6 @@ export default function ClaimedOffers() {
       } finally {
         setLoading(false);
       }
-
     };
     fetchClaimedOffers();
   }, [api, authToken]);
@@ -59,7 +58,7 @@ export default function ClaimedOffers() {
             <OfferCard key={offer._id} offer={offer} />
           ))
         ) : (
-          <p className="text-center">No open offers available.</p>
+          <p className="text-center">No offers claimed yet!</p>
         )}
       </div>
     </div>

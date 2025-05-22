@@ -3,6 +3,7 @@ import { AuthContext } from "../AuthContext";
 import axios from "axios";
 import { BiSolidCoinStack } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function CreatedOffers() {
   const [postedOffers, setPostedOffers] = useState([]);
@@ -83,20 +84,30 @@ function OfferCard({ offer }) {
     navigate(`/editOffer/${offer._id}`);
   };
 
-  const handleDeleteClick = async () => {
-    const authToken = localStorage.getItem("authToken");
-    if (!authToken) {
-      alert("No authorization token found");
-      return;
-    }
+ const handleDeleteClick = async () => {
+  const authToken = localStorage.getItem("authToken");
+  if (!authToken) {
+    Swal.fire({
+      icon: "error",
+      title: "Unauthorized",
+      text: "No authorization token found",
+    });
+    return;
+  }
 
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "Do you really want to delete this offer?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete it!",
+    cancelButtonText: "Cancel",
+  });
+
+  if (result.isConfirmed) {
     try {
-      console.log("Deleting offer with ID:", offer._id);
-      const confirmDelete = window.confirm(
-        "Are you sure you want to delete this offer?"
-      );
-      if (!confirmDelete) return;
-
       const response = await axios.delete(
         `${api}/user/deleteOffer/${offer._id}`,
         {
@@ -107,12 +118,25 @@ function OfferCard({ offer }) {
         }
       );
 
-      alert("Offer deleted successfully!");
+      await Swal.fire({
+        icon: "success",
+        title: "Deleted!",
+        text: "Offer deleted successfully!",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
     } catch (error) {
       console.error("Error deleting the offer:", error);
-      alert("Failed to delete the offer");
+      Swal.fire({
+        icon: "error",
+        title: "Failed!",
+        text: "Failed to delete the offer",
+      });
     }
-  };
+  }
+};
+
 
   return (
     <div className="relative flex bg-white shadow-md rounded-lg overflow-hidden border h-40 font-serif">

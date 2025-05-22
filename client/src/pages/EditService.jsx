@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { BsChevronLeft } from "react-icons/bs";
 import LoggedNavbar from "../components/loggedNavbar";
 import Footer from "../components/footer";
+import Swal from "sweetalert2";
 
 export default function EditService() {
   const api = import.meta.env.VITE_URL;
@@ -108,15 +109,26 @@ export default function EditService() {
       );
 
       if (res.data.status === "Service updated!") {
-        alert("Service updated successfully!");
-        navigate(-1);
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Service updated successfully!",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Go back",
+        }).then(() => {
+          navigate(-1); // Navigate after user confirms
+        });
       }
     } catch (error) {
       console.error(
         "Error updating service:",
         error.response?.data || error.message
       );
-      alert("Failed to update service. Please check your input.");
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: "Failed to update service. Please check your input.",
+      });
     }
   };
 
@@ -162,7 +174,7 @@ export default function EditService() {
         {/* Form */}
         <div className="w-4/6 p-10">
           <h2 className="text-2xl font-semibold mb-5">Edit Service</h2>
-          <form onSubmit={handleSubmit} className="w-full">
+          <form onSubmit={handleSubmit} className="w-full ">
             <div className="mb-5">
               <label
                 className="block mb-2 text-sm font-medium text-gray-900"
@@ -217,11 +229,11 @@ export default function EditService() {
             </div>
 
             <div className="relative">
-              <label className="block font-medium">Skills</label>
+              <label className="block text-sm ">Skills</label>
               <button
                 type="button"
                 onClick={() => setSkillsDropdown(!skillsDropdown)}
-                className="w-full p-3 border rounded-md flex justify-between items-center bg-white"
+                className="w-full py-2 mb-3 px-3 border rounded-md flex justify-between items-center bg-white"
               >
                 {formData.skills.length > 0
                   ? formData.skills.split(", ").join(", ")
@@ -272,7 +284,7 @@ export default function EditService() {
                 name="credits"
                 value={formData.credits}
                 onChange={handleChange}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 mt-1 block w-full p-2.5"
                 placeholder="50"
                 required
               />
@@ -316,14 +328,14 @@ export default function EditService() {
             <div className="flex space-x-5">
               <button
                 type="submit"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5"
+                className="text-white bg-blue-950 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2"
               >
                 Submit
               </button>
               <button
                 type="button"
                 onClick={handleCancel}
-                className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5"
+                className="text-red-600 bg-wtite border border-red-600 hover:bg-red-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2"
               >
                 Cancel
               </button>

@@ -42,7 +42,7 @@ const Settings = () => {
 
   const Button = ({ onClick, children, className = "" }) => (
     <button
-      className={`bg-red-500 hover:bg-red-700 text-white font-bold mt-28  mb-4 py-2 px-4 rounded-md ${className}`}
+      className={`bg-red-600 hover:bg-red-700 text-white font-bold mt-28  mb-4 py-2 px-4 rounded-md ${className}`}
       onClick={onClick}
     >
       {children}
