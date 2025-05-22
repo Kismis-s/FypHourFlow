@@ -134,7 +134,7 @@ const HomePage = () => {
         </div>
 
         <div className="px-16">
-          <div className="flex flex-wrap gap-9 mt-7 mb-6">
+          <div className="flex flex-wrap gap-6 mt-7 mb-6">
             {services.map((request, index) => (
               <RequestCard request={request} key={index} />
             ))}

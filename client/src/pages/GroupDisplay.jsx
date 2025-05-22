@@ -9,6 +9,7 @@ import PostCard from "../components/PostCard";
 import { FaCheck } from "react-icons/fa";
 import { FaShareAlt } from "react-icons/fa";
 import ShareModal from "../components/ShareModal";
+import Swal from "sweetalert2";
 
 function GroupDisplay() {
   const api = import.meta.env.VITE_URL;
@@ -82,13 +83,49 @@ function GroupDisplay() {
           Authorization: `Bearer ${authToken}`,
         },
       });
+
       if (res.data.message === "Joined group successfully") {
         setIsMember(true);
-        alert("You have joined the group!");
+        Swal.fire({
+          icon: "success",
+          title: "You have joined the group!",
+          text: "Welcome aboard! Connect, share, and grow together.",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          position: "top-end",
+          toast: true,
+        });
       }
     } catch (error) {
       console.error("Error joining group:", error);
       alert("Failed to join the group!");
+    }
+  };
+
+  const handleLeaveGroup = async () => {
+    try {
+      const res = await axios.patch(`${api}/user/leaveGroup/${id}`, null, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      if (res.data.message === "Left group successfully") {
+        setIsMember(false);
+        Swal.fire({
+          icon: "success",
+          title: "You have left the group",
+          text: "We're sad to see you go!",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          position: "top-end",
+          toast: true,
+        });
+      }
+    } catch (error) {
+      console.error("Error leaving group:", error);
+      alert("Failed to leave the group!");
     }
   };
 
@@ -105,7 +142,7 @@ function GroupDisplay() {
         formData,
         {
           headers: {
-            headers: { "Content-Type": "multipart/form-data" },
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${authToken}`,
           },
         }
@@ -164,23 +201,21 @@ function GroupDisplay() {
 
               {/* Action Buttons */}
               <div className="absolute top-80 flex justify-center gap-2 right-0 p-4 md:top-96 md:right-10">
-                <button
-                  onClick={handleJoinGroup}
-                  disabled={isMember}
-                  className={`rounded px-8 py-1 md:px-5 ${
-                    isMember
-                      ? "bg-green-600 text-white cursor-default"
-                      : "bg-blue-950 text-white hover:bg-blue-600"
-                  }`}
-                >
-                  {isMember ? (
-                    <span className="flex items-center">
-                      <FaCheck className="mr-2" /> Joined
-                    </span>
-                  ) : (
-                    "Join"
-                  )}
-                </button>
+                {isMember ? (
+                  <button
+                    onClick={handleLeaveGroup}
+                    className="rounded px-8 py-1 md:px-8 text-red-600 border border-red-600 bg-white  hover:bg-red-700 hover:text-white"
+                  >
+                    Leave
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleJoinGroup}
+                    className="rounded py-1 px-10 bg-blue-950 text-white hover:bg-blue-600"
+                  >
+                    Join
+                  </button>
+                )}
 
                 <button
                   onClick={() => setIsShareModalOpen(true)}

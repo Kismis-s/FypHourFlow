@@ -7,6 +7,7 @@ import ConfirmationDialog from "../components/confirmationDialog";
 import { FaUser } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 import ReviewForm from "../components/ReviewForm";
+import Swal from "sweetalert2";
 
 export default function OngoingServices() {
   const [ongoingServices, setOngoingServices] = useState([]);
@@ -16,7 +17,7 @@ export default function OngoingServices() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
-  const { authToken, id } = useContext(AuthContext); // Removed 'role' here
+  const { authToken, id } = useContext(AuthContext);
   const userId = id;
   const api = import.meta.env.VITE_URL;
   const navigate = useNavigate();
@@ -125,11 +126,25 @@ export default function OngoingServices() {
         onConfirm={handleConfirm}
         onCancel={handleCancel}
       />
-      {isReviewOpen && (
-        <ReviewForm
-          revieweeId={selectedService.provider._id}
-          reviewerId={userId}
-        />
+      {isReviewOpen && selectedService && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white rounded-xl shadow-lg p-6 max-w-lg w-full relative">
+            <ReviewForm
+              revieweeId={selectedService.provider._id}
+              reviewerId={userId}
+              onSubmit={() => {
+                setReviewOpen(false); 
+                Swal.fire({
+                  icon: "success",
+                  title: "Review submitted!",
+                  text: "Thank you for your feedback.",
+                  timer: 2500,
+                  showConfirmButton: false,
+                });
+              }}
+            />
+          </div>
+        </div>
       )}
     </div>
   );
@@ -144,20 +159,14 @@ function ServiceCard({ service, onClick }) {
   return (
     <div
       className="relative flex bg-white shadow-lg rounded-xl overflow-hidden border h-44 font-serif cursor-pointer transition-transform transform hover:scale-105"
-      onClick={() => {
-        console.log("Service Card Clicked!");
-        onClick();
-      }}
+      onClick={onClick}
     >
-      {/* Service Image */}
       <img
         src={imageUrl}
         alt={service.title}
         className="w-40 h-full object-cover"
       />
-      {/* Service Details */}
       <div className="ml-4 flex flex-col justify-between flex-grow p-3">
-        {/* Title & Description */}
         <div>
           <h3 className="text-lg font-bold text-blue-900 line-clamp-1">
             {service.title}
@@ -166,14 +175,10 @@ function ServiceCard({ service, onClick }) {
             {service.description}
           </p>
         </div>
-
-        {/* Skills */}
         <p className="text-sm text-gray-500">
           <strong className="text-blue-900">Skills:</strong>{" "}
           {service.skills?.join(", ") || "N/A"}
         </p>
-
-        {/* Client & Provider */}
         <div className="flex justify-between items-center mt-3">
           <div className="flex items-center bg-blue-100 px-3 py-1 rounded-lg">
             <FaUser className="text-blue-900 mr-2" size={14} />
@@ -191,7 +196,6 @@ function ServiceCard({ service, onClick }) {
           </div>
         </div>
       </div>
-      {/* Credits Badge */}
       <div className="absolute top-2 right-2 bg-blue-950 text-white py-1 px-3 m-1 rounded-2xl flex items-center">
         <p className="text-md font-semibold">{service.credits}</p>
         <BiSolidCoinStack size={20} className="ml-1" />

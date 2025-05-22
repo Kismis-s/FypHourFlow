@@ -2,24 +2,49 @@ import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../AuthContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function EditProfile() {
   const api = import.meta.env.VITE_URL;
   const navigate = useNavigate();
   const { authToken } = useContext(AuthContext);
+
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [skillsDropdown, setSkillsDropdown] = useState(false);
+  const availableSkills = [
+    "Web Development",
+    "Graphic Design",
+    "Data Analysis",
+    "Copywriting",
+    "Digital Marketing",
+    "Photography",
+    "Video Editing",
+    "UI/UX Design",
+    "Tutoring",
+    "Translation",
+    "Assistance",
+    "Guitar",
+    "Baking",
+    "Machine Learning",
+    "DevOps",
+  ];
   const [formData, setFormData] = useState({
     name: "",
     city: "",
-    province: "",
+    country: "",
     birthday: "",
     phone: "",
     email: "",
     profession: "",
+    skills: [],
     photo: null,
     cover: null,
   });
+
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [coverPreview, setCoverPreview] = useState(null);
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -36,10 +61,14 @@ export default function EditProfile() {
           name: fetchedData.name || "",
           birthday: fetchedData.birthday || "",
           city: fetchedData.city || "",
-          province: fetchedData.province || "",
+          country: fetchedData.country || "",
           email: fetchedData.email || "",
           phone: fetchedData.phone || "",
+          profession: fetchedData.profession || "",
+          skills: fetchedData.skills || [],
         }));
+        setPhotoPreview(fetchedData.photo || null);
+        setCoverPreview(fetchedData.cover || null);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -57,13 +86,40 @@ export default function EditProfile() {
       [name]: value,
     });
   };
+
+  const toggleSkill = (skill) => {
+    if (formData.skills.includes(skill)) {
+      // Remove skill
+      setFormData({
+        ...formData,
+        skills: formData.skills.filter((s) => s !== skill),
+      });
+    } else {
+      // Add skill
+      setFormData({
+        ...formData,
+        skills: [...formData.skills, skill],
+      });
+    }
+  };
+
   const handleImageChange = (e) => {
     const { name, files } = e.target;
-    setFormData({
-      ...formData,
-      [name]: files[0],
-    });
+    if (files && files[0]) {
+      setFormData({
+        ...formData,
+        [name]: files[0],
+      });
+      // preview image
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (name === "photo") setPhotoPreview(reader.result);
+        if (name === "cover") setCoverPreview(reader.result);
+      };
+      reader.readAsDataURL(files[0]);
+    }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -72,11 +128,14 @@ export default function EditProfile() {
       formDataToSend.append("phone", formData.phone);
       formDataToSend.append("birthday", formData.birthday);
       formDataToSend.append("city", formData.city);
-      formDataToSend.append("province", formData.province);
+      formDataToSend.append("country", formData.country);
       formDataToSend.append("email", formData.email);
       formDataToSend.append("profession", formData.profession);
-      formDataToSend.append("photo", formData.photo);
-      formDataToSend.append("cover", formData.cover);
+      formData.skills.forEach((skill) =>
+        formDataToSend.append("skills[]", skill)
+      );
+      if (formData.photo) formDataToSend.append("photo", formData.photo);
+      if (formData.cover) formDataToSend.append("cover", formData.cover);
 
       const res = await axios.patch(`${api}/user/editProfile`, formDataToSend, {
         headers: {
@@ -85,7 +144,12 @@ export default function EditProfile() {
         },
       });
       if (res.data.status === "Profile updated!") {
-        alert("Profile updated successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "Profile updated successfully!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
         navigate(-1);
       }
     } catch (error) {
@@ -99,124 +163,156 @@ export default function EditProfile() {
 
   if (loading) {
     return (
-      <div className="flex items-center text-center h-screen">
-        <p>Loading...</p>
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-lg font-medium text-gray-600">Loading...</p>
       </div>
     );
   }
+
   return (
-    <div>
-      <div className="flex items-center justify-between font-serif">
-        <h2>Edit Profile</h2>
-      </div>
-      <form onSubmit={handleSubmit} className="my-10 w-2/3">
-        <div className="mb-5">
-          <label
-            className="block mb-2 text-sm font-medium text-gray-900 "
-            htmlFor="file_input"
-          >
-            Upload Profile Picture
-          </label>
-          <input
-            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none "
-            id="file_input"
-            type="file"
-            name="photo"
-            onChange={handleImageChange}
-          />
-        </div>
-        <div className="mb-5">
-          <label
-            className="block mb-2 text-sm font-medium text-gray-900 "
-            htmlFor="file_input"
-          >
-            Upload Background Picture
-          </label>
-          <input
-            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none "
-            id="file_input"
-            type="file"
-            name="cover"
-            onChange={handleImageChange}
-          />
-        </div>
+    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg mt-10 mb-20 font-serif">
+      {/* Removed shadow-lg from this div */}
+
+      <h2 className="text-3xl font-semibold mb-6  text-blue-900">
+        Edit Profile
+      </h2>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Profile Picture Upload */}
+        {/* Profile Picture Upload */}
         <div>
-          <label
-            htmlFor="name"
-            className="block mb-2 text-sm font-medium text-gray-900 "
-          >
-            Full Name
+          <label className="block mb-2 font-medium text-gray-700">
+            Profile Picture
           </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-            placeholder="John Doe"
-            required
-          />
+          <div className="flex items-center space-x-6">
+            {/* Show circle preview only if photoPreview exists */}
+            {photoPreview && (
+              <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 border border-gray-300">
+                <img
+                  src={photoPreview}
+                  alt="Profile Preview"
+                  className="object-cover w-full h-full"
+                />
+              </div>
+            )}
+            <input
+              type="file"
+              name="photo"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="cursor-pointer text-sm text-gray-600 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
         </div>
-        <div className="mb-6">
-          <label
-            htmlFor="email"
-            className="block mb-2 text-sm font-medium text-gray-900 "
-          >
-            Email address
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            onChange={handleChange}
-            value={formData.email}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-            placeholder="john.doe@company.com"
-            required
-          />
-        </div>
+
+        {/* Cover Picture Upload */}
         <div>
-          <label
-            htmlFor="phone"
-            className="block mb-2 text-sm font-medium text-gray-900 "
-          >
-            Contact Number
+          <label className="block mb-2 font-medium text-gray-700">
+            Background Picture
           </label>
-          <input
-            type="text"
-            id="phone"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-            placeholder="9800000000"
-            required
-          />
+          <div className="flex items-center space-x-6">
+            {/* Show rectangle preview only if coverPreview exists */}
+            {coverPreview && (
+              <div className="w-35 h-14 rounded-lg overflow-hidden bg-gray-100 border border-gray-300">
+                <img
+                  src={coverPreview}
+                  alt="Cover Preview"
+                  className="object-cover w-full h-full"
+                />
+              </div>
+            )}
+            <input
+              type="file"
+              name="cover"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="cursor-pointer text-sm text-gray-600 border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
         </div>
-        <div>
-          <label
-            htmlFor="birthday"
-            className="block mb-2 text-sm font-medium text-gray-900 "
-          >
-            Birthday
-          </label>
-          <input
-            type="text"
-            id="birthday"
-            name="birthday"
-            value={formData.birthday}
-            onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-            placeholder="23 January, 2002"
-            required
-          />
-        </div>
-        <div className="flex justify-between ">
+
+        {/* Personal Details */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* ... same inputs as before ... */}
+          <div>
+            <label
+              htmlFor="name"
+              className="block mb-2 font-medium text-gray-700"
+            >
+              Full Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="John Doe"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="email"
+              className="block mb-2 font-medium text-gray-700"
+            >
+              Email Address
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="john.doe@company.com"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="phone"
+              className="block mb-2 font-medium text-gray-700"
+            >
+              Contact Number
+            </label>
+            <input
+              type="text"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="9800000000"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="birthday"
+              className="block mb-2 font-medium text-gray-700"
+            >
+              Birthday
+            </label>
+            <input
+              type="text"
+              id="birthday"
+              name="birthday"
+              value={formData.birthday}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="23 January, 2002"
+            />
+          </div>
+
           <div>
             <label
               htmlFor="city"
-              className="block mb-2 text-sm font-medium text-gray-900 "
+              className="block mb-2 font-medium text-gray-700"
             >
               City
             </label>
@@ -226,50 +322,97 @@ export default function EditProfile() {
               name="city"
               value={formData.city}
               onChange={handleChange}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+              className="w-full px-4 py-2 border rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Kathmandu"
             />
           </div>
+
           <div>
             <label
-              htmlFor="province"
-              className="block mb-2 text-sm font-medium text-gray-900 "
+              htmlFor="country"
+              className="block mb-2 font-medium text-gray-700"
             >
-              Province
+              Country
             </label>
             <input
               type="text"
-              id="province"
-              name="province"
-              value={formData.province}
+              id="country"
+              name="country"
+              value={formData.country}
               onChange={handleChange}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+              className="w-full px-4 py-2 border rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Bagmati"
             />
           </div>
+
+          <div className="md:col-span-2">
+            <label
+              htmlFor="profession"
+              className="block mb-2 font-medium text-gray-700"
+            >
+              Profession
+            </label>
+            <input
+              type="text"
+              id="profession"
+              name="profession"
+              value={formData.profession}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Developer"
+            />
+          </div>
         </div>
-        <div className="mb-6">
-          <label
-            htmlFor="profession"
-            className="block mb-2 text-sm font-medium text-gray-900 "
+
+        <div className="relative">
+          <label className="block font-medium">Skills:</label>
+          <button
+            type="button"
+            onClick={() => setSkillsDropdown(!skillsDropdown)}
+            className={`w-full p-3 border rounded-md flex justify-between items-center bg-white`}
           >
-            Profession
-          </label>
-          <input
-            type="profession"
-            id="profession"
-            name="profession"
-            onChange={handleChange}
-            value={formData.profession}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-            placeholder="Developer"
-          />
+            {formData.skills.length > 0
+              ? formData.skills.join(", ")
+              : "Select Skills"}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="size-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19.5 9l-7.5 7.5L4.5 9"
+              />
+            </svg>
+          </button>
+
+          {skillsDropdown && (
+            <div className="absolute w-full mt-2 bg-white border rounded-md shadow-lg max-h-40 overflow-y-auto z-10">
+              {availableSkills.map((skill) => (
+                <div
+                  key={skill}
+                  className={`p-2 cursor-pointer hover:bg-blue-100 ${
+                    formData.skills.includes(skill) ? "bg-blue-200" : ""
+                  }`}
+                  onClick={() => toggleSkill(skill)}
+                >
+                  {skill}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
+
+        {/* Submit Button */}
         <button
           type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center "
+          className="w-full py-2 bg-blue-950 text-white rounded-md hover:bg-blue-800 transition-colors duration-300"
         >
-          Submit
+          Save Changes
         </button>
       </form>
     </div>

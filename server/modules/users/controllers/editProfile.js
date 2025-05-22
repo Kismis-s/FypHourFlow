@@ -38,7 +38,7 @@ const editProfile = async (req, res) => {
       return res.status(400).json({ status: 'Failed!', message: err });
     }
 
-    const { name, email, birthday, phone, city, province, profession } = req.body;
+    const { name, email, birthday, phone, city, country, profession, skills } = req.body;
     const photo = req.files?.photo ? req.files.photo[0].filename : null;
     const cover = req.files?.cover ? req.files.cover[0].filename : null;
 
@@ -49,8 +49,9 @@ const editProfile = async (req, res) => {
         birthday,
         phone,
         city,
-        province,
+        country,
         profession,
+        skills,
       };
 
       if (photo) {

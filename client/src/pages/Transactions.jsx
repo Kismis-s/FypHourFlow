@@ -5,9 +5,10 @@ import Footer from "../components/footer";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function Transactions() {
-  const [activeScreen, setActiveScreen] = useState("screen1");
+  const [activeScreen, setActiveScreen] = useState("screen1"); // screen1 = Send Credits now
   const { authToken } = useContext(AuthContext);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,12 +38,12 @@ export default function Transactions() {
     };
     fetchTransactions();
 
-    // Check the URL hash to determine which screen to show
+    // Check URL hash for screen, default now screen1 (Send Credits)
     const hash = window.location.hash;
-    if (hash === '#screen2') {
-      setActiveScreen('screen2');
+    if (hash === "#screen2") {
+      setActiveScreen("screen2"); // Recent Transactions
     } else {
-      setActiveScreen('screen1');
+      setActiveScreen("screen1"); // Send Credits
     }
   }, [authToken, api]);
 
@@ -60,9 +61,28 @@ export default function Transactions() {
           },
         }
       );
+
       if (response.data.status === "Credits sent successfully!") {
-        alert("Credits sent successfully!");
-        navigate('/transactions#screen2');  // Redirect to screen2
+        Swal.fire("Success!", "Credits sent successfully!", "success");
+
+        // Clear input fields
+        setReceiverEmail("");
+        setAmount("");
+        setRemarks("");
+        setError(null);
+
+        // Switch to Recent Transactions screen
+        setActiveScreen("screen2");
+        navigate("/transactions#screen2");
+
+        // Refetch transactions to update UI
+        const res = await axios.get(`${api}/user/dashboard`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        setTransactions(res.data.transac || []);
       }
     } catch (error) {
       console.log(error);
@@ -81,25 +101,32 @@ export default function Transactions() {
   return (
     <div>
       <LoggedNavbar />
-      <div className="grid grid-cols-[17%_83%] gap-0 font-serif">
-        <div className="text-blue-900 bg-blue-50 pl-2 flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            className="size-6"
+      <div className="grid grid-cols-[17%_83%] gap-0 font-serif ">
+        {/* Sidebar with Back to Profile link at top */}
+        <div className="text-blue-900 bg-blue-50 pl-4 pt-3 flex flex-col gap-4">
+          <Link
+            to="/profile"
+            className="flex items-center gap-2 hover:underline text-blue-900"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15.75 19.5 8.25 12l7.5-7.5"
-            />
-          </svg>
-          <Link to="/profile">BACK TO PROFILE PAGE</Link>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 19.5L8.25 12l7.5-7.5"
+              />
+            </svg>
+            BACK TO PROFILE PAGE
+          </Link>
         </div>
 
+        {/* Main content */}
         <div className="p-4">
           <div className="flex space-x-4 border-b mb-4">
             <button
@@ -110,7 +137,7 @@ export default function Transactions() {
               }`}
               onClick={() => setActiveScreen("screen1")}
             >
-              Transactions
+              Send Credits
             </button>
             <button
               className={`py-2 px-4 ${
@@ -120,19 +147,82 @@ export default function Transactions() {
               }`}
               onClick={() => setActiveScreen("screen2")}
             >
-              Send Credits
+              Recent Transactions
             </button>
           </div>
 
           <div className="mt-4">
             {activeScreen === "screen1" && (
+              <div className="flex items-center justify-center font-serif">
+                <form className="w-[40%]">
+                  <h2 className="text-3xl font-bold text-blue-900 py-6">
+                    Send Credits
+                  </h2>
+                  <div>
+                    <label htmlFor="receiverEmail" className="text-base">
+                      Receiver's Email
+                    </label>
+                    <br />
+                    <input
+                      type="text"
+                      id="receiverEmail"
+                      className="border border-gray-400 text-gray-500 text-sm pl-3 w-full h-9 mb-4 rounded-md focus:border-blue-500 focus:border-2 focus:outline-none"
+                      placeholder="Enter receiver's email"
+                      onChange={(e) => setReceiverEmail(e.target.value)}
+                      value={receiverEmail}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="amount" className="text-base">
+                      Amount
+                    </label>
+                    <br />
+                    <input
+                      type="number"
+                      id="amount"
+                      className="border border-gray-400 text-gray-500 text-sm pl-3 block w-full h-9 mb-4 rounded-md focus:border-blue-500 focus:border-2 focus:outline-none"
+                      placeholder="Enter the amount"
+                      onChange={(e) => setAmount(e.target.value)}
+                      value={amount}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="remarks" className="text-base">
+                      Remarks
+                    </label>
+                    <br />
+                    <input
+                      type="text"
+                      id="remarks"
+                      className="border border-gray-400 text-gray-500 text-sm pl-3 w-full h-9 mb-4 rounded-md focus:border-blue-500 focus:border-2 focus:outline-none"
+                      placeholder="Remarks must be longer than 3 characters"
+                      onChange={(e) => setRemarks(e.target.value)}
+                      value={remarks}
+                    />
+                  </div>
+                  {error && (
+                    <p className="text-red-600 mb-2 text-sm font-semibold">
+                      {error}
+                    </p>
+                  )}
+                  <button
+                    className="px-4 py-2 w-full rounded-md mt-4 bg-blue-950 text-white hover:bg-blue-800 mb-4"
+                    onClick={handleSubmit}
+                  >
+                    Send
+                  </button>
+                </form>
+              </div>
+            )}
+
+            {activeScreen === "screen2" && (
               <div className="pl-4">
                 <h2 className="text-lg font-semibold text-blue-900 ">
                   Recent Transactions
                 </h2>
                 <div>
                   {transactions.length > 0 ? (
-                    transactions.map((transaction) => (
+                    transactions.slice(0, 7).map((transaction) => (
                       <div
                         key={transaction._id}
                         className="bg-white p-4 mb-4 rounded-md shadow-md hover:shadow-xl transition duration-300"
@@ -169,64 +259,10 @@ export default function Transactions() {
                 </div>
               </div>
             )}
-
-            {activeScreen === "screen2" && (
-              <div className="flex items-center justify-center font-serif">
-                <form className="w-[40%]">
-                  <h2 className="text-3xl font-bold text-blue-900 py-6">
-                    Send Credits
-                  </h2>
-                  <div>
-                    <label htmlFor="receiverEmail" className="text-base">
-                      Receiver's Email
-                    </label>
-                    <br></br>
-                    <input
-                      type="text"
-                      id="receiverEmail"
-                      className="border border-gray-400 text-gray-500 text-sm pl-3 w-full h-9 mb-4 rounded-md focus:border-blue-500 focus:border-2 focus:outline-none"
-                      placeholder="Enter receiver's email"
-                      onChange={(e) => setReceiverEmail(e.target.value)}
-                    ></input>
-                  </div>
-                  <div>
-                    <label htmlFor="amount" className="text-base">
-                      Amount
-                    </label>
-                    <br></br>
-                    <input
-                      type="amount"
-                      id="amount"
-                      className="border border-gray-400 text-gray-500 text-sm pl-3 block w-full h-9 mb-4 rounded-md focus:border-blue-500 focus:border-2 focus:outline-none"
-                      placeholder="Enter the amount"
-                      onChange={(e) => setAmount(e.target.value)}
-                    ></input>
-                  </div>
-                  <div>
-                    <label htmlFor="remarks" className="text-base">
-                      Remarks
-                    </label>
-                    <br></br>
-                    <input
-                      type="text"
-                      id="remarks"
-                      className="border border-gray-400 text-gray-500 text-sm pl-3 w-full h-9 mb-4 rounded-md focus:border-blue-500 focus:border-2 focus:outline-none"
-                      placeholder="Remarks must be longer than 3 characters"
-                      onChange={(e) => setRemarks(e.target.value)}
-                    ></input>
-                  </div>
-                  <button
-                    className="px-4 py-2 w-full rounded-md mt-4 bg-blue-950 text-white hover:bg-blue-800 mb-4"
-                    onClick={handleSubmit}
-                  >
-                    Send
-                  </button>
-                </form>
-              </div>
-            )}
           </div>
         </div>
       </div>
+
       <Footer />
     </div>
   );

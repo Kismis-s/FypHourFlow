@@ -60,7 +60,7 @@ const ReviewCard = (props) => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
+    <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200 mb-3">
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center gap-2">
           <h3 className="font-semibold text-lg">

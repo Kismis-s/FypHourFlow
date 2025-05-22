@@ -10,6 +10,7 @@ import OngoingServices from "./OngoingServices";
 import CompletedServices from "./CompletedServices";
 import CreatedOffers from "./PostedOffers";
 import ClaimedOffers from "./ClaimedOffers";
+import Help from "./Help";
 
 const Settings = () => {
   const [activeContent, setActiveContent] = useState("profile");
@@ -160,10 +161,16 @@ const Settings = () => {
             )}
 
             {activeContent === "help" && (
-              <div className="space-y-4">
-                <h2 className="text-2xl font-bold">Help & Support</h2>
-                <p>Find solutions and contact support.</p>
-              </div>
+              <>
+                {(() => {
+                  try {
+                    return <Help />;
+                  } catch (error) {
+                    console.error("Error in showing claimed offers", error);
+                    return <p>Error loading claimed Offers</p>;
+                  }
+                })()}
+              </>
             )}
           </SettingsContent>
         </div>

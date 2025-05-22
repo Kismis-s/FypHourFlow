@@ -44,27 +44,42 @@ export default function Reviews() {
     <div>
       <LoggedNavbar />
       <div className="grid grid-cols-[17%_83%] gap-0 font-serif">
-        <div className="text-blue-900 bg-blue-50 pl-2 flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            className="size-6"
+        {/* Sidebar column */}
+        <div className="text-blue-900 bg-blue-50 pl-4 pt-4 flex flex-col gap-4">
+          <Link
+            to="/profile"
+            className="flex items-center gap-2 text-blue-900 hover:underline "
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15.75 19.5 8.25 12l7.5-7.5"
-            />
-          </svg>
-          <Link to="/profile">BACK TO PROFILE PAGE</Link>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 19.5 8.25 12l7.5-7.5"
+              />
+            </svg>
+            BACK TO PROFILE PAGE
+          </Link>
         </div>
-        {user.review.map((review) => {
-          return <ReviewCard reviewId={review} key={review}/>; 
-        })}
+
+        {/* Main content column for reviews */}
+        <div className="p-4">
+          {user.review.length > 0 ? (
+            user.review.map((review) => {
+              return <ReviewCard reviewId={review} key={review} />;
+            })
+          ) : (
+            <p>No reviews available.</p>
+          )}
+        </div>
       </div>
+
       <Footer />
     </div>
   );

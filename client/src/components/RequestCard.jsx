@@ -45,7 +45,7 @@ export default function RequestCard(props) {
   }
 
   return (
-    <div className="font-serif bg-white shadow-lg rounded-lg overflow-hidden w-80 border border-gray-200 flex flex-col">
+    <div className="font-serif bg-white shadow-lg rounded-lg overflow-hidden w-[330px] border border-gray-200 flex flex-col">
       {/* Image with Status Badge */}
       <div className="relative">
         <img

@@ -69,9 +69,9 @@ const userSchema = new mongoose.Schema({
       coordinates: {
         type: [Number], // [longitude, latitude]
       },
-      city: String,
-      country: String,
     },
+    city: {type: String},
+    country: {type: String},
     skills: {
       type: [String],
       default: []
@@ -100,6 +100,7 @@ const userSchema = new mongoose.Schema({
       ref: "offers",
       default: []
     },
+    
     achievementBadges: {
       type: [{ type: mongoose.Schema.Types.ObjectId }],
       ref: "achievements",
