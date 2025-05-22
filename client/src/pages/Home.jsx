@@ -52,7 +52,7 @@ const HomePage = () => {
 
         // Process services
         const latestServices = servicesRes.data.data
-          .filter((service) => service.status !== "Completed")
+          .filter((service) => service.status == "Open")
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort by latest
           .slice(0, 8); // Limit to 8
 
@@ -90,8 +90,8 @@ const HomePage = () => {
     <div>
       <LoggedNavbar />
       <div>
-        <div className="flex items-center justify-evenly font-serif">
-          <div className="space-y-3">
+        <div className="flex items-center justify-evenly font-serif space-x-20">
+          <div className="space-y-3 mt-8 mr-5  ml-[-45px]">
             <h1 className="text-4xl font-extrabold text-primary text-blue-950 leading-10">
               Exchange Skills, Enrich{" "}
               <span className="text-blue-700 ">Communities!</span>!
@@ -104,13 +104,17 @@ const HomePage = () => {
               collaboration—because every hour counts!
             </p>
           </div>
-          <img src={home} alt="Placeholder" className="h-[330px] w-auto pt-8" />
+          <img
+            src={home}
+            alt="Placeholder"
+            className="h-[320px] w-auto pt-8 mr-[-90px]"
+          />
         </div>
         <div className="flex justify-between items-center mt-6">
           <h2 className="text-2xl font-semibold text-blue-900 ml-16 font-serif">
             Latest Requests
           </h2>
-          <div className="flex justify-between items-center text-blue-900 gap-1 mr-12 hover:text-blue-500">
+          <div className="flex justify-between items-center text-blue-900 gap-1 mr-[65px] hover:text-blue-500">
             <Link to="/services">More</Link>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -129,17 +133,19 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-5 ml-16 mt-7 mb-6">
-          {services.map((request, index) => (
-            <RequestCard request={request} key={index} />
-          ))}
+        <div className="px-16">
+          <div className="flex flex-wrap gap-9 mt-7 mb-6">
+            {services.map((request, index) => (
+              <RequestCard request={request} key={index} />
+            ))}
+          </div>
         </div>
 
         <div className="flex justify-between items-center mt-12">
           <h2 className="text-2xl font-semibold text-blue-900 ml-16 font-serif">
             Latest Offers
           </h2>
-          <div className="flex justify-between items-center text-blue-900 gap-1 mr-12 hover:text-blue-500">
+          <div className="flex justify-between items-center text-blue-900 gap-1 mr-[65px] hover:text-blue-500">
             <Link to="/offers">More</Link>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -157,7 +163,7 @@ const HomePage = () => {
             </svg>
           </div>
         </div>
-        <div className="flex flex-wrap gap-5 ml-16 mt-7 mb-6 font-serif">
+        <div className="flex flex-wrap gap-7 ml-16 mt-7 mb-6 font-serif">
           {offers.map((offer, index) => {
             return <OfferCard offer={offer} key={index} />;
           })}
@@ -167,7 +173,7 @@ const HomePage = () => {
           <h2 className="text-2xl font-semibold text-blue-900 ml-16 font-serif">
             Groups For You
           </h2>
-          <div className="flex justify-between items-center text-blue-900 gap-1 mr-12 hover:text-blue-500">
+          <div className="flex justify-between items-center text-blue-900 gap-1 mr-[65px] hover:text-blue-500">
             <Link to="/groups">More</Link>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -185,7 +191,7 @@ const HomePage = () => {
             </svg>
           </div>
         </div>
-        <div className="flex flex-wrap gap-5 ml-16 mt-7 mb-6 font-serif">
+        <div className="flex flex-wrap gap-6 ml-16 mt-7 mb-6 font-serif">
           {Array.isArray(groups) && groups.length > 0 ? (
             groups.map((group, index) => (
               <GroupCard group={group} key={index} />

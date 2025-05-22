@@ -19,8 +19,8 @@ export default function GroupCard(props) {
   }
 
   return (
-    <div className="font-serif bg-white shadow-lg rounded-lg overflow-hidden w-[330px] h-auto border border-gray-200 relative">
-      {/* Background Image (Increased height) */}
+    <div className="font-serif bg-white shadow-lg rounded-lg overflow-hidden w-[330px] h-[450px] border border-gray-200 flex flex-col">
+      {/* Top image */}
       <div className="h-48 w-full relative">
         <img
           src={
@@ -33,41 +33,41 @@ export default function GroupCard(props) {
         />
       </div>
 
-      <div className="pt-4 px-6 pb-5 space-y-4">
+      {/* Content wrapper */}
+      <div className="flex flex-col flex-grow px-6 pt-4 pb-5">
+        {/* Name and Join button */}
         <div className="flex items-center justify-between">
-          {/* Group Name */}
           <h1 className="text-xl font-bold text-blue-900">{group.name}</h1>
-
-          {/* Join Button */}
           <button
             className="text-sm bg-blue-950 hover:bg-blue-700 text-white py-1 px-5 rounded-md transition duration-200 mr-1"
-            onClick={() => {
-              // Replace with your join logic
-              console.log("Joining group:", group._id);
-            }}
+            onClick={() => console.log("Joining group:", group._id)}
           >
             Join
           </button>
         </div>
 
-        <p className="text-gray-600 text-sm">
+        {/* Description */}
+        <p className="text-gray-600 text-sm mt-3">
           {group.description.split(" ").length > 12
             ? group.description.split(" ").slice(0, 12).join(" ") + " ...more"
             : group.description}
         </p>
 
         {/* Skills */}
-        <div>
-          <p className="text-gray-600 text-sm font-sem">
+        <div className="mt-3">
+          <p className="text-gray-600 text-sm">
             <span className="font-semibold">Skills: </span>
             {group.skills.join(", ")}
           </p>
         </div>
 
-        {/* View Group Button */}
+        {/* Spacer pushes the button to bottom */}
+        <div className="flex-grow"></div>
+
+        {/* View button always at bottom */}
         <button
           onClick={handleClick}
-          className="rounded-lg w-full bg-green-700 hover:bg-green-600 text-white py-2 px-4 transition duration-300 ease-in-out"
+          className="mt-4 rounded-lg w-full bg-green-700 hover:bg-green-600 text-white py-2 px-4 transition duration-300 ease-in-out"
         >
           View Group
         </button>

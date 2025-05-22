@@ -64,7 +64,7 @@ const userSchema = new mongoose.Schema({
       type: {
         type: String,
         enum: ["Point"],
-        default: "Point"
+        default: undefined
       },
       coordinates: {
         type: [Number], // [longitude, latitude]
@@ -115,7 +115,11 @@ const userSchema = new mongoose.Schema({
     timestamps: true,
 })
 
-userSchema.index({ location: "2dsphere" });
+userSchema.index(
+  { location: "2dsphere" },
+  { partialFilterExpression: { "location.coordinates": { $exists: true } } }
+);
+
 
 const userModel = mongoose.model("users", userSchema);
 

@@ -45,7 +45,7 @@ export default function RequestCard(props) {
   }
 
   return (
-    <div className="font-serif bg-white shadow-lg rounded-lg overflow-hidden w-80 border border-gray-200">
+    <div className="font-serif bg-white shadow-lg rounded-lg overflow-hidden w-80 border border-gray-200 flex flex-col">
       {/* Image with Status Badge */}
       <div className="relative">
         <img
@@ -53,17 +53,16 @@ export default function RequestCard(props) {
           className="w-full h-48 object-cover"
           alt="Request Image"
         />
-
-        {/* Status Badge */}
         <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-sm px-3 m-2 py-2 rounded-lg">
           {request.status}
         </div>
       </div>
 
-      <div className="p-5 space-y-4">
+      {/* Card Content */}
+      <div className="flex flex-col flex-grow p-5 space-y-2">
         {/* Title and Credits */}
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold">{request.title}</h1>
+          <h1 className="text-lg font-bold">{request.title}</h1>
           <div className="flex gap-2 items-center text-white bg-blue-950 p-1 pl-3 pr-3 rounded-2xl">
             <p className="text-md font-semibold">{request.credits}</p>
             <BiSolidCoinStack size={20} />
@@ -72,7 +71,7 @@ export default function RequestCard(props) {
 
         {/* Client Profile */}
         <div className="flex gap-3 items-center">
-          {client && client.photo && (
+          {client?.photo && (
             <img
               src={`${api}/uploads/${client.photo}`}
               className="w-10 h-10 rounded-full"
@@ -86,9 +85,11 @@ export default function RequestCard(props) {
 
         {/* Skills */}
         <p className="text-gray-600 text-sm font-sem">
-          <span className="font-semibold">Skills: </span>{" "}
+          <span className="font-semibold">Skills: </span>
           {request.skills.join(", ")}
         </p>
+
+        <div className="flex-grow"></div>
 
         {/* Review Button */}
         <button
