@@ -86,7 +86,7 @@ userRouter.patch("/updateGroup/:id", updateGroup);
 userRouter.delete("/deleteGroup/:id", delGroup);
 
 //for posts
-userRouter.post("/createPost/:id", upload.none(), createPost);
+userRouter.post("/createPost/:id", createPost);
 userRouter.patch("/updatePost/:id", updatePost);
 userRouter.get("/posts", getAllPosts);
 userRouter.get("/getPostbyId/:id", getPostById);

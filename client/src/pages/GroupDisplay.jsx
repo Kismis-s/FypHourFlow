@@ -15,6 +15,7 @@ function GroupDisplay() {
   const { authToken } = useContext(AuthContext);
   const [group, setGroup] = useState(null);
   const [user, setUser] = useState(null);
+  const [postImages, setPostImages] = useState(null);
   const [postText, setPostText] = useState("");
   const [isMember, setIsMember] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -95,12 +96,16 @@ function GroupDisplay() {
     try {
       const formData = new FormData();
       formData.append("content", postText);
+      if (postImages) {
+        formData.append("postImages", postImages);
+      }
 
       const response = await axios.post(
         `${api}/user/createPost/${group._id}`,
         formData,
         {
           headers: {
+            headers: { "Content-Type": "multipart/form-data" },
             Authorization: `Bearer ${authToken}`,
           },
         }
@@ -109,8 +114,8 @@ function GroupDisplay() {
       if (response.data.status === "Post created successfully") {
         alert("Posted successfully!");
         setPostText("");
+        setPostImages(null);
 
-        // 🔄 Re-fetch the group data to get the updated posts list
         const updatedGroup = await axios.get(`${api}/user/getGroupbyId/${id}`, {
           headers: {
             "Content-Type": "application/json",
@@ -267,12 +272,32 @@ function GroupDisplay() {
                         rows="3"
                         placeholder="Share an achievement, tip, or ask a question..."
                       ></textarea>
-
+                      {postImages && (
+                        <div className="mt-2">
+                          <img
+                            src={URL.createObjectURL(postImages)}
+                            alt="Preview"
+                            className="h-40 rounded border"
+                          />
+                        </div>
+                      )}
                       <div className="flex justify-between items-center mt-3">
                         <div className="flex space-x-4">
-                          <button className="text-gray-500 hover:text-blue-500">
+                          <button
+                            className="text-gray-500 hover:text-blue-500"
+                            onClick={() =>
+                              document.getElementById("imageUpload").click()
+                            }
+                          >
                             <FaImage />
                           </button>
+                          <input
+                            type="file"
+                            id="imageUpload"
+                            accept="image/*"
+                            style={{ display: "none" }}
+                            onChange={(e) => setPostImages(e.target.files[0])}
+                          />
                           <button className="text-gray-500 hover:text-blue-500">
                             <FaFileAlt />
                           </button>

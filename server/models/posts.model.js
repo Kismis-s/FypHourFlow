@@ -4,13 +4,15 @@ const postSchema = new mongoose.Schema(
   {
     content: {
       type: String,
-      required: [true, "Post content is required"],
+    },
+    postImages: {
+      type: String,
     },
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
       required: [true, "Post author is required"],
-    },
+    },  
     group: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "groups",

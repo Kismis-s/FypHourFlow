@@ -13,7 +13,6 @@ const PostCard = ({ post: initialPost, api }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [post, setPost] = useState(initialPost);
   const [newComment, setNewComment] = useState(""); // Track new comment input
-
   const openModal = async () => {
     setIsModalOpen(true);
     try {
@@ -94,6 +93,9 @@ const PostCard = ({ post: initialPost, api }) => {
       {/* Post Content */}
       <div className="mt-4">
         <p className="text-gray-700 mb-2">{post.content}</p>
+        {post.postImages && (
+          <img src={`${api}/postImages/${post.postImages}`} />
+        )}
       </div>
 
       {/* Like / Comment Buttons */}

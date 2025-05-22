@@ -1,12 +1,43 @@
 const mongoose = require("mongoose");
+const multer = require("multer");
+const path = require("path");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "postImages/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}_${file.originalname}`);
+  },
+});
+
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    const fileTypes = /jpeg|jpg|png/;
+    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = fileTypes.test(file.mimetype);
+
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb("Error: Images only!");
+    }
+  },
+}).fields([{ name: "postImages", maxCount: 1 }]);
 
 const createPost = async (req, res) => {
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({ status: "Failed!", message: err });
+    }
   const PostModel = mongoose.model("posts");
   const GroupModel = mongoose.model("groups");
   const UserModel = mongoose.model("users");
   try {
     const groupId = req.params.id;
     const { content } = req.body;
+    const postImages = req.files?.postImages ? req.files.postImages[0].filename : null;
 
     // Check if the group exists
     const group = await GroupModel.findById(groupId);
@@ -24,6 +55,7 @@ const createPost = async (req, res) => {
     // Create the new post
     const newPost = await PostModel.create({
       content,
+      postImages,
       author: req.user._id,
       group: groupId,
     });
@@ -61,6 +93,7 @@ const createPost = async (req, res) => {
     console.error("Error creating post:", error);
     res.status(500).json({ message: "Internal server error" });
   }
+})
 };
 
 module.exports = createPost;

@@ -32,6 +32,7 @@ app.use("/serviceImages", express.static(path.join(__dirname, "serviceImages")))
 app.use("/offerImages", express.static(path.join(__dirname, "offerImages")));
 app.use("/groupImages", express.static(path.join(__dirname, "groupImages")));
 app.use("/achievementImages", express.static(path.join(__dirname, "./achievementImages")));
+app.use("/postImages", express.static(path.join(__dirname, "./postImages")));
 
 // Session setup
 app.use(
