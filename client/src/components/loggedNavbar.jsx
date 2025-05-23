@@ -1,14 +1,25 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Hourflow from "../assets/Hourflow.png";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { AuthContext } from "../AuthContext";
 
 function LoggedNavbar() {
   const api = import.meta.env.VITE_URL;
-  const { authToken } = useContext(AuthContext);
+  const { authToken, logout } = useContext(AuthContext);
   const [user, setUser] = useState(null);
-
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const navigate = useNavigate();
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+  const handleLogout = () => {
+    console.log("logout");
+    toggleDropdown();
+    logout();
+    navigate("/");
+  };
   useEffect(() => {
     const fetchProfile = async () => {
       console.log("called");
@@ -22,6 +33,19 @@ function LoggedNavbar() {
     };
     fetchProfile();
   }, [authToken]);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   if (!user) {
     return (
@@ -123,14 +147,53 @@ function LoggedNavbar() {
                 />
               </svg>
             </div>
-            <div>
-              <Link to="/profile">
+            <div className="relative inline-block text-left" ref={dropdownRef}>
+              <div>
                 <img
-                  src={`${api}/uploads/${user.photo}`}
+                  src={`${api}/uploads/${user?.photo || "default-profile.png"}`}
                   alt="profile"
-                  className="rounded-full h-10 w-10 mr-8"
+                  id="menu-button"
+                  aria-expanded={isOpen}
+                  aria-haspopup="true"
+                  onClick={toggleDropdown}
+                  className="rounded-full h-10 w-10 mr-2"
                 />
-              </Link>
+              </div>
+
+              {isOpen && (
+                <div
+                  className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg z-50 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                  role="menu"
+                  aria-orientation="vertical"
+                  aria-labelledby="menu-button"
+                >
+                  <div className="py-1" role="none">
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      role="menuitem"
+                      onClick={toggleDropdown}
+                    >
+                      Profile
+                    </Link>
+                    <Link
+                      to="/settings"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      role="menuitem"
+                      onClick={toggleDropdown}
+                    >
+                      Settings
+                    </Link>
+                    <button
+                      className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100 hover:text-gray-900"
+                      role="menuitem"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

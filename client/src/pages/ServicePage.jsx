@@ -67,7 +67,7 @@ const ServicePage = () => {
 
   const handleSearch = (event) => {
     event.preventDefault();
-
+    console.log("Search query:", searchQuery);
     if (!searchQuery.trim()) {
       setFilteredServices(services);
     } else {
@@ -170,7 +170,7 @@ const ServicePage = () => {
 
         <div className="px-16">
           <div className="flex flex-wrap gap-6 mt-7 mb-6">
-            {services.map((request, index) => (
+            {filteredServices.map((request, index) => (
               <RequestCard request={request} key={index} />
             ))}
           </div>
