@@ -54,7 +54,6 @@ const Settings = () => {
       <LoggedNavbar />
       <div className="flex justify-center items-start font-serif">
         {" "}
-        {/* Adjusted for height */}
         <div className="flex w-full bg-white shadow-md">
           <div className="w-64 bg-blue-50 text-blue-950 p-5">
             <ul className="list-none p-0 m-0">

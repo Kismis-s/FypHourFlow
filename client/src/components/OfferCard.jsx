@@ -68,7 +68,6 @@ const OfferCard = (props) => {
 
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden w-64 max-w-[16rem] flex-none border border-gray-200 flex flex-col">
-      {/* Image with Cost Badge */}
       <div className="relative h-32 w-full">
         <img
           src={`${api}/offerImages/${offer.offerImages}`}
@@ -85,7 +84,6 @@ const OfferCard = (props) => {
       {/* Offer Details */}
       <div className="p-3 flex flex-col flex-grow text-center justify-between">
         <div>
-          {/* Offer Title */}
           <h1 className="text-lg font-bold">{offer.title}</h1>
 
           <div className="flex gap-3 items-center">
@@ -101,16 +99,13 @@ const OfferCard = (props) => {
             </h2>
           </div>
 
-          {/* Description */}
           <p className="text-gray-500 text-xs mt-1 line-clamp-2">
             {offer.description}
           </p>
 
-          {/* Expiration Date */}
           <p className="text-red-600 text-xs mt-1">Expires: {formattedDate}</p>
         </div>
 
-        {/* Claim Button */}
         <button
           className="w-full bg-green-700 hover:bg-green-800 text-white rounded-lg py-2 mt-3 transition duration-300 ease-in-out"
           onClick={handleClaim}

@@ -77,7 +77,6 @@ function SignUp() {
   return (
     <div>
       <div className="grid grid-cols-[11fr_9fr] h-screen bg-white">
-        {/* Left Form Section */}
         <div className="flex items-center justify-center font-serif">
           <form className="w-3/5" onSubmit={handleSubmit}>
             <h2 className="text-3xl font-bold text-blue-900 py-6">
@@ -218,12 +217,9 @@ function SignUp() {
                 Log in
               </span>
             </p>
-
-            {/* ...rest of your form unchanged... */}
           </form>
         </div>
 
-        {/* Right Image Section */}
         <div>
           <img
             src={watchs}

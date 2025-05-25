@@ -131,7 +131,7 @@ export default function PostService() {
         }
       );
       if (response.data.status === "Successfully posted request!") {
-        setShowSuccessPopup(true); // Show the popup instead of alert
+        setShowSuccessPopup(true); 
       }
     } catch (error) {
       console.error("Error posting service:", error);

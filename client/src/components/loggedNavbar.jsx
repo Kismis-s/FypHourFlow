@@ -50,9 +50,7 @@ function LoggedNavbar() {
   if (!user) {
     return (
       <div className="text-gray-700 font-serif m-0">
-        {/* Navigation */}
         <nav className="border-b border-gray-200 flex items-center justify-between px-8 h-16">
-          {/* Logo */}
           <div className="flex items-center">
             <img src={Hourflow} alt="logo" className="h-16 w-16 ml-4" />
           </div>

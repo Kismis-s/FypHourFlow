@@ -11,7 +11,7 @@ export default function EditService() {
   const api = import.meta.env.VITE_URL;
   const navigate = useNavigate();
   const { authToken } = useContext(AuthContext);
-  const { id } = useParams(); // Extract service ID from URL params
+  const { id } = useParams(); 
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({

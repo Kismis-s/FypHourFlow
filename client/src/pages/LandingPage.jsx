@@ -8,7 +8,6 @@ import Navbar from "../components/navbar";
 function LandingPage() {
   return (
     <div className="text-gray-700 font-serif m-0">
-      {/* Content Wrapper */}
       <Navbar />
       <div>
         {/* Main Section */}
@@ -159,7 +158,6 @@ function LandingPage() {
                 style={{ transform: "translateX(0%)" }}
                 id="carousel-slides"
               >
-                {/* Slide 1 */}
                 <div className="w-full flex-shrink-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4  ml-8">
                   <Testimonial />
                   <Testimonial />
@@ -167,7 +165,6 @@ function LandingPage() {
                   <Testimonial />
                 </div>
 
-                {/* Slide 2 */}
                 <div className="w-full flex-shrink-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
                   <Testimonial />
                   <Testimonial />

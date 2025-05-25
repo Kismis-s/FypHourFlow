@@ -15,14 +15,12 @@ function Footer() {
           </div>
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3 md:ml-16">
             {" "}
-            {/* Added ml-16 for more space to the right */}
             <div>
               <h2 className="mb-3 text-lg font-semibold text-black ">
                 Useful Links
               </h2>
               <ul className="text-gray-500 text-sm font-normal space-y-2">
                 {" "}
-                {/* Added space-y-2 for more gap between links */}
                 <li>
                   <a href="#" className="hover:underline">
                     About Us
@@ -46,7 +44,6 @@ function Footer() {
               </h2>
               <ul className="text-gray-500 text-sm font-normal space-y-2">
                 {" "}
-                {/* Added space-y-2 for more gap between links */}
                 <li>
                   <a href="#" className="hover:underline">
                     Contact Support
@@ -63,7 +60,6 @@ function Footer() {
               <h2 className="mb-3 text-lg font-semibold text-black ">Legal</h2>
               <ul className="text-gray-500 text-sm font-normal space-y-2">
                 {" "}
-                {/* Added space-y-2 for more gap between links */}
                 <li>
                   <a href="#" className="hover:underline">
                     Our Privacy Policy

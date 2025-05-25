@@ -76,7 +76,7 @@ const Chat = () => {
 
   const sendMessage = () => {
     socket.emit("send_message", { roomId, message, senderId: currentUserId });
-    setMessage(""); // Clear input only after sending.
+    setMessage(""); 
   };
 
   return (

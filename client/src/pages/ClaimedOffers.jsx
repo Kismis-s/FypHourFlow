@@ -94,7 +94,6 @@ function OfferCard({ offer }) {
         </div>
       </div>
 
-      {/* Right Side: Edit & Delete Buttons */}
       <div className="flex flex-col justify-between items-end p-4">
         {/* Credits Badge */}
         <div className="flex gap-2 items-center text-white bg-blue-950 py-1 px-3 rounded-2xl">

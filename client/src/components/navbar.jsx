@@ -67,7 +67,6 @@ function Navbar() {
             </button>
           </form>
 
-          {/* Login/Sign Up Buttons */}
           <div className="flex space-x-4">
             <button className="px-3 py-1 border border-blue-950 text-blue-950 rounded hover:bg-blue-600 hover:text-white" onClick={()=>navigate("/signup")}>
               Sign up

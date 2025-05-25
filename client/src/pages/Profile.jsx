@@ -75,7 +75,6 @@ function Profile() {
                   {user.profession ? user.profession : ""}
                 </span>
               </div>
-              {/* Actions (SVG + Buttons) */}
               <div className="absolute top-80 flex justify-center gap-2 right-0 p-4 md:top-96 md:right-10 md:justify-end">
                 <button className="rounded bg-blue-950 px-8 py-1 text-white hover:bg-blue-600 md:px-11">
                   Follow
@@ -85,7 +84,6 @@ function Profile() {
                 </button>
               </div>
             </div>
-            {/* Grid Section */}
             <div className="mx-2 my-2 grid grid-cols-12 gap-2">
               {/* About Section */}
               <div className="col-span-12  rounded bg-white p-2 shadow md:col-span-3">
@@ -149,10 +147,8 @@ function Profile() {
                   </div>
                 </div>
               </div>
-              {/* Column 2 */}
               <div className="col-span-12 md:col-span-9">
                 <div className="grid  h-full grid-rows-1 md:grid-rows-2 gap-2">
-                  {/* Tab Container */}
                   <div className="grid grid-cols-1  md:grid-cols-2  gap-2">
                     <div className="rounded bg-white p-2 shadow text-center text-base font-medium text-gray-500">
                       {/* Tabs Navigation */}
@@ -190,7 +186,6 @@ function Profile() {
                         )}
                       </div>
                     </div>
-                    {/* Right Side Section */}
                     <div className="grid grid-rows-2 h-full gap-2 ">
                       {/* Time Bank */}
                       <div className="relative flex h-full flex-col justify-between rounded bg-white p-2 shadow border-b-2 border-gray-200">
@@ -220,8 +215,6 @@ function Profile() {
                         </div>
                         <div className="mt-4 text-center text-3xl items-center justify-center">
                           {generateStars(user.averageRating)}
-                          {/* <br></br>
-                          {user.averageRating} */}
                         </div>
                         <button
                           onClick={handleReviewClick}

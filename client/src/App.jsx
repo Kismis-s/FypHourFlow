@@ -35,7 +35,6 @@ function App() {
     createRoutesFromElements(
       <Route>
         {" "}
-        {/* Define the routes inside this */}
         <Route path="/" element={<LandingPage />} /> {/* Default route */}
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />

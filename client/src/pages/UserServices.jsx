@@ -131,25 +131,22 @@ function ServiceCard({ service, isOpen }) {
     ? `${api}/serviceImages/${service.serviceImage}`
     : "https://via.placeholder.com/150";
 
-  // Handle card click to show the popup only for Open Services
   const handleCardClick = () => {
     if (isOpen) {
-      setIsPopupOpen(true); // Open the popup only for open services
+      setIsPopupOpen(true); 
     }
   };
 
-  // Handle Review action - Redirect to RequestDisplay page with the service ID
   const handleReviewClick = (e) => {
     e.stopPropagation();
     navigate(`/displayService/${service._id}`);
     setIsPopupOpen(false); 
   };
 
-  // Handle Update action (Placeholder for now)
   const handleUpdateClick = (e) => {
     e.stopPropagation();
     navigate(`/editService/${service._id}`);
-    setIsPopupOpen(false); // Close the popup
+    setIsPopupOpen(false); 
   };
 
   const handleDeleteClick = async (e) => {
@@ -191,7 +188,6 @@ function ServiceCard({ service, isOpen }) {
     }
   };
 
-  // Close the popup
   const handleClosePopup = (e) => {
     e.stopPropagation();
     setIsPopupOpen(false);
@@ -234,7 +230,6 @@ function ServiceCard({ service, isOpen }) {
         {isPopupOpen && (
           <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
             <div className="relative bg-white rounded-lg p-6 w-1/3">
-              {/* Close Icon */}
               <button
                 className="absolute top-2 right-2 text-gray-500 text-2xl z-10"
                 onClick={handleClosePopup}

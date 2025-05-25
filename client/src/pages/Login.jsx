@@ -43,7 +43,7 @@ function Login() {
               email,
               password,
               coords: { latitude, longitude },
-              rememberMe, // if you want to send rememberMe to backend
+              rememberMe,
             },
             {
               headers: {
@@ -81,7 +81,6 @@ function Login() {
   return (
     <div>
       <div className="grid grid-cols-[11fr_9fr] h-screen bg-white">
-        {/* Left Form Section */}
         <div className="flex items-center justify-center font-serif">
           <form className="w-3/5">
             <h2 className="text-3xl font-bold text-blue-900 py-6">Login</h2>
@@ -130,7 +129,6 @@ function Login() {
               )}
             </div>
 
-            {/* Remember me checkbox */}
             <div className="mb-5 flex items-center space-x-2">
               <input
                 type="checkbox"
@@ -160,8 +158,6 @@ function Login() {
                 Login
               </button>
             </div>
-
-            {/* Signup link */}
             <p className="text-sm mt-2 text-gray-600">
               Don't have an account?{" "}
               <Link
@@ -174,7 +170,6 @@ function Login() {
           </form>
         </div>
 
-        {/* Right Image Section */}
         <div>
           <img
             src={watchs}

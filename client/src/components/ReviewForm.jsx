@@ -62,7 +62,7 @@ const ReviewForm = ({ revieweeId, reviewerId, onSubmit }) => {
         setComment("");
 
         if (typeof onSubmit === "function") {
-          onSubmit(); // ✅ This triggers Swal and closes modal
+          onSubmit(); 
         }
       } else {
         setError(response.data.status || "Review submission failed.");

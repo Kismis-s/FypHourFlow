@@ -8,7 +8,6 @@ export default function OfferBanner(props) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    // navigate("");
     console.log("clicked");
   };
 

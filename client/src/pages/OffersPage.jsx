@@ -90,42 +90,6 @@ export default function OffersPage() {
             })}
           </div>
         </div>
-        {/* Offers near you */}
-        {/* <div>
-          <div className="flex jsutify-between">
-            <h2>Offers near you</h2>
-            <p>More</p>
-          </div>
-          <div>
-            {banners.map((banner, index) => {
-              return <OfferBanner banner={banner} key={index} />;
-            })}
-          </div>
-          <div>
-            {offersNearYou.map((offer, index) => {
-              return <OfferCard offer={offer} key={index} />;
-            })}
-          </div>
-        </div>
-        {/* Popular Categories */}
-        {/* <div>
-          <div className="flex jsutify-between">
-            <h2>Popular Categories</h2>
-            <p>More</p>
-          </div>
-          {categories.map((category, index) => {
-            return <PopularCategories category={category} key={index} />;
-          })}
-        </div>*/}
-        {/* Top Vendors */}
-        {/* <div>
-          <h2>Top vendors</h2>
-          <div>
-            {vendors.map((vendor, index) => {
-              return <img src={`${api}/image/${vendor.image}`} />;
-            })}
-          </div>
-        </div>  */}
       </div>
       <Footer />
     </div>

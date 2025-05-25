@@ -1,4 +1,3 @@
-// components/ShareModal.jsx
 import React from "react";
 import {
   FacebookShareButton,

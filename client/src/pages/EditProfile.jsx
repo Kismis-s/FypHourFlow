@@ -171,20 +171,16 @@ export default function EditProfile() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg mt-10 mb-20 font-serif">
-      {/* Removed shadow-lg from this div */}
 
       <h2 className="text-3xl font-semibold mb-6  text-blue-900">
         Edit Profile
       </h2>
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Profile Picture Upload */}
-        {/* Profile Picture Upload */}
         <div>
           <label className="block mb-2 font-medium text-gray-700">
             Profile Picture
           </label>
           <div className="flex items-center space-x-6">
-            {/* Show circle preview only if photoPreview exists */}
             {photoPreview && (
               <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 border border-gray-300">
                 <img
@@ -210,7 +206,6 @@ export default function EditProfile() {
             Background Picture
           </label>
           <div className="flex items-center space-x-6">
-            {/* Show rectangle preview only if coverPreview exists */}
             {coverPreview && (
               <div className="w-35 h-14 rounded-lg overflow-hidden bg-gray-100 border border-gray-300">
                 <img
@@ -232,7 +227,6 @@ export default function EditProfile() {
 
         {/* Personal Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* ... same inputs as before ... */}
           <div>
             <label
               htmlFor="name"

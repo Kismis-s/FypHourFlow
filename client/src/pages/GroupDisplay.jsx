@@ -288,14 +288,12 @@ function GroupDisplay() {
                 </div>
               </div>
 
-              {/* Right Column (Create Post + Posts) */}
               <div className="col-span-12 md:col-span-8">
-                {/* Create Post */}
                 <div className="bg-white rounded shadow-sm p-6">
                   <div className="flex items-start space-x-3">
                     <img
                       className="h-10 w-10 rounded-full"
-                      src={`${api}/uploads/${user?.photo}`} // use uploaded photo
+                      src={`${api}/uploads/${user?.photo}`} 
                       alt="Your profile"
                     />
                     <div className="flex-1">

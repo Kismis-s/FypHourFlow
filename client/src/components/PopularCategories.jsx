@@ -6,7 +6,6 @@ export default function PopularCategories(props) {
   const category = props.category;
   const navigate = useNavigate();
   const handleClick = () => {
-    // navigate("");
     console.log("clicked");
   };
   return (

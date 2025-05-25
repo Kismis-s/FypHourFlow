@@ -55,7 +55,6 @@ const AchievementSlider = () => {
         </div>
       </div>
 
-      {/* Right: Image Section */}
       <div className="w-full md:w-1/2">
         <img
           src={achievements[current].image}
